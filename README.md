@@ -1,84 +1,96 @@
 # Lyrprep - Lyrics Preprocessing Tool
 
-Lyrprep is a Python-based tool designed to process lyrics files (.lrc) into a ready-to-sync text for AMLL TTML Tool.  
-Vibe-coded with Cascade by Windsurf.
+A powerful web application for formatting and preprocessing song lyrics with real-time conversion. Perfect for preparing lyrics for karaoke, music production, or lyric videos.
 
-## Features
+## 🌟 Features
 
-- **Multiple Processing Modes**:
-  - Basic formatting (lyrprep.py)
-  - Clipboard integration (lyrprep_clip.py)
-- **Text Transformations**:
-  - Smart dash handling (end-of-line dashes become em-dashes)
-  - Parentheses processing
-  - Custom spacing with backslashes
-- **Easy Integration**:
-  - Drag-and-drop batch files
-  - Windows context menu integration
-  - Command-line interface
+- **Real-time Processing**: See changes instantly as you type or modify settings
+- **LRCLIB Integration**: Search and fetch lyrics directly within the app
+- **Smart Formatting**:
+  - Remove timestamps `[00:00.00]`
+  - Convert dashes to proper formatting:
+    - `-` → `—` (em dash with space)
+    - `--` → `—` (em dash)
+    - Word-connecting dashes → `-\` (with escape)
+  - Parentheses Processing:
+    - Move parenthetical content to new lines
+    - Capitalize first letter
+    - Add `<` prefix for background vocals
+  - Remove empty lines (optional)
+  - Add spaces between words (with escape characters)
+- **Modern UI**:
+  - Dark/Light theme with system preference detection
+  - Clean, responsive design for all devices
+  - Intuitive settings panel
+- **Productivity Features**:
+  - One-click copy to clipboard
+  - Save settings in browser
+  - Installable as PWA for offline use
 
-## Installation
+## 🚀 How to Use
 
-### Prerequisites
-- Python 3.6 or higher
-- Required Python packages: `pyperclip`
+1. **Input Your Lyrics**
+   - Paste directly into the text area, or
+   - Click the search icon (🔍) to find lyrics by song/artist
 
-### Quick Start
+2. **Customize Processing** (via Settings ⚙️)
+   - Toggle individual processing options
+   - Real-time preview updates automatically
+   - All settings are saved in your browser
 
-1. Clone this repository or download the files to your preferred directory.
-2. Install the required packages:
-   ```
-   pip install pyperclip
-   ```
-3. (Optional) Run the installer to add context menu integration:
-   ```
-   install_context_menu.bat
-   ```
-   Note: This requires administrator privileges.
+3. **Get Your Results**
+   - Formatted text appears in the output area
+   - Click the copy button to copy to clipboard
+   - Toggle between formatted and raw output
 
-## Usage
+## 📱 Installation (PWA)
 
-### Basic Usage
+1. Open the app in a modern browser (Chrome, Edge, or Safari)
+2. Click the install prompt or use the browser's "Add to Home Screen" option
+3. Use the app even when offline
 
-1. **Using the Basic Processor**
-   - Drag and drop an .lrc file onto `lyrprep.bat`
-   - Output will be saved as `[original_filename]_processed.txt`
+## 🛠 Development
 
-2. **Using the Clipboard Version**
-   - Drag and drop an .lrc file onto `lyrprep_clip.bat`
-   - Processed text will be copied to your clipboard
-
-### Command Line Usage
+To run locally:
 
 ```bash
-# Basic processing
-python lyrprep.py "path/to/your/file.lrc"
+# Using Python
+python -m http.server 8000
 
-# Clipboard version
-python lyrprep_clip.py "path/to/your/file.lrc"
+# Or using Node.js
+npx http-server docs -p 8000
 ```
 
-## Context Menu Integration
+Then open `http://localhost:8000` in your browser.
 
-To add Lyrprep to your Windows right-click context menu:
+## 📝 Notes
 
-1. Run `install_context_menu.bat` as administrator
-2. Right-click any .lrc file and select "Process with Lyrprep"
+- All processing happens in your browser (no data is sent to any server)
+- Settings are saved in your browser's local storage
+- For best results, use the latest version of Chrome, Firefox, Safari, or Edge
 
-To uninstall the context menu integration:
+## Dependencies
 
-1. You're on your own sorry
+- [Font Awesome](https://fontawesome.com/) - Icons
+- [Google Fonts](https://fonts.google.com/) - Inter font family
+- [LRCLIB API](https://lrclib.net/) - Lyrics database
 
-## Contributing
+## Browser Support
 
-Contributions are welcome! Please feel free to submit a Pull Request.
+- Chrome (latest)
+- Firefox (latest)
+- Safari (latest)
+- Edge (latest)
+- Mobile browsers (iOS/Android)
 
 ## License
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+MIT
 
-## Acknowledgments
+## Contributing
 
-- Built with Python
-- Uses [pyperclip](https://pypi.org/project/pyperclip/) for clipboard operations
-- Thanks to Cascade (Windsurf) for basically making everything
+Contributions are welcome! Please open an issue or submit a pull request.
+
+---
+
+Made with ❤️ by [Your Name]
