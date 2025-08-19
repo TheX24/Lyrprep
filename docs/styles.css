@@ -865,7 +865,28 @@ input:checked + .slider:before {
 .search-form .btn-primary {
     width: 100%;
     margin-top: 1rem;
-    padding: 0.75rem;
+    padding: 0.75rem 1.5rem;
+    background-color: var(--primary-color);
+    color: white;
+    border: none;
+    border-radius: 6px;
+    font-weight: 500;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background-color 0.2s, transform 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+}
+
+.search-form .btn-primary:hover {
+    background-color: var(--primary-hover);
+    transform: translateY(-1px);
+}
+
+.search-form .btn-primary:active {
+    transform: translateY(0);
 }
 
 .search-result-title {
