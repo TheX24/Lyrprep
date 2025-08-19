@@ -49,20 +49,6 @@ A powerful web application for formatting and preprocessing song lyrics with rea
 2. Click the install prompt or use the browser's "Add to Home Screen" option
 3. Use the app even when offline
 
-## 🛠 Development
-
-To run locally:
-
-```bash
-# Using Python
-python -m http.server 8000
-
-# Or using Node.js
-npx http-server docs -p 8000
-```
-
-Then open `http://localhost:8000` in your browser.
-
 ## 📝 Notes
 
 - All processing happens in your browser (no data is sent to any server)
@@ -93,4 +79,4 @@ Contributions are welcome! Please open an issue or submit a pull request.
 
 ---
 
-Made with ❤️ by [Your Name]
+Made with ❤️ by [TheX24](https://github.com/TheX24)
