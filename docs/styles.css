@@ -465,18 +465,19 @@ input:checked + .slider:before {
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%) scale(0.95);
-    background-color: var(--modal-bg);
-    border: 1px solid var(--modal-border);
+    width: 480px;
+    max-width: 95vw;
+    max-height: 80vh;
+    background-color: var(--settings-bg);
     border-radius: 12px;
-    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
     z-index: 1000;
-    max-width: 500px;
-    width: 90%;
-    max-height: 90vh;
-    overflow-y: auto;
     opacity: 0;
     visibility: hidden;
     transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
 }
 
 .settings-panel.active {
@@ -526,10 +527,46 @@ input:checked + .slider:before {
 
 .settings-content {
     padding: 1.5rem;
+    overflow-y: auto;
+    overflow-x: hidden;
+    flex: 1;
+    max-height: calc(100% - 70px);
+    width: 100%;
+    box-sizing: border-box;
 }
 
 .settings-section {
     margin-bottom: 1.5rem;
+}
+
+.settings-section:last-child {
+    margin-bottom: 0;
+}
+
+/* Settings Footer */
+.settings-footer {
+    margin-top: auto;
+    padding: 1rem 1.5rem;
+    text-align: center;
+    color: var(--secondary-color);
+    font-size: 0.8rem;
+    border-top: 1px solid var(--border-color);
+}
+
+.settings-footer-content {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.settings-footer-content span:not(:last-child) {
+    color: var(--secondary-color);
+    opacity: 0.8;
+}
+
+.settings-footer-content span:first-child {
+    font-weight: 500;
 }
 
 .settings-section h4 {
@@ -550,9 +587,10 @@ input:checked + .slider:before {
     align-items: center;
     gap: 0.75rem;
     cursor: pointer;
-    padding: 0.5rem 0.25rem;
+    padding: 0.5rem 1.5rem 0.5rem 0.5rem;
     border-radius: 6px;
-    transition: background-color 0.2s;
+    transition: all 0.2s;
+    position: relative;
 }
 
 .setting-option:hover {
@@ -571,9 +609,88 @@ input:checked + .slider:before {
     width: 0;
 }
 
+/* Info Icon Styles */
+.info-icon {
+    position: absolute;
+    right: 0.5rem;
+    color: var(--secondary-color);
+    opacity: 0;
+    cursor: help;
+    transition: all 0.2s;
+    width: 20px;
+    height: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    background: rgba(0, 0, 0, 0.05);
+}
+
+.setting-option:hover .info-icon {
+    opacity: 0.6;
+}
+
+.setting-option .info-icon:hover {
+    opacity: 1 !important;
+    color: var(--primary-color);
+    background: rgba(0, 0, 0, 0.1);
+}
+
+.info-icon:hover {
+    color: var(--primary-color);
+    opacity: 1;
+}
+
+.info-icon i {
+    font-size: 14px;
+}
+
+/* Tooltip Styles */
+.info-icon::after {
+    content: attr(data-tooltip);
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%) translateY(0);
+    bottom: calc(100% + 10px);
+    background: var(--card-bg);
+    color: var(--text-color);
+    padding: 8px 12px;
+    border-radius: 6px;
+    font-size: 0.8rem;
+    line-height: 1.4;
+    text-align: left;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.2s ease-out;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    border: 1px solid var(--border-color);
+    z-index: 1000;
+    pointer-events: none;
+    max-width: 280px;
+    width: max-content;
+    white-space: normal;
+    word-wrap: break-word;
+    /* Prevent tooltip from going off-screen */
+    left: auto;
+    right: auto;
+    transform: translateX(0) translateY(0);
+    margin-right: 8px;
+}
+
+.info-icon:hover::after {
+    opacity: 1;
+    visibility: visible;
+}
+
+.info-icon:hover::after {
+    opacity: 1;
+    visibility: visible;
+    transform: translateX(-43%) translateY(0);
+}
+
 .checkmark {
     position: relative;
-    display: inline-flex;
+    display: flex;
     align-items: center;
     justify-content: center;
     height: 20px;
@@ -583,7 +700,6 @@ input:checked + .slider:before {
     border-radius: 4px;
     transition: all 0.2s;
     flex-shrink: 0;
-    vertical-align: middle;
 }
 
 .setting-option:hover .checkmark {
@@ -603,7 +719,8 @@ input:checked + .slider:before {
     border: solid white;
     border-width: 0 2px 2px 0;
     transform: rotate(45deg) translateY(-1px);
-    margin-top: -1px;
+    margin-top: -2px;
+    margin-left: -1.4px;
 }
 
 .setting-option input:checked ~ .checkmark:after {
