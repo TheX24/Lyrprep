@@ -1,5 +1,8 @@
 # Lyrprep - Lyrics Preprocessing Tool
 
+> [!WARNING]
+> Deprecated. Use [website.](https://lyrprep.spicylyrics.org)
+
 Lyrprep is a Python-based tool designed to process lyrics files (.lrc) into a ready-to-sync text for AMLL TTML Tool.  
 Vibe-coded with Cascade by Windsurf.
 
