@@ -1,6 +1,6 @@
 // Service Worker for Lyrprep PWA
 
-const CACHE_NAME = 'lyrprep-v1';
+const CACHE_NAME = 'lyrprep-v2';
 const ASSETS_TO_CACHE = [
   '/',
   '/index.html',
