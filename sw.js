@@ -1,6 +1,6 @@
 // Service Worker for Lyrprep PWA
 
-const CACHE_NAME = 'lyrprep-v4';
+const CACHE_NAME = 'lyrprep-v5';
 const ASSETS_TO_CACHE = [
   '/',
   '/index.html',
@@ -45,7 +45,7 @@ self.addEventListener('fetch', event => {
   if (!event.request.url.startsWith('http')) return;
   
   // Skip LRCLIB API requests (we want fresh data)
-  if (event.request.url.includes('lrclib.net') || event.request.url.includes('spicylyrics.org')) {
+  if (event.request.url.includes('lrclib.net') || event.request.url.includes('spicylyrics.org') || event.request.url.includes('hcaptcha.com')) {
     return;
   }
 
