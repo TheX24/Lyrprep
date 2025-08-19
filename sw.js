@@ -1,6 +1,6 @@
 // Service Worker for Lyrprep PWA
 
-const CACHE_NAME = 'lyrprep-v6';
+const CACHE_NAME = 'lyrprep-v7';
 // Use scope-relative URLs so this works under subpaths (e.g., /lyrprep/)
 // Do not include './' to avoid opaqueredirect caching issues on some hosts
 const ASSETS_TO_CACHE = [
