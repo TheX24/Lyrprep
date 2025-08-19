@@ -1,21 +1,30 @@
 // Service Worker for Lyrprep PWA
 
-const CACHE_NAME = 'lyrprep-v5';
+const CACHE_NAME = 'lyrprep-v6';
+// Use scope-relative URLs so this works under subpaths (e.g., /lyrprep/)
 const ASSETS_TO_CACHE = [
-  '/',
-  '/index.html',
-  '/styles.css',
-  '/app.js',
-  'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css',
-  'https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap',
-  'https://img.icons8.com/color/48/000000/musical-notes.png',
-  'https://img.icons8.com/color/192/000000/musical-notes.png'
+  './',
+  './index.html',
+  './styles.css',
+  './app.js'
 ];
 
 // Install event - cache all static assets
 self.addEventListener('install', event => {
   event.waitUntil(
-    caches.open(CACHE_NAME).then(cache => cache.addAll(ASSETS_TO_CACHE))
+    caches.open(CACHE_NAME).then(async cache => {
+      // Add assets individually so one failure doesn't abort the whole install
+      await Promise.all(
+        ASSETS_TO_CACHE.map(async (asset) => {
+          try {
+            await cache.add(asset);
+          } catch (e) {
+            // Log and continue (use runtime caching for externals or missing files)
+            console.warn('Failed to cache asset during install:', asset, e);
+          }
+        })
+      );
+    })
   );
   self.skipWaiting();
 });  
@@ -59,7 +68,7 @@ self.addEventListener('fetch', event => {
           caches.open(CACHE_NAME).then(cache => cache.put(event.request, responseClone));
           return response;
         })
-        .catch(() => caches.open(CACHE_NAME).then(cache => cache.match('/index.html')))
+        .catch(() => caches.open(CACHE_NAME).then(cache => cache.match('./index.html')))
     );
     return;
   }
