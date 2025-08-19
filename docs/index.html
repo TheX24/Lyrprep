@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lyrprep - Lyrics Preprocessing Tool</title>
+    <meta name="description" content="A beautiful, minimal tool for preprocessing lyrics with real-time conversion and LRCLIB API integration.">
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="https://img.icons8.com/color/48/000000/musical-notes.png">
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Styles -->
+    <link rel="stylesheet" href="styles.css">
+    
+    <!-- PWA Support -->
+    <meta name="theme-color" content="#28a745">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <link rel="apple-touch-icon" href="https://img.icons8.com/color/192/000000/musical-notes.png">
+    <link rel="manifest" href="manifest.json">
+</head>
+<body>
+    <div class="app-container">
+        <header>
+            <h1>Lyrprep</h1>
+            <p class="subtitle">Preprocess and format your lyrics with ease, with lyrics search using LRCLIB.</p>
+        </header>
+        
+        <main class="main-content">
+            <div class="converter">
+                <!-- Input Text Box -->
+                <div class="text-box-container">
+                    <div class="text-box-header">
+                        <h3>Input</h3>
+                        <div class="text-box-actions">
+                            <button id="clear-input" class="icon-button" aria-label="Clear input">
+                                <i class="fas fa-trash-alt"></i>
+                            </button>
+                            <button id="search-lyrics" class="icon-button" aria-label="Search lyrics">
+                                <i class="fas fa-search"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="text-box-wrapper">
+                        <textarea id="input-text" placeholder="Paste your lyrics here or search for lyrics..." rows="10" autofocus></textarea>
+                    </div>
+                </div>
+                
+                <!-- Controls -->
+                <div class="controls">
+                    <button id="convert-btn" class="convert-btn" aria-label="Convert lyrics">
+                        <i class="fas fa-arrow-right"></i>
+                    </button>
+                    <div class="realtime-toggle">
+                        <span>Real-time</span>
+                        <label class="switch">
+                            <input type="checkbox" id="realtime-toggle" checked>
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+                </div>
+                
+                <!-- Output Text Box -->
+                <div class="text-box-container">
+                    <div class="text-box-header">
+                        <h3>Output</h3>
+                        <div class="text-box-actions">
+                            <button id="copy-output" class="icon-button" aria-label="Copy to clipboard">
+                                <i class="far fa-copy"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="text-box-wrapper">
+                        <textarea id="output-text" placeholder="Your processed lyrics will appear here..." rows="10" readonly></textarea>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+    
+    <!-- Settings Panel -->
+    <div id="settings-panel" class="settings-panel">
+        <div class="settings-header">
+            <h3>Settings</h3>
+            <button id="close-settings" class="close-btn" aria-label="Close settings">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <div class="settings-content">
+            <div class="settings-section">
+                <h4>Processing Options</h4>
+                <div class="settings-options">
+                    <label class="setting-option">
+                        <input type="checkbox" id="option-remove-timestamps" checked>
+                        <span class="checkmark"></span>
+                        <span>Remove uneccessary elements</span>
+                    </label>
+                    <label class="setting-option">
+                        <input type="checkbox" id="option-handle-dashes" checked>
+                        <span class="checkmark"></span>
+                        <span>Split dashes</span>
+                    </label>
+                    <label class="setting-option">
+                        <input type="checkbox" id="option-handle-emdash" checked>
+                        <span class="checkmark"></span>
+                        <span>Convert cut-off dash to em-dash (—)</span>
+                    </label>
+                    <label class="setting-option">
+                        <input type="checkbox" id="option-handle-parentheses" checked>
+                        <span class="checkmark"></span>
+                        <span>Split background lines</span>
+                    </label>
+                    <label class="setting-option">
+                        <input type="checkbox" id="option-add-spaces" checked>
+                        <span class="checkmark"></span>
+                        <span>Split spaces from words</span>
+                    </label>
+                    <label class="setting-option">
+                        <input type="checkbox" id="option-remove-empty-lines" checked>
+                        <span class="checkmark"></span>
+                        <span>Remove empty lines</span>
+                    </label>
+                </div>
+            </div>
+            
+            <div class="settings-section">
+                <h4>Appearance</h4>
+                <div class="theme-toggle-container">
+                    <span>Dark Mode</span>
+                    <label class="switch">
+                        <input type="checkbox" id="theme-toggle">
+                        <span class="slider"></span>
+                    </label>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Search Modal -->
+    <div id="search-modal" class="search-modal">
+        <div class="search-container">
+            <div class="search-header">
+                <h3>Search Lyrics</h3>
+                <button id="close-search" class="close-btn" aria-label="Close search">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            
+            <form class="search-form">
+                <div class="form-group">
+                    <label for="search-track">Track Name</label>
+                    <input type="text" id="search-track" class="form-control" placeholder="Enter track name" required>
+                </div>
+                <div class="form-group">
+                    <label for="search-artist">Artist (optional)</label>
+                    <input type="text" id="search-artist" class="form-control" placeholder="Enter artist name">
+                </div>
+                <div class="form-group">
+                    <label for="search-album">Album (optional)</label>
+                    <input type="text" id="search-album" class="form-control" placeholder="Enter album name">
+                </div>
+                <button type="submit" id="search-btn" class="btn btn-primary">
+                    <i class="fas fa-search"></i> Search
+                </button>
+            </form>
+            
+            <div id="search-results" class="search-results">
+                <!-- Search results will be populated here -->
+                <div class="text-center" style="padding: 2rem; color: var(--secondary-color);">
+                    <i class="fas fa-search" style="font-size: 2rem; margin-bottom: 1rem; opacity: 0.5;"></i>
+                    <p>Search for lyrics to get started</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Settings Button -->
+    <button id="settings-btn" class="floating-btn settings-btn" aria-label="Settings">
+        <i class="fas fa-cog"></i>
+    </button>
+    
+    <!-- Overlay -->
+    <div id="overlay" class="overlay"></div>
+    
+    <!-- Toast Notification -->
+    <div id="toast" class="toast"></div>
+    
+    <!-- Welcome Popup -->
+    <div id="welcome-popup" class="welcome-popup">
+        <div class="welcome-content">
+            <h2>Welcome to Lyrprep!</h2>
+            <div class="welcome-guide">
+                <p>Here's how to get started:</p>
+                <ol>
+                    <li>Paste your lyrics or use the search button to find lyrics</li>
+                    <li>Customize the processing options in Settings</li>
+                    <li>Copy the formatted lyrics with one click</li>
+                    <li>Open AMLL TTML Tool</li>
+                    <li>Make sure that "Word separator" is set to "\" (backslash) and "Enable special prefixes" is checked</li>
+                    <li>Paste the lyrics and click on import</li>
+                </ol>
+                <p>All processing happens in your browser - your data stays private!</p>
+            </div>
+            <div class="welcome-actions">
+                <label class="setting-option dont-show-again">
+                    <input type="checkbox" id="dont-show-again">
+                    <span class="checkmark"></span>
+                    <span class="dont-show-again-text">Don't show this again</span>
+                </label>
+                <button id="close-welcome" class="btn btn-primary">Got it!</button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Scripts -->
+    <script src="app.js"></script>
+    
+    <!-- PWA Service Worker -->
+    <script>
+        // Register service worker for PWA
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('sw.js')
+                    .then(registration => {
+                        console.log('ServiceWorker registration successful');
+                    })
+                    .catch(err => {
+                        console.log('ServiceWorker registration failed: ', err);
+                    });
+            });
+        }
+    </script>
+</body>
+</html>
