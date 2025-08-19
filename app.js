@@ -72,8 +72,26 @@ let siteKeyRetries = 0;
 const siteKeyRetryDelay = 1000;
 const siteKeyMaxRetries = 10;
 
+
 async function initSitekey() {
     if (hCaptchaSiteKey != null) return;
+
+    if (!navigator.onLine) {
+        const savedSK = localStorage.getItem("SK_Store");
+        if (savedSK) {
+            const sk = JSON.parse(savedSK);
+            if (sk.sk) {
+                hCaptchaSiteKey = sk.sk.split("\x1e").join("-");
+                siteKeyRetries = 0;
+
+                if (typeof overlay !== 'undefined') {
+                    overlay.classList.remove("active");
+                }
+            }
+        }
+        return;
+    }
+
     if (siteKeyRetries > siteKeyMaxRetries) {
         console.error("error while getting hCaptcha sitekey");
         showToast("Error while getting the hCaptcha siteKey, try reloading");
@@ -90,6 +108,9 @@ async function initSitekey() {
         const siteKey = siteKeyData.split("\x1e").join("-");
 
         hCaptchaSiteKey = siteKey;
+        localStorage.setItem("SK_Store", JSON.stringify({
+            sk: siteKeyData
+        }))
         siteKeyRetries = 0;
 
         if (typeof overlay !== 'undefined') {
@@ -108,8 +129,6 @@ const hCaptchaCallbacks = {
 		console.log('hCaptcha solved successfully');
 		currentHCaptchaToken = token;
 		currentHCaptchaKey = key;
-
-        searchLyrics();
 	},
 	onError: (err) => {
 		console.error('hCaptcha error callback:', err);
@@ -847,3 +866,55 @@ window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () 
 		applyTheme();
 	}
 });
+
+// Handle online/offline UI state for search button and modal
+function updateSearchButtonStatus() {
+	if (!searchBtn) return;
+	const isOnline = navigator.onLine;
+	if (!isOnline) {
+		searchBtn.classList.add('disabled');
+		searchBtn.disabled = true;
+	} else {
+		searchBtn.classList.remove('disabled');
+		searchBtn.disabled = false;
+	}
+}
+
+function forceCloseSearchModalIfOpen() {
+	if (!searchModal) return;
+	if (searchModal.classList.contains('active')) {
+		searchModal.classList.remove('active');
+		// Only remove overlay/no-scroll if settings panel isn't open
+		if (!settingsPanel.classList.contains('active')) {
+			overlay.classList.remove('active');
+			document.body.classList.remove('no-scroll');
+		}
+		cleanupHCaptcha();
+	}
+}
+
+// Initial online state and listeners
+window.addEventListener('online', () => {
+	updateSearchButtonStatus();
+    hCaptchaSiteKey = null;
+    siteKeyRetries = 0;
+    initSitekey();
+    showToast("Back online!");
+});
+
+window.addEventListener('offline', () => {
+	updateSearchButtonStatus();
+	forceCloseSearchModalIfOpen();
+
+    showToast("You're offline. Features are limited during offline mode");
+});
+
+// Check if user is offline when page loads and show toast
+if (!navigator.onLine) {
+    updateSearchButtonStatus();
+	forceCloseSearchModalIfOpen();
+    showToast("You're offline. Features are limited during offline mode");
+}
+
+// Ensure initial state on script load
+updateSearchButtonStatus();

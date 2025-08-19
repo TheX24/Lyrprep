@@ -1,6 +1,6 @@
 // Service Worker for Lyrprep PWA
 
-const CACHE_NAME = 'lyrprep-v2';
+const CACHE_NAME = 'lyrprep-v4';
 const ASSETS_TO_CACHE = [
   '/',
   '/index.html',
@@ -15,16 +15,10 @@ const ASSETS_TO_CACHE = [
 // Install event - cache all static assets
 self.addEventListener('install', event => {
   event.waitUntil(
-    caches.open(CACHE_NAME)
-      .then(cache => {
-        console.log('Caching app shell and content');
-        return cache.addAll(ASSETS_TO_CACHE);
-      })
-      .catch(error => {
-        console.error('Cache addAll error:', error);
-      })
+    caches.open(CACHE_NAME).then(cache => cache.addAll(ASSETS_TO_CACHE))
   );
-});
+  self.skipWaiting();
+});  
 
 // Activate event - clean up old caches
 self.addEventListener('activate', event => {
@@ -37,7 +31,7 @@ self.addEventListener('activate', event => {
             return caches.delete(cacheName);
           }
         })
-      );
+      ).then(() => self.clients.claim());
     })
   );
 });
@@ -51,40 +45,40 @@ self.addEventListener('fetch', event => {
   if (!event.request.url.startsWith('http')) return;
   
   // Skip LRCLIB API requests (we want fresh data)
-  if (event.request.url.includes('lrclib.net')) {
+  if (event.request.url.includes('lrclib.net') || event.request.url.includes('spicylyrics.org')) {
+    return;
+  }
+
+  // Network-first for navigations/HTML to ensure latest shell
+  const acceptHeader = event.request.headers.get('accept') || '';
+  if (event.request.mode === 'navigate' || acceptHeader.includes('text/html')) {
+    event.respondWith(
+      fetch(event.request)
+        .then(response => {
+          const responseClone = response.clone();
+          caches.open(CACHE_NAME).then(cache => cache.put(event.request, responseClone));
+          return response;
+        })
+        .catch(() => caches.open(CACHE_NAME).then(cache => cache.match('/index.html')))
+    );
     return;
   }
   
+  // Cache-first for other GETs, scoped to the current cache only
   event.respondWith(
-    caches.match(event.request)
-      .then(response => {
-        // Return cached response if found
-        if (response) {
-          return response;
-        }
-        
-        // Clone the request
-        const fetchRequest = event.request.clone();
-        
-        // Make network request and cache the response
-        return fetch(fetchRequest).then(response => {
-          // Check if we received a valid response
-          if (!response || response.status !== 200 || response.type !== 'basic') {
-            return response;
+    caches.open(CACHE_NAME).then(cache =>
+      cache.match(event.request).then(cached => {
+        if (cached) return cached;
+        return fetch(event.request).then(networkResponse => {
+          if (!networkResponse || networkResponse.status !== 200 || networkResponse.type !== 'basic') {
+            return networkResponse;
           }
-          
-          // Clone the response
-          const responseToCache = response.clone();
-          
-          // Cache the response
-          caches.open(CACHE_NAME)
-            .then(cache => {
-              cache.put(event.request, responseToCache);
-            });
-            
-          return response;
+          const responseToCache = networkResponse.clone();
+          cache.put(event.request, responseToCache);
+          return networkResponse;
         });
       })
+    )
   );
 });
 

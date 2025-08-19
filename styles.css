@@ -281,7 +281,8 @@ textarea#output-text {
     line-height: 1.5;
 }
 
-.btn:disabled {
+.btn:disabled,
+.icon-button:disabled {
     opacity: 0.7 !important;
     cursor: not-allowed !important;
 }
@@ -1346,8 +1347,4 @@ input:checked + .slider:before {
     width: 20cqw;
     background: var(--card-bg);
     border-radius: 8px;
-}
-
-.search-form.spicylyrics #search-btn {
-    display: none;
 }
