@@ -61,7 +61,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     // Append scripts
     console.log(`Segment loader: Appending scripts`);
     {
-        import("/app.mjs").then(() => {
+        import("/app.js").then(() => {
             console.log(`Segment loader: Successfully appended script`);
             const hCaptchaScript = document.createElement("script");
             hCaptchaScript.src = "https://js.hcaptcha.com/1/api.js?onload=onloadHCaptcha&render=explicit";
