@@ -1,11 +1,11 @@
 document.addEventListener("DOMContentLoaded", async () => {
-    console.log("Segment loader: DOM content loaded, starting segment processing");
+    // console.log("Segment loader: DOM content loaded, starting segment processing");
     const segmentNodeList = document.querySelectorAll("segment");
     const segments = Array.from(segmentNodeList);
 
-    console.log(`Segment loader: Found ${segments.length} segments to process`);
+    // console.log(`Segment loader: Found ${segments.length} segments to process`);
     if (!segments || segments.length <= 0) {
-        console.log("Segment loader: No segments found, exiting");
+        // console.log("Segment loader: No segments found, exiting");
         return;
     }
 
@@ -26,7 +26,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     const groupPromises = [];
     for (const [nameAttr, elements] of nameToSegments.entries()) {
         const destination = `/segments/${nameAttr}.html`;
-        console.log(`Segment loader: Processing segment "${nameAttr}" from ${destination} for ${elements.length} instance(s)`);
+        // console.log(`Segment loader: Processing segment "${nameAttr}" from ${destination} for ${elements.length} instance(s)`);
 
         const p = (async () => {
             try {
@@ -36,13 +36,13 @@ document.addEventListener("DOMContentLoaded", async () => {
                     throw new Error("Fetch Error");
                 }
                 const content = await response.text();
-                console.log(`Segment loader: Successfully fetched content for segment "${nameAttr}"`);
+                // console.log(`Segment loader: Successfully fetched content for segment "${nameAttr}"`);
 
                 if (content !== undefined) {
                     for (const el of elements) {
                         el.outerHTML = content;
                     }
-                    console.log(`Segment loader: Successfully replaced ${elements.length} instance(s) of segment "${nameAttr}" with content`);
+                    // console.log(`Segment loader: Successfully replaced ${elements.length} instance(s) of segment "${nameAttr}" with content`);
                     return true;
                 }
                 throw new Error("Empty content");
@@ -59,10 +59,10 @@ document.addEventListener("DOMContentLoaded", async () => {
     await Promise.all(groupPromises);
 
     // Append scripts
-    console.log(`Segment loader: Appending scripts`);
+    // console.log(`Segment loader: Appending scripts`);
     {
         import("/app.js").then(() => {
-            console.log(`Segment loader: Successfully appended script`);
+            // console.log(`Segment loader: Successfully appended script`);
             const hCaptchaScript = document.createElement("script");
             hCaptchaScript.src = "https://js.hcaptcha.com/1/api.js?onload=onloadHCaptcha&render=explicit";
             hCaptchaScript.defer = true;
@@ -70,5 +70,5 @@ document.addEventListener("DOMContentLoaded", async () => {
             document.head.appendChild(hCaptchaScript)
         })
     }
-    console.log("Segment loader: Completed processing all segments and scripts");
+    // console.log("Segment loader: Completed processing all segments and scripts");
 })

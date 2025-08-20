@@ -135,7 +135,7 @@ async function initSitekey() {
 
 const hCaptchaCallbacks = {
 	onSolve: (token, key) => {
-		console.log('hCaptcha solved successfully');
+		// console.log('hCaptcha solved successfully');
 		currentHCaptchaToken = token;
 		currentHCaptchaKey = key;
 		// Auto-resume SL search if applicable
@@ -519,14 +519,14 @@ async function searchLyrics() {
 
 			const cachedContent = await iDB.get(`sl:${trackId}`);
 
-			console.log("Cached Content", cachedContent);
+			// console.log("Cached Content", cachedContent);
 			if (cachedContent !== undefined) {
-				console.log("Cached Content - not undefined");
+				// console.log("Cached Content - not undefined");
 				const lyrics = parseLyrics(cachedContent);
 
-				console.log("Cached Parsed Lyrics", lyrics);
+				// console.log("Cached Parsed Lyrics", lyrics);
 				if (lyrics !== undefined) {
-					console.log("Cached Lyrics - not undefined");
+					// console.log("Cached Lyrics - not undefined");
 					lyricsContinue(lyrics);
 					showLoadingState(false);
 					return;
