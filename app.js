@@ -29,7 +29,7 @@ const searchResults = document.getElementById('search-results');
 const searchTrackInput = document.getElementById('search-track');
 const searchArtistInput = document.getElementById('search-artist');
 const searchAlbumInput = document.getElementById('search-album');
-const swapProvidersButton = document.querySelector('.swapProvidersButton');
+//const swapProvidersButton = document.querySelector('.swapProvidersButton');
 
 const lrclibFormGroup = document.querySelector('.lrclib-formGroup');
 const spicyLyricsFormGroup = document.querySelector('.sl-formGroup');
@@ -251,6 +251,19 @@ async function closeWelcomePopup() {
 	inputText.focus();
 }
 
+
+// Search Providers
+const searchProviders = [
+	{
+		element: document.querySelector(".providersTab .sl"),
+		name: "spicylyrics"
+	},
+	{
+		element: document.querySelector(".providersTab .lrclib"),
+		name: "lrclib"
+	}
+]
+
 // Initialize the app
 async function init() {
 
@@ -299,8 +312,24 @@ function setupEventListeners() {
 	convertBtn.addEventListener('click', convertText);
 
 
-	swapProvidersButton.addEventListener("click", swapLyricsProviders)
+	//swapProvidersButton.addEventListener("click", swapLyricsProviders)
 	
+	searchProviders.forEach(provider => {
+		provider.element.addEventListener("click", (e) => {
+			if (provider.element.classList.contains("active")) return;
+
+			// Remove active class from all providers
+			searchProviders.forEach(p => p.element.classList.remove("active"));
+			
+			// Add active class to clicked provider
+			provider.element.classList.add("active");
+
+			swapLyricsProviders();
+		})
+	})
+
+
+
 	// Clear input button
 	clearInputBtn.addEventListener('click', () => {
 		inputText.value = '';
