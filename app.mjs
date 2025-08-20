@@ -1,3 +1,13 @@
+import DB from "./tools/iDB.mjs";
+// IndexedDB config moved here (stores are fixed by the DB class)
+const iDBConfig = {
+	dbName: 'LyrprepDB',
+	version: 1,
+	defaults: {
+		expireTtlMs: 1000 * 60 * 60 * 24 * 7,
+	},
+};
+const iDB = new DB(iDBConfig);
 // DOM Elements
 const inputText = document.getElementById('input-text');
 const outputText = document.getElementById('output-text');
@@ -43,6 +53,8 @@ async function waitUntil(valueOrFn, checkInterval = 100) {
 
 // Config
 const spicyLyricsApiUrlBase = `https://api.spicylyrics.org/lyrprep`;
+// Version embedded in saved payloads (not the IndexedDB schema version)
+const CURRENT_STORE_VERSION = 1;
 
 // Settings state
 const settings = {
@@ -72,22 +84,22 @@ let siteKeyRetries = 0;
 const siteKeyRetryDelay = 1000;
 const siteKeyMaxRetries = 10;
 
+let shouldRenderHCaptcha = false;
+let isAwaitingHCaptcha = false;
+
 
 async function initSitekey() {
     if (hCaptchaSiteKey != null) return;
 
     if (!navigator.onLine) {
-        const savedSK = localStorage.getItem("SK_Store");
+        const savedSK = await iDB.get("SK_Store");
         if (savedSK) {
-            const sk = JSON.parse(savedSK);
-            if (sk.sk) {
-                hCaptchaSiteKey = sk.sk.split("\x1e").join("-");
-                siteKeyRetries = 0;
+            hCaptchaSiteKey = savedSK;
+			siteKeyRetries = 0;
 
-                if (typeof overlay !== 'undefined') {
-                    overlay.classList.remove("active");
-                }
-            }
+			if (typeof overlay !== 'undefined') {
+				overlay.classList.remove("active");
+			}
         }
         return;
     }
@@ -108,9 +120,7 @@ async function initSitekey() {
         const siteKey = siteKeyData.split("\x1e").join("-");
 
         hCaptchaSiteKey = siteKey;
-        localStorage.setItem("SK_Store", JSON.stringify({
-            sk: siteKeyData
-        }))
+        await iDB.savePermanent("SK_Store", siteKey)
         siteKeyRetries = 0;
 
         if (typeof overlay !== 'undefined') {
@@ -129,6 +139,16 @@ const hCaptchaCallbacks = {
 		console.log('hCaptcha solved successfully');
 		currentHCaptchaToken = token;
 		currentHCaptchaKey = key;
+		// Auto-resume SL search if applicable
+		try {
+			const modalIsActive = searchModal && searchModal.classList.contains('active');
+			const spicyActive = searchForm && searchForm.classList.contains('spicylyrics');
+			if (modalIsActive && spicyActive) {
+				shouldRenderHCaptcha = false;
+				isAwaitingHCaptcha = false;
+				searchLyrics();
+			}
+		} catch (_) {}
 	},
 	onError: (err) => {
 		console.error('hCaptcha error callback:', err);
@@ -152,7 +172,7 @@ function ensureHCaptchaRendered() {
 		const container = document.getElementById('sl-hcaptcha-content');
 		const modalIsActive = searchModal && searchModal.classList.contains('active');
 		const spicyActive = searchForm && searchForm.classList.contains('spicylyrics');
-		if (!hCaptchaLoaded || !hCaptchaSiteKey || !container || !modalIsActive || !spicyActive) return;
+		if (!hCaptchaLoaded || !hCaptchaSiteKey || !container || !modalIsActive || !spicyActive || !shouldRenderHCaptcha) return;
 
 		// Don't render twice into the same container
 		if (container.childElementCount > 0 && currentHCaptchaWidget !== null) return;
@@ -196,20 +216,32 @@ function cleanupHCaptcha() {
 		currentHCaptchaKey = null;
 		currentHCaptchaToken = null;
 		currentHCaptchaWidget = null;
+		shouldRenderHCaptcha = false;
+		// Re-enable the submit button if it was disabled for captcha
+		try {
+			const submitBtn = document.getElementById('search-btn');
+			if (submitBtn) submitBtn.disabled = false;
+		} catch (_) {}
 	}
 }
 
 // Show welcome popup if not disabled
-function showWelcomePopup() {
+async function showWelcomePopup() {
 	// Check if user has chosen not to see the popup again
-	if (localStorage.getItem('hideWelcomePopup') !== 'true') {
+	try {
+		const hidden = localStorage.getItem("hideWelcomePopup");
+		if (hidden !== 'true') {
+			welcomePopup.classList.add('show');
+			document.body.style.overflow = 'hidden'; // Prevent scrolling when popup is open
+		}
+	} catch (_) {
 		welcomePopup.classList.add('show');
-		document.body.style.overflow = 'hidden'; // Prevent scrolling when popup is open
+		document.body.style.overflow = 'hidden';
 	}
 }
 
 // Close welcome popup
-function closeWelcomePopup() {
+async function closeWelcomePopup() {
 	// Save user preference
 	if (dontShowAgainCheckbox.checked) {
 		localStorage.setItem('hideWelcomePopup', 'true');
@@ -225,8 +257,8 @@ async function init() {
 
 	await initSitekey();
 
-	// Load settings from localStorage
-	loadSettings();
+	// Load settings from storage
+	await loadSettings();
 	
 	// Set up event listeners
 	setupEventListeners();
@@ -235,7 +267,7 @@ async function init() {
 	updateSearchProviderFields();
 	
 	// Set initial theme based on system preference
-	setInitialTheme();
+	await setInitialTheme();
 	
 	// Set initial state of toggles
 	updateTogglesFromSettings();
@@ -341,9 +373,10 @@ function setupEventListeners() {
 }
 
 // Set initial theme based on system preference
-function setInitialTheme() {
+async function setInitialTheme() {
 	const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-	const savedTheme = localStorage.getItem('theme');
+	let savedTheme;
+	try { savedTheme = await iDB.get('theme'); } catch (_) {}
 	
 	if (savedTheme) {
 		settings.theme = savedTheme;
@@ -370,14 +403,14 @@ function applyTheme() {
 }
 
 // Toggle between light and dark theme
-function toggleTheme() {
+async function toggleTheme() {
 	if (themeToggle.checked) {
 		settings.theme = 'dark';
 	} else {
 		settings.theme = 'light';
 	}
 	
-	localStorage.setItem('theme', settings.theme);
+	await iDB.savePermanent('theme', settings.theme);
 	applyTheme();
 }
 
@@ -388,10 +421,9 @@ function toggleSettings() {
 	document.body.classList.toggle('no-scroll', settingsPanel.classList.contains('active'));
 }
 
-// Toggle search modal
+// Toggle search modal (open immediately; render hCaptcha lazily if needed)
 async function toggleSearchModal() {
 	overlay.classList.toggle('active');
-	await waitUntil(() => hCaptchaLoaded && !!hCaptchaSiteKey);
 	searchModal.classList.toggle('active');
 	document.body.classList.toggle('no-scroll', searchModal.classList.contains('active'));
 	
@@ -401,12 +433,14 @@ async function toggleSearchModal() {
 			searchTrackInput.focus();
 		} else if (searchForm.classList.contains("spicylyrics")) {
 			searchSpotifyUri.focus();
-			ensureHCaptchaRendered();
 		}
 	} else {
 		cleanupHCaptcha();
 	}
+
+	isAwaitingHCaptcha = false;
 }
+
 
 // Search for lyrics using LRCLIB API
 async function searchLyrics() {
@@ -455,8 +489,18 @@ async function searchLyrics() {
 			showLoadingState(false);
 		}
 	} else if (currentProvider === "sl") {
+		// Hard block: if awaiting captcha, do not proceed even if user force-enables the button
+		if (isAwaitingHCaptcha) {
+			return;
+		}
+		const parseLyrics = (lyrics) => lyrics.split("\x1e").join("\n");
 
-		if (!currentHCaptchaToken) return;
+		const lyricsContinue = (lyrics) => {
+			inputText.value = lyrics;
+			searchSpotifyUri.value = "";
+			if (realtimeToggle.checked) convertText();
+			toggleSearchModal();
+		}
 
 		const trackUrl = searchSpotifyUri.value.trim();
 		let trackId;
@@ -471,10 +515,41 @@ async function searchLyrics() {
 			trackId = trackUrl
 		}
 
+
 		if (trackId) {
+			showLoadingState(true);
+
+			const cachedContent = await iDB.get(`sl:${trackId}`);
+
+			console.log("Cached Content", cachedContent);
+			if (cachedContent !== undefined) {
+				console.log("Cached Content - not undefined");
+				const lyrics = parseLyrics(cachedContent);
+
+				console.log("Cached Parsed Lyrics", lyrics);
+				if (lyrics !== undefined) {
+					console.log("Cached Lyrics - not undefined");
+					lyricsContinue(lyrics);
+					showLoadingState(false);
+					return;
+				};
+			}
+
+			// No cached lyrics; require hCaptcha after submit
+			if (!currentHCaptchaToken) {
+				showLoadingState(false);
+				shouldRenderHCaptcha = true;
+				isAwaitingHCaptcha = true;
+				ensureHCaptchaRendered();
+				// Disable the submit button until captcha is solved
+				try {
+					const submitBtn = document.getElementById('search-btn');
+					if (submitBtn) submitBtn.disabled = true;
+				} catch (_) {}
+				return;
+			}
+
 			try {
-				showLoadingState(true);
-				
 				const response = await fetch(`${spicyLyricsApiUrlBase}/lyrics`, {
 					method: "POST",
 					headers: {
@@ -499,12 +574,11 @@ async function searchLyrics() {
 					return;
 				}
 
-				const lyrics = data.split("\x1e").join("\n");
+				const lyrics = parseLyrics(data);
 
-				inputText.value = lyrics;
-				searchSpotifyUri.value = "";
-				if (realtimeToggle.checked) convertText();
-				toggleSearchModal();
+				await iDB.saveExpiring(`sl:${trackId}`, data, 1000 * 60 * 30);
+
+				lyricsContinue(lyrics);
 			} catch (error) {
 				console.error("Error happened while fetching the Spicy Lyrics API for Lyrics", error)
 				showToast('Error searching for lyrics');
@@ -565,7 +639,7 @@ function escapeHtml(unsafe) {
 }
 
 // Update settings from UI
-function updateSettings() {
+async function updateSettings() {
 	settings.removeTimestamps = document.getElementById('option-remove-timestamps').checked;
 	settings.handleDashes = document.getElementById('option-handle-dashes').checked;
 	settings.handleEmdash = document.getElementById('option-handle-emdash').checked;
@@ -573,7 +647,7 @@ function updateSettings() {
 	settings.addSpaces = document.getElementById('option-add-spaces').checked;
 	settings.removeEmptyLines = document.getElementById('option-remove-empty-lines').checked;
 	
-	saveSettings();
+	await saveSettings();
 	
 	if (realtimeToggle.checked) {
 		convertText();
@@ -581,15 +655,16 @@ function updateSettings() {
 }
 
 // Save settings to localStorage
-function saveSettings() {
-	localStorage.setItem('lyrprepSettings', JSON.stringify(settings));
+async function saveSettings() {
+	await iDB.savePermanent('lyrprepSettings', settings);
 }
 
 // Load settings from localStorage
-function loadSettings() {
-	const savedSettings = localStorage.getItem('lyrprepSettings');
+async function loadSettings() {
+	let savedSettings;
+	try { savedSettings = await iDB.get('lyrprepSettings'); } catch (_) {}
 	if (savedSettings) {
-		Object.assign(settings, JSON.parse(savedSettings));
+		try { Object.assign(settings, JSON.parse(savedSettings)); } catch (_) {}
 	}
 	
 	// Apply loaded settings to UI
@@ -805,11 +880,13 @@ function swapLyricsProviders() {
 	// If modal open, render or cleanup depending on provider
 	if (searchModal.classList.contains('active')) {
 		if (searchForm.classList.contains('spicylyrics')) {
-			ensureHCaptchaRendered();
+			if (shouldRenderHCaptcha) ensureHCaptchaRendered();
 		} else {
 			cleanupHCaptcha();
 		}
 	}
+
+	isAwaitingHCaptcha = false;
 }
 
 // Enable/disable and toggle required for inputs based on active provider
@@ -858,8 +935,8 @@ function updateSearchProviderFields() {
 }
 
 // Initialize the app when the DOM is loaded
-document.addEventListener('DOMContentLoaded', init);
-
+//document.addEventListener('DOMContentLoaded', init);
+init();
 // Listen for system theme changes
 window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => {
 	if (settings.theme === 'system') {
