@@ -1,4 +1,4 @@
-import DB from "./tools/iDB.mjs";
+import DB from "./tools/iDB.js";
 // IndexedDB config moved here (stores are fixed by the DB class)
 const iDBConfig = {
 	dbName: 'LyrprepDB',
