@@ -60,7 +60,6 @@ const CURRENT_STORE_VERSION = 1;
 const settings = {
 	removeTimestamps: true,
 	handleDashes: true,
-	handleEmdash: true,
 	handleParentheses: true,
 	addSpaces: true,
 	removeEmptyLines: true,
@@ -336,7 +335,6 @@ function setupEventListeners() {
 	// Settings toggles
 	document.getElementById('option-remove-timestamps').addEventListener('change', updateSettings);
 	document.getElementById('option-handle-dashes').addEventListener('change', updateSettings);
-	document.getElementById('option-handle-emdash').addEventListener('change', updateSettings);
 	document.getElementById('option-handle-parentheses').addEventListener('change', updateSettings);
 	document.getElementById('option-add-spaces').addEventListener('change', updateSettings);
 	document.getElementById('option-remove-empty-lines').addEventListener('change', updateSettings);
@@ -642,7 +640,6 @@ function escapeHtml(unsafe) {
 async function updateSettings() {
 	settings.removeTimestamps = document.getElementById('option-remove-timestamps').checked;
 	settings.handleDashes = document.getElementById('option-handle-dashes').checked;
-	settings.handleEmdash = document.getElementById('option-handle-emdash').checked;
 	settings.handleParentheses = document.getElementById('option-handle-parentheses').checked;
 	settings.addSpaces = document.getElementById('option-add-spaces').checked;
 	settings.removeEmptyLines = document.getElementById('option-remove-empty-lines').checked;
@@ -675,7 +672,6 @@ async function loadSettings() {
 function updateTogglesFromSettings() {
 	document.getElementById('option-remove-timestamps').checked = settings.removeTimestamps;
 	document.getElementById('option-handle-dashes').checked = settings.handleDashes;
-	document.getElementById('option-handle-emdash').checked = settings.handleEmdash;
 	document.getElementById('option-handle-parentheses').checked = settings.handleParentheses;
 	document.getElementById('option-add-spaces').checked = settings.addSpaces;
 	document.getElementById('option-remove-empty-lines').checked = settings.removeEmptyLines;
@@ -754,96 +750,107 @@ function processLine(line) {
 		line = line.replace(/\[.*?\]/g, '').trim();
 	}
 
-	// If only removeTimestamps is enabled, we can return early
-	if (!settings.handleDashes && !settings.handleParentheses) {
-		return line;
-	}
-
 	let result = '';
-	let i = 0;
+	let backgroundVocals = [];
+	let inParen = false;
+	let currentParen = '';
+	let mainLine = '';
 	
-	while (i < line.length) {
-		// Handle text in parentheses if enabled
-		if (settings.handleParentheses && line[i] === '(') {
-			let j = i + 1;
-			let parenContent = '';
-			
-			// Find the matching closing parenthesis
-			while (j < line.length && line[j] !== ')') {
-				parenContent += line[j];
-				j++;
-			}
-			
-			if (j < line.length) { // Found closing parenthesis
-				// Get text before the opening parenthesis
-				const beforeParen = line.substring(0, i).trim();
-				
-				// Process the content inside parentheses
-				const processed = processLine(parenContent);
-				
-				// Get any text after the closing parenthesis
-				const afterParen = line.substring(j + 1).trim();
-				
-				// Build the result with proper newlines and < for parenthetical content
-				if (beforeParen) {
-					result = beforeParen + '\n';
-				}
-				
-				if (processed) {
-					const formatted = processed.charAt(0).toUpperCase() + processed.slice(1).toLowerCase();
-					result += '<' + formatted;  // Add < before the parenthetical content
-				}
-				
-				if (afterParen) {
-					result += '\n' + afterParen;
-				}
-				
-				// Skip to the end of the line
-				i = line.length;
-				break;
-			}
+	// First, extract all parenthetical content and build the main line
+	for (let i = 0; i < line.length; i++) {
+		// Handle parenthetical content if enabled
+		if (settings.handleParentheses && line[i] === '(' && !inParen) {
+			inParen = true;
+			currentParen = '';
+			continue;
+		} else if (settings.handleParentheses && line[i] === ')' && inParen) {
+			inParen = false;
+			backgroundVocals.push(currentParen.trim());
+			continue;
+		} else if (inParen) {
+			currentParen += line[i];
+			continue;
 		}
-		
+
 		// Handle dashes if enabled
 		if (settings.handleDashes && line[i] === '-') {
 			if (i + 1 < line.length) {
 				const nextChar = line[i + 1];
 				if (nextChar === ' ') {
 					// Dash followed by space → em dash
-					result += '— ';
-					i += 2;
+					mainLine += '— ';
+					i++; // Skip the space
 				} else if (nextChar === '-') {
 					// Double dash → em dash
-					result += '—';
-					i += 2;
+					mainLine += '—';
+					i++; // Skip the second dash
 				} else if (i > 0 && line[i - 1].match(/[a-zA-Z]/) && nextChar.match(/[a-zA-Z]/)) {
 					// Dash between letters → add backslash
-					result += '-\\';
-					i++;
+					mainLine += '-\\';
 				} else {
-					// Single dash at end of word → em dash
-					result += '—';
-					i++;
+					// Single dash → em dash
+					mainLine += '—';
 				}
 				continue;
 			} else {
 				// Dash at end of line → em dash
-				result += '—';
-				i++;
-				continue;
+				mainLine += '—';
 			}
+		} else {
+			mainLine += line[i];
 		}
+	}
+
+	// Clean up the main line - handle spaces around words and commas
+	mainLine = mainLine
+		.replace(/\s*,\s*/g, ', ')  // Ensure single space after commas
+		.replace(/\s+/g, ' ')       // Replace multiple spaces with single space
+		.replace(/\s+,/g, ',')      // Remove spaces before commas
+		.replace(/(\w)\s+(?=[,.!?])/g, '$1')  // Remove spaces before punctuation
+		.trim()
+		.replace(/\s*,\s*/g, ', '); // Final cleanup of commas
+
+	// Process background vocals if any
+	let bgLine = '';
+	if (settings.handleParentheses && backgroundVocals.length > 0) {
+		// Process each background vocal part for dashes
+		bgLine = backgroundVocals.map(part => {
+			let processed = '';
+			for (let i = 0; i < part.length; i++) {
+				if (settings.handleDashes && part[i] === '-') {
+					if (i + 1 < part.length) {
+						const nextChar = part[i + 1];
+						if (nextChar === ' ') {
+							processed += '— ';
+							i++; // Skip the space
+						} else if (nextChar === '-') {
+							processed += '—';
+							i++; // Skip the second dash
+						} else if (i > 0 && part[i - 1].match(/[a-zA-Z]/) && nextChar.match(/[a-zA-Z]/)) {
+							processed += '-\\';
+						} else {
+							processed += '—';
+						}
+					} else {
+						processed += '—';
+					}
+				} else {
+					processed += part[i];
+				}
+			}
+			return processed.trim();
+		}).join(', ');
 		
-		// Add regular characters
-		result += line[i];
-		i++;
+		// Capitalize only the first character of the entire line
+		if (bgLine.length > 0) {
+			bgLine = bgLine.charAt(0).toUpperCase() + bgLine.slice(1);
+		}
 	}
 	
-	// Clean up multiple spaces but preserve newlines
-	return result.replace(/[^\S\n]+/g, ' ').trim();
+	return bgLine ? (mainLine ? mainLine + '\n<' + bgLine : '<' + bgLine) : mainLine;
 }
 
-// Copy output to clipboard
+// ...
 async function copyToClipboard() {
 	try {
 		await navigator.clipboard.writeText(outputText.value);
