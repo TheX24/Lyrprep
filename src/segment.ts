@@ -42,12 +42,12 @@ document.addEventListener("DOMContentLoaded", async () => {
         nameToSegments.get(nameAttr).push(segment);
     }
 
-    //const groupPromises = [];
+    const groupPromises = [];
     for (const [nameAttr, elements] of nameToSegments.entries()) {
         const destination = `/segments/${nameAttr}.html`;
         // console.log(`Segment loader: Processing segment "${nameAttr}" from ${destination} for ${elements.length} instance(s)`);
 
-        //const p = (async () => {
+        const p = (async () => {
             try {
                 const response = await fetch(destination);
                 if (!response.ok) {
@@ -63,7 +63,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                         addLoadedSegments();
                     }
                     // console.log(`Segment loader: Successfully replaced ${elements.length} instance(s) of segment "${nameAttr}" with content`);
-                    continue;
+                    return true;
                 }
                 throw new Error("Empty content");
             } catch (error) {
@@ -72,12 +72,12 @@ document.addEventListener("DOMContentLoaded", async () => {
                 alert(`Error getting segment: ${message}`);
                 throw error;
             }
-        //})();
+        })();
 
-        //groupPromises.push(p);
+        groupPromises.push(p);
     }
 
-    //await Promise.all(groupPromises);
+    await Promise.all(groupPromises);
 
     /* for (const promise of groupPromises) {
         await promise;
