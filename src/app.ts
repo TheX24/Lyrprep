@@ -129,7 +129,7 @@ async function initSitekey() {
 
 
 const hCaptchaCallbacks = {
-	onSolve: (token: string, key: number) => {
+	onSolve: (token: string) => {
 		// console.log('hCaptcha solved successfully');
 		currentHCaptchaToken = token;
 		// currentHCaptchaKey = key;
@@ -173,7 +173,7 @@ function ensureHCaptchaRendered() {
 
 		currentHCaptchaWidget = hcaptcha.render(container, {
 			sitekey: hCaptchaSiteKey,
-			callback: (token: string) => hCaptchaCallbacks.onSolve(token, currentHCaptchaWidget as number),
+			callback: (token: string) => hCaptchaCallbacks.onSolve(token),
 			'expired-callback': () => hCaptchaCallbacks.onExpired(),
 			'error-callback': (err: unknown) => hCaptchaCallbacks.onError(err),
 		});
@@ -709,10 +709,7 @@ function updateTogglesFromSettings() {
 	}
 }
 
-// Remove empty lines from text
-function removeEmptyLines(text: string) {
-	return text.split('\n').filter((line: string) => line.trim() !== '').join('\n');
-}
+// (removed unused removeEmptyLines helper)
 
 // Main conversion function
 function convertText() {
@@ -777,7 +774,6 @@ function processLine(line: string) {
 		line = line.replace(/\[.*?\]/g, '').trim();
 	}
 
-	let result = '';
 	let backgroundVocals = [];
 	let inParen = false;
 	let currentParen = '';
