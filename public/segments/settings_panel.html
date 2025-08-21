@@ -1,0 +1,73 @@
+<div id="settings-panel" class="settings-panel">
+    <div class="settings-header">
+        <h3>Settings</h3>
+        <button id="close-settings" class="close-btn" aria-label="Close settings">
+            <i class="fas fa-times"></i>
+        </button>
+    </div>
+    <div class="settings-content">
+        <div class="settings-section">
+            <h4>Processing Options</h4>
+            <div class="settings-options">
+                <label class="setting-option">
+                    <input type="checkbox" id="option-remove-timestamps" checked>
+                    <span class="checkmark"></span>
+                    <span>Remove uneccessary elements</span>
+                    <div class="info-icon" data-tooltip="Removes timestamps, lyric tags, and other uneccessary elements">
+                        <i class="fas fa-info-circle"></i>
+                    </div>
+                </label>
+                <label class="setting-option">
+                    <input type="checkbox" id="option-handle-dashes" checked>
+                    <span class="checkmark"></span>
+                    <span>Process dashes</span>
+                    <div class="info-icon" data-tooltip="Splits dashes in between words into separate words and replaces lyric cut-off dashes with em-dashes">
+                        <i class="fas fa-info-circle"></i>
+                    </div>
+                </label>
+                <label class="setting-option">
+                    <input type="checkbox" id="option-handle-parentheses" checked>
+                    <span class="checkmark"></span>
+                    <span>Split background lines</span>
+                    <div class="info-icon" data-tooltip="Splits lines with background vocals (text in parentheses) into separate lines and adds a tag">
+                        <i class="fas fa-info-circle"></i>
+                    </div>
+                </label>
+                <label class="setting-option">
+                    <input type="checkbox" id="option-add-spaces" checked>
+                    <span class="checkmark"></span>
+                    <span>Split spaces from words</span>
+                    <div class="info-icon" data-tooltip="Split spaces into separate 'words'">
+                        <i class="fas fa-info-circle"></i>
+                    </div>
+                </label>
+                <label class="setting-option">
+                    <input type="checkbox" id="option-remove-empty-lines" checked>
+                    <span class="checkmark"></span>
+                    <span>Remove empty lines</span>
+                    <div class="info-icon" data-tooltip="Removes any blank lines from the final output">
+                        <i class="fas fa-info-circle"></i>
+                    </div>
+                </label>
+            </div>
+        </div>
+        
+        <div class="settings-section">
+            <h4>Appearance</h4>
+            <div class="theme-toggle-container">
+                <span>Dark Mode</span>
+                <label class="switch">
+                    <input type="checkbox" id="theme-toggle">
+                    <span class="slider"></span>
+                </label>
+            </div>
+        </div>
+        <div class="settings-footer">
+            <div class="settings-footer-content">
+                <span>Made by <a href="https://github.com/TheX24" target="_blank" style="color: inherit;">TX24</a></span>
+                <span>•</span>
+                <span>Spicy Lyrics API - <a href="https://spikerko.org" target="_blank" style="color: inherit;">Spikerko</a></span>
+            </div>
+        </div>
+    </div>
+</div>

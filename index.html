@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lyrprep - Lyrics Preprocessing Tool</title>
+    <meta name="description" content="A beautiful, minimal tool for preprocessing lyrics with real-time conversion, + LRCLIB API and the Spicy Lyrics API integration.">
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="https://img.icons8.com/color/48/000000/musical-notes.png">
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Styles -->
+    <link rel="stylesheet" href="./src/css/styles.css">
+    
+    <!-- PWA Support -->
+    <meta name="theme-color" content="#28a745">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <link rel="apple-touch-icon" href="https://img.icons8.com/color/192/000000/musical-notes.png">
+    <link rel="manifest" href="/manifest.json">
+
+    <script
+      src="./src/lucide-icons.ts"
+      type="module"
+      defer
+    ></script>
+
+    <script
+        src="./src/segment.ts"
+        type="module"
+        defer
+    ></script>
+</head>
+<body>
+    <noscript>You need to enable JavaScript to use this site</noscript>
+
+    <div class="app-container">
+        <header>
+            <h1 class="app-title">Lyrprep</h1>
+            <p class="subtitle">Preprocess and format your lyrics with ease, with lyrics search using <a href="https://lrclib.net" target="_blank" style="color: inherit;">LRCLIB</a> or the <a href="https://spicylyrics.org" target="_blank" style="color: inherit;">Spicy Lyrics</a> API.</p>
+            <p class="subtitle-small">*Official Partnership with <a href="https://spicylyrics.org" target="_blank" style="color: inherit; text-decoration: underline;">Spicy Lyrics</a></p>
+        </header>
+        
+        <main class="main-content">
+            <div class="converter">
+                <!-- Input Text Box -->
+                <segment name="prep_inputform"></segment>
+                
+                <!-- Controls -->
+                <div class="controls">
+                    <button id="convert-btn" class="convert-btn" aria-label="Convert lyrics">
+                        <i class="fas fa-arrow-right"></i>
+                    </button>
+                    <div class="realtime-toggle">
+                        <span>Real-time</span>
+                        <label class="switch">
+                            <input type="checkbox" id="realtime-toggle" checked>
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+                </div>
+                
+                <!-- Output Text Box -->
+                <segment name="prep_outputform"></segment>
+            </div>
+        </main>
+    </div>
+    
+    <!-- Settings Panel -->
+    <segment name="settings_panel"></segment>
+    
+    <!-- Search Modal -->
+    <segment name="search_modal"></segment>
+    
+    <!-- Settings Button -->
+    <button id="settings-btn" class="floating-btn settings-btn" aria-label="Settings">
+        <i class="fas fa-cog"></i>
+    </button>
+
+    <div class="initLoader active">
+      <div class="initLoaderContent">
+        <p class="initLoaderTitle">Loaded <span class="loadedSegments">0</span> segments out of <span class="segmentsCount">0</span></p>
+        <div class="spinning-loader">
+          <i data-lucide="loader-circle" style="--size: 40px; width: var(--size); height: var(--size);"></i>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Overlay -->
+    <div id="overlay" class="overlay active"></div>
+    
+    <!-- Toast Notification -->
+    <div id="toast" class="toast"></div>
+    
+    <!-- Welcome Popup -->
+    <segment name="welcome_popup"></segment>
+
+    
+    <!-- PWA Service Worker -->
+    <!-- <script>
+        // Register service worker for PWA
+        // Added prevention, to not cache content in dev mode
+        if ('serviceWorker' in navigator && window.location.hostname !== "localhost" && window.location.hostname !== "127.0.0.1") {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('sw.js')
+                    .then(registration => {
+                        console.log('ServiceWorker registration successful');
+                    })
+                    .catch(err => {
+                        console.log('ServiceWorker registration failed: ', err);
+                    });
+            });
+        }
+    </script> -->
+
+    <script>document.body.classList.add("js-enabled")</script>
+</body>
+</html>
