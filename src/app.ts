@@ -43,6 +43,7 @@ const initLoaderTitle = initLoaderModal.querySelector<HTMLElement>(".initLoaderC
 
 // Config
 const spicyLyricsApiUrlBase = `https://api.spicylyrics.org/lyrprep`;
+//const spicyLyricsApiUrlBase = `http://localhost:3001/lyrprep`;
 // Version embedded in saved payloads (not the IndexedDB schema version)
 // const CURRENT_STORE_VERSION = 1;
 
@@ -560,20 +561,8 @@ async function searchLyrics() {
 				};
 			}
 
-			// No cached lyrics; require hCaptcha after submit
-			if (!currentHCaptchaToken) {
-				showLoadingState(false);
-				shouldRenderHCaptcha = true;
-				isAwaitingHCaptcha = true;
-				ensureHCaptchaRendered();
-				// Disable the submit button until captcha is solved
-				try {
-					const submitBtn = document.getElementById('search-btn') as HTMLButtonElement | null;
-					if (submitBtn) submitBtn.setAttribute('disabled', 'true');
-				} catch (_) {}
-				return;
-			}
 
+			let skipCaptchaReset = false;
 			try {
 				const response = await fetch(`${spicyLyricsApiUrlBase}/lyrics`, {
 					method: "POST",
@@ -581,7 +570,8 @@ async function searchLyrics() {
 						"Content-Type": "application/json"
 					},
 					body: JSON.stringify({
-						captcha: currentHCaptchaToken,
+						// Only include captcha if present; otherwise omit so server returns 400 when required
+						captcha: currentHCaptchaToken ?? null,
 						metadata: {
 							trackId
 						}
@@ -589,6 +579,20 @@ async function searchLyrics() {
 				})
 
 				if (!response.ok) {
+					// Only initiate hCaptcha after the API explicitly requires it (400)
+					if (response.status === 400) {
+						shouldRenderHCaptcha = true;
+						isAwaitingHCaptcha = true;
+						ensureHCaptchaRendered();
+						// Disable the submit button until captcha is solved
+						try {
+							const submitBtn = document.getElementById('search-btn') as HTMLButtonElement | null;
+							if (submitBtn) submitBtn.setAttribute('disabled', 'true');
+						} catch (_) {}
+						// Do not reset captcha in finally; we just asked user to solve it
+						skipCaptchaReset = true;
+						return;
+					}
 					throw new Error('Failed to fetch lyrics (from the Spicy Lyrics API)');
 				}
 
@@ -609,9 +613,13 @@ async function searchLyrics() {
 				showToast('Error searching for lyrics');
 			} finally {
 				showLoadingState(false);
-				// If modal is still open (error/no results), reset so user can retry; if closed (success), cleanup happens on close
+				// If modal is still open (error/no results), reset so user can retry;
+				// if closed (success), cleanup happens on close. When we just requested
+				// captcha (400), do not reset it here.
 				if (searchModal.classList.contains('active')) {
-					resetHCaptcha();
+					if (!skipCaptchaReset) {
+						resetHCaptcha();
+					}
 				} else {
 					cleanupHCaptcha();
 				}
