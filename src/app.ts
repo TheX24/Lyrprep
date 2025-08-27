@@ -1035,7 +1035,7 @@ window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () 
 	}
 } */
 
-function forceCloseSearchModalIfOpen() {
+/* function forceCloseSearchModalIfOpen() {
 	if (!searchModal) return;
 	if (searchModal.classList.contains('active')) {
 		searchModal.classList.remove('active');
@@ -1047,7 +1047,7 @@ function forceCloseSearchModalIfOpen() {
 		cleanupHCaptcha();
 	}
 }
-
+ */
 let wasOnLrcLib = false;
 
 function updateOfflineStatus() {
