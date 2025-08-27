@@ -173,6 +173,7 @@ a:hover {
     height: 100vh;
     box-sizing: border-box;
     overflow: auto;
+    transition: padding .3s;
 }
 
 header {
@@ -1357,6 +1358,10 @@ input:checked + .slider:before {
         padding: 1rem;
         height: 100%;
     }
+
+    body:has(.offlineNotice.active) .app-container {
+        padding: 2rem 1rem 1rem 1rem;
+    }
     
     h1 {
         font-size: 2rem;
@@ -1526,6 +1531,11 @@ input:checked + .slider:before {
     background-color: var(--modal-border);
 }
 
+.providersTab .provider.disabled {
+    opacity: 0.3 !important;
+    pointer-events: none !important;
+}
+
 .spinning-loader > svg {
     animation: spin 1s infinite linear;
 }
@@ -1566,4 +1576,28 @@ input:checked + .slider:before {
     flex-direction: column;
     align-items: center;
     justify-content: center;
+}
+
+.offlineNotice {
+    position: absolute;
+    top: 0;
+    padding: 1rem 1rem 1rem 4rem;
+    right: 0;
+    font-size: .845rem;
+    color: var(--text-color);
+    opacity: 0;
+    background: linear-gradient(0deg, transparent, var(--bg-color));
+    /* Use a solid color for mask to rely only on alpha */
+    mask-image: linear-gradient(90deg, transparent 0%, black 40%);
+    border-bottom-left-radius: 12px;
+    transition: opacity .18s;
+    z-index: 100;
+}
+
+.offlineNotice span {
+    opacity: .6;
+}
+
+.offlineNotice.active {
+    opacity: .95;
 }
