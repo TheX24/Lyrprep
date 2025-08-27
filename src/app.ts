@@ -758,7 +758,6 @@ async function convertText() {
 				() => (
 					iDB
 						.savePermanent("lastLyrics", (text !== "" ? text.split("\n").join("\x1e") : ""))
-						.then(() => console.log("Saved Lyrics!"))
 				),
 				1000
 			)
