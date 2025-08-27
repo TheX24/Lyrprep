@@ -815,8 +815,8 @@ function processLine(line: string) {
 					// Double dash → em dash
 					mainLine += '—';
 					i++; // Skip the second dash
-				} else if (i > 0 && line[i - 1].match(/[a-zA-Z]/) && nextChar.match(/[a-zA-Z]/)) {
-					// Dash between letters → add backslash
+				} else if (i > 0 && line[i - 1].match(/[a-zA-Z0-9]/) && nextChar.match(/[a-zA-Z0-9]/)) {
+					// Dash between letters/numbers → add backslash
 					mainLine += '-\\';
 				} else {
 					// Single dash → em dash
@@ -857,7 +857,7 @@ function processLine(line: string) {
 						} else if (nextChar === '-') {
 							processed += '—';
 							i++; // Skip the second dash
-						} else if (i > 0 && part[i - 1].match(/[a-zA-Z]/) && nextChar.match(/[a-zA-Z]/)) {
+						} else if (i > 0 && part[i - 1].match(/[a-zA-Z0-9]/) && nextChar.match(/[a-zA-Z0-9]/)) {
 							processed += '-\\';
 						} else {
 							processed += '—';
