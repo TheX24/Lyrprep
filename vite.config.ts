@@ -17,17 +17,10 @@ export default defineConfig({
         theme_color: "#28a745",
         orientation: "portrait-primary",
         icons: [
-          {
-            src: "https://img.icons8.com/color/192/000000/musical-notes.png",
-            sizes: "192x192",
-            type: "image/png",
-            purpose: "any maskable",
-          },
-          {
-            src: "https://img.icons8.com/color/512/000000/musical-notes.png",
-            sizes: "512x512",
-            type: "image/png",
-          },
+            { src: "icon.png", sizes: "192x192", type: "image/png", purpose: "any" },
+            { src: "icon-maskable.png", sizes: "192x192", type: "image/png", purpose: "maskable" },
+            { src: "icon-large.png", sizes: "512x512", type: "image/png", purpose: "any" },
+            { src: "icon-large-maskable.png", sizes: "512x512", type: "image/png", purpose: "maskable" },
         ],
         categories: ["utilities", "music", "productivity"],
         screenshots: [],
