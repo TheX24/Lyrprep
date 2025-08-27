@@ -90,7 +90,7 @@ async function initSitekey() {
 
 			if (initLoaderTitle) initLoaderTitle.innerHTML = `Done!`;
 			if (typeof overlay !== 'undefined' && typeof initLoaderModal !== undefined) {
-				overlay.classList.remove("active");
+				if (!searchModal.classList.contains("active") && !settingsPanel.classList.contains("active")) overlay.classList.remove("active");
 				initLoaderModal.classList.remove("active");
 			}
         }
@@ -118,7 +118,7 @@ async function initSitekey() {
 
 		if (initLoaderTitle) initLoaderTitle.innerHTML = `Done!`;
         if (typeof overlay !== 'undefined' && typeof initLoaderModal !== undefined) {
-			overlay.classList.remove("active");
+			if (!searchModal.classList.contains("active") && !settingsPanel.classList.contains("active")) overlay.classList.remove("active");
 			initLoaderModal.classList.remove("active");
 		}
     } catch (error) {
@@ -333,6 +333,7 @@ function setupEventListeners() {
 		inputText.value = '';
 		outputText.value = '';
 		inputText.focus();
+		clearSavedTextLyrics();
 	});
 	
 	// Copy output button
@@ -561,6 +562,12 @@ async function searchLyrics() {
 				};
 			}
 
+			if (!navigator.onLine) {
+				showLoadingState(false);
+				showToast("Lyrics aren't cached, and you're offline. Get back online to get lyrics for this song");
+				return;
+			};
+
 
 			let skipCaptchaReset = false;
 			try {
@@ -719,10 +726,43 @@ function updateTogglesFromSettings() {
 
 // (removed unused removeEmptyLines helper)
 
+
+let currentSaveTextTimeout: number | null = null;
+
+async function clearSavedTextLyrics() {
+	await iDB.savePermanent("lastLyrics", "");
+}
+
+async function loadSavedTextLyrics() {
+	const value = await iDB.get("lastLyrics");
+	if (value === undefined) return;
+	const lyrics = value.split("\x1e").join("\n");
+	if (lyrics === undefined) return;
+	inputText.value = lyrics;
+	convertText();
+}
+
+loadSavedTextLyrics();
+
 // Main conversion function
-function convertText() {
+async function convertText() {
 	try {
 		let text = inputText.value;
+
+		if (currentSaveTextTimeout) {
+			clearTimeout(currentSaveTextTimeout);
+			currentSaveTextTimeout = null;
+		}
+		currentSaveTextTimeout =
+			setTimeout(
+				() => (
+					iDB
+						.savePermanent("lastLyrics", (text !== "" ? text.split("\n").join("\x1e") : ""))
+						.then(() => console.log("Saved Lyrics!"))
+				),
+				1000
+			)
+
 		if (!text.trim()) {
 			outputText.value = '';
 			return;
@@ -731,6 +771,7 @@ function convertText() {
 		// Split into lines and process each one
 		let lines = text.split('\n');
 		let processedLines = [];
+
 		
 		for (let line of lines) {
 			if (line.trim() === '') {
@@ -983,7 +1024,7 @@ window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () 
 });
 
 // Handle online/offline UI state for search button and modal
-function updateSearchButtonStatus() {
+/* function updateSearchButtonStatus() {
 	if (!searchBtn) return;
 	const isOnline = navigator.onLine;
 	if (!isOnline) {
@@ -993,7 +1034,7 @@ function updateSearchButtonStatus() {
 		searchBtn.classList.remove('disabled');
 		searchBtn.disabled = false;
 	}
-}
+} */
 
 function forceCloseSearchModalIfOpen() {
 	if (!searchModal) return;
@@ -1008,28 +1049,64 @@ function forceCloseSearchModalIfOpen() {
 	}
 }
 
+let wasOnLrcLib = false;
+
+function updateOfflineStatus() {
+	const lrcLibSPButton = searchProviders.find(provider => provider.name === "lrclib")?.element as HTMLElement;
+	const spicyLyricsSPButton = searchProviders.find(provider => provider.name === "spicylyrics")?.element as HTMLElement;
+	const isLrcLibFormScreen = searchForm.classList.contains("lrclib");
+
+	if (navigator.onLine) {
+		if (lrcLibSPButton) {
+			lrcLibSPButton.classList.remove("disabled");
+		}
+
+		if (wasOnLrcLib) {
+			swapLyricsProviders();
+			if (lrcLibSPButton) lrcLibSPButton.classList.add("active");
+			if (spicyLyricsSPButton) spicyLyricsSPButton.classList.remove("active");
+		}
+
+		wasOnLrcLib = false;
+
+		return;
+	}
+
+	if (lrcLibSPButton) {
+		lrcLibSPButton.classList.add("disabled");
+	}
+
+	if (isLrcLibFormScreen) {
+		wasOnLrcLib = true;
+		swapLyricsProviders();
+		if (lrcLibSPButton) lrcLibSPButton.classList.remove("active");
+		if (spicyLyricsSPButton) spicyLyricsSPButton.classList.add("active");
+	}
+
+}
+
+const offlineNoticeElement = document.querySelector<HTMLElement>(".offlineNotice");
+
 // Initial online state and listeners
 window.addEventListener('online', () => {
-	updateSearchButtonStatus();
+	updateOfflineStatus();
     hCaptchaSiteKey = null;
     siteKeyRetries = 0;
     initSitekey();
     showToast("Back online!");
+	offlineNoticeElement?.classList.remove("active");
 });
 
 window.addEventListener('offline', () => {
-	updateSearchButtonStatus();
-	forceCloseSearchModalIfOpen();
+	updateOfflineStatus();
 
     showToast("You're offline. Features are limited during offline mode");
+	offlineNoticeElement?.classList.add("active");
 });
 
 // Check if user is offline when page loads and show toast
 if (!navigator.onLine) {
-    updateSearchButtonStatus();
-	forceCloseSearchModalIfOpen();
+	updateOfflineStatus();
     showToast("You're offline. Features are limited during offline mode");
+	offlineNoticeElement?.classList.add("active");
 }
-
-// Ensure initial state on script load
-updateSearchButtonStatus();

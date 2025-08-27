@@ -25,7 +25,7 @@ A powerful web application for formatting and preprocessing song lyrics with rea
 - **Productivity Features**:
   - One-click copy to clipboard
   - Save settings in browser
-  - Installable as PWA for offline use (currently broken)
+  - Installable as PWA for offline use
 
 ## 🚀 How to Use
 
