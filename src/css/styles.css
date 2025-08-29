@@ -946,6 +946,7 @@ input:checked + .slider:before {
     font-size: 1.25rem;
     font-weight: 600;
     color: var(--text-color);
+    align-self: center;
 }
 
 .search-form {
@@ -1066,9 +1067,30 @@ input:checked + .slider:before {
     color: var(--secondary-color);
 }
 
+/* Floating Buttons Container */
+.floating-buttons {
+    position: fixed;
+    left: 50%;
+    bottom: 2rem;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 1rem;
+    z-index: 100;
+}
+
+/* Floating Buttons Container */
+.floating-buttons {
+    position: fixed;
+    left: 50%;
+    bottom: 2rem;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 1rem;
+    z-index: 100;
+}
+
 /* Floating Buttons */
 .floating-btn {
-    position: fixed;
     width: 48px;
     height: 48px;
     border-radius: 50%;
@@ -1082,6 +1104,7 @@ input:checked + .slider:before {
     z-index: 90;
     color: var(--text-color);
     background-color: var(--card-bg);
+    position: relative;
 }
 
 .floating-btn:hover {
@@ -1089,12 +1112,12 @@ input:checked + .slider:before {
     box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
 }
 
-.settings-btn {
-    bottom: 2rem;
-    right: 2rem;
+.settings-btn i {
+    font-size: 1.25rem;
 }
 
-.settings-btn i {
+/* Help Button */
+.help-btn {
     font-size: 1.25rem;
 }
 
@@ -1401,9 +1424,8 @@ input:checked + .slider:before {
         height: 40px;
     }
     
-    .settings-btn {
+    .floating-buttons {
         bottom: 1rem;
-        right: 1rem;
     }
     
     .text-box-wrapper {
@@ -1501,6 +1523,7 @@ input:checked + .slider:before {
     background-color: var(--toast-text);
     padding: .85cqh 1cqh;
     border-radius: 8px;
+    margin-left: 5px;
 }
 
 .providersTab .provider {

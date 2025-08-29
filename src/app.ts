@@ -53,14 +53,10 @@ const settings = {
 	handleDashes: true,
 	handleParentheses: true,
 	addSpaces: true,
+	splitCJK: true,
 	removeEmptyLines: true,
 	theme: 'system'
 };
-
-// Welcome popup elements
-const welcomePopup = document.getElementById('welcome-popup') as HTMLElement;
-const closeWelcomeBtn = document.getElementById('close-welcome') as HTMLButtonElement;
-const dontShowAgainCheckbox = document.getElementById('dont-show-again') as HTMLInputElement;
 
 let currentHCaptchaWidget: number | null = null;
 
@@ -220,34 +216,6 @@ function cleanupHCaptcha() {
 	}
 }
 
-// Show welcome popup if not disabled
-async function showWelcomePopup() {
-	// Check if user has chosen not to see the popup again
-	try {
-		const hidden = localStorage.getItem("hideWelcomePopup");
-		if (hidden !== 'true') {
-			welcomePopup.classList.add('show');
-			document.body.style.overflow = 'hidden'; // Prevent scrolling when popup is open
-		}
-	} catch (_) {
-		welcomePopup.classList.add('show');
-		document.body.style.overflow = 'hidden';
-	}
-}
-
-// Close welcome popup
-async function closeWelcomePopup() {
-	// Save user preference
-	if (dontShowAgainCheckbox.checked) {
-		localStorage.setItem('hideWelcomePopup', 'true');
-	}
-	
-	welcomePopup.classList.remove('show');
-	document.body.style.overflow = ''; // Re-enable scrolling
-	inputText.focus();
-}
-
-
 // Search Providers
 const searchProviders = [
 	{
@@ -279,31 +247,11 @@ async function init() {
 	
 	// Set initial state of toggles
 	updateTogglesFromSettings();
-	
-	// Show welcome popup if needed
-	setTimeout(showWelcomePopup, 500); // Small delay for better UX
-	
-	// Close popup when clicking outside content
-	welcomePopup.addEventListener('click', (e) => {
-		if (e.target === welcomePopup) {
-			closeWelcomePopup();
-		}
-	});
-	
-	// Close popup when pressing Escape key
-	document.addEventListener('keydown', (e) => {
-		if (e.key === 'Escape' && welcomePopup.classList.contains('show')) {
-			closeWelcomePopup();
-		}
-	});
 
 }
 
 // Set up event listeners
 function setupEventListeners() {
-	// Welcome popup close button
-	closeWelcomeBtn.addEventListener('click', closeWelcomePopup);
-	
 	// Convert button click
 	convertBtn.addEventListener('click', convertText);
 
@@ -365,6 +313,7 @@ function setupEventListeners() {
 	(document.getElementById('option-handle-dashes') as HTMLInputElement).addEventListener('change', updateSettings);
 	(document.getElementById('option-handle-parentheses') as HTMLInputElement).addEventListener('change', updateSettings);
 	(document.getElementById('option-add-spaces') as HTMLInputElement).addEventListener('change', updateSettings);
+	(document.getElementById('option-split-cjk') as HTMLInputElement).addEventListener('change', updateSettings);
 	(document.getElementById('option-remove-empty-lines') as HTMLInputElement).addEventListener('change', updateSettings);
 	
 	// Theme toggle
@@ -684,6 +633,7 @@ function escapeHtml(unsafe: string) {
 	settings.handleDashes = (document.getElementById('option-handle-dashes') as HTMLInputElement).checked;
 	settings.handleParentheses = (document.getElementById('option-handle-parentheses') as HTMLInputElement).checked;
 	settings.addSpaces = (document.getElementById('option-add-spaces') as HTMLInputElement).checked;
+	settings.splitCJK = (document.getElementById('option-split-cjk') as HTMLInputElement).checked;
 	settings.removeEmptyLines = (document.getElementById('option-remove-empty-lines') as HTMLInputElement).checked;
 	
 	await saveSettings();
@@ -716,6 +666,7 @@ function updateTogglesFromSettings() {
 	(document.getElementById('option-handle-dashes') as HTMLInputElement).checked = settings.handleDashes;
 	(document.getElementById('option-handle-parentheses') as HTMLInputElement).checked = settings.handleParentheses;
 	(document.getElementById('option-add-spaces') as HTMLInputElement).checked = settings.addSpaces;
+	(document.getElementById('option-split-cjk') as HTMLInputElement).checked = settings.splitCJK;
 	(document.getElementById('option-remove-empty-lines') as HTMLInputElement).checked = settings.removeEmptyLines;
 	
 	// Set theme toggle
@@ -813,7 +764,7 @@ function processLine(line: string) {
 	if (!line || typeof line !== 'string') return line || '';
 	
 	// If all processing options are off, return the line as is
-	if (!settings.removeTimestamps && !settings.handleDashes && !settings.handleParentheses) {
+	if (!settings.removeTimestamps && !settings.handleDashes && !settings.handleParentheses && !settings.splitCJK) {
 		return line;
 	}
 	
@@ -827,20 +778,51 @@ function processLine(line: string) {
 	let currentParen = '';
 	let mainLine = '';
 	
+	function isAlphaNum(ch: string): boolean {
+		return /[\p{L}\p{N}]/u.test(ch); // Unicode letters and digits
+	  }
+	  function shouldEscapeInlineHyphen(prev: string, next: string): boolean {
+		return isAlphaNum(prev) && isAlphaNum(next);
+	  }
+
 	// First, extract all parenthetical content and build the main line
 	for (let i = 0; i < line.length; i++) {
 		// Handle parenthetical content if enabled
-		if (settings.handleParentheses && line[i] === '(' && !inParen) {
-			inParen = true;
-			currentParen = '';
-			continue;
-		} else if (settings.handleParentheses && line[i] === ')' && inParen) {
-			inParen = false;
-			backgroundVocals.push(currentParen.trim());
-			continue;
-		} else if (inParen) {
-			currentParen += line[i];
-			continue;
+		if (settings.handleParentheses) {
+			// Check for opening parentheses (both ASCII and CJK)
+			const isOpeningParen = ['(', '（', '「', '『', '【', '〈', '《'].includes(line[i]);
+			// Check for closing parentheses (both ASCII and CJK)
+			const isClosingParen = [')', '）', '」', '』', '】', '〉', '》'].includes(line[i]);
+			
+			if (isOpeningParen && !inParen) {
+				inParen = true;
+				currentParen = '';
+				continue;
+			} else if (isClosingParen && inParen) {
+				inParen = false;
+				backgroundVocals.push(currentParen.trim());
+				continue;
+			} else if (inParen) {
+				currentParen += line[i];
+				continue;
+			}
+		}
+
+		// Handle CJK character splitting if enabled
+		if (settings.splitCJK) {
+			const char = line[i];
+			// Check if character is CJK (CJK Unified Ideographs, Hiragana, Katakana, Hangul)
+			const isCJK = /[\u3040-\u30ff\u3400-\u4dbf\u4e00-\u9fff\uf900-\ufaff\uff66-\uff9f]/.test(char);
+			if (isCJK) {
+				// Check if next character is also CJK
+				if (i + 1 < line.length && /[\u3040-\u30ff\u3400-\u4dbf\u4e00-\u9fff\uf900-\ufaff\uff66-\uff9f]/.test(line[i + 1])) {
+					// Add backslash after CJK character if followed by another CJK character
+					mainLine += char + '\\';
+				} else {
+					mainLine += char;
+				}
+				continue;
+			}
 		}
 
 		// Handle dashes if enabled
@@ -855,7 +837,7 @@ function processLine(line: string) {
 					// Double dash → em dash
 					mainLine += '—';
 					i++; // Skip the second dash
-				} else if (i > 0 && line[i - 1].match(/[a-zA-Z0-9]/) && nextChar.match(/[a-zA-Z0-9]/)) {
+				} else if (i > 0 && shouldEscapeInlineHyphen(line[i - 1], nextChar)) {
 					// Dash between letters/numbers → add backslash
 					mainLine += '-\\';
 				} else {
@@ -878,41 +860,67 @@ function processLine(line: string) {
 		.replace(/\s+/g, ' ')       // Replace multiple spaces with single space
 		.replace(/\s+,/g, ',')      // Remove spaces before commas
 		.replace(/(\w)\s+(?=[,.!?])/g, '$1')  // Remove spaces before punctuation
-		.trim()
-		.replace(/\s*,\s*/g, ', '); // Final cleanup of commas
+		.trim();
 
 	// Process background vocals if any
 	let bgLine = '';
-	if (settings.handleParentheses && backgroundVocals.length > 0) {
-		// Process each background vocal part for dashes
-		bgLine = backgroundVocals.map(part => {
-			let processed = '';
-			for (let i = 0; i < part.length; i++) {
-				if (settings.handleDashes && part[i] === '-') {
-					if (i + 1 < part.length) {
-						const nextChar = part[i + 1];
-						if (nextChar === ' ') {
-							processed += '— ';
-							i++; // Skip the space
-						} else if (nextChar === '-') {
-							processed += '—';
-							i++; // Skip the second dash
-						} else if (i > 0 && part[i - 1].match(/[a-zA-Z0-9]/) && nextChar.match(/[a-zA-Z0-9]/)) {
-							processed += '-\\';
+	if (backgroundVocals.length > 0) {
+		bgLine = backgroundVocals.map(vocal => {
+			let processedVocal = vocal;
+			
+			// Apply CJK splitting to background vocals if enabled
+			if (settings.splitCJK) {
+				let result = '';
+				for (let i = 0; i < processedVocal.length; i++) {
+					const char = processedVocal[i];
+					const isCJK = /[\u3040-\u30ff\u3400-\u4dbf\u4e00-\u9fff\uf900-\ufaff\uff66-\uff9f]/.test(char);
+					
+					result += char;
+					
+					// Add backslash after CJK character if followed by another CJK character
+					if (isCJK && i < processedVocal.length - 1) {
+						const nextChar = processedVocal[i + 1];
+						const nextIsCJK = /[\u3040-\u30ff\u3400-\u4dbf\u4e00-\u9fff\uf900-\ufaff\uff66-\uff9f]/.test(nextChar);
+						if (nextIsCJK) {
+							result += '\\';
+						}
+					}
+				}
+				processedVocal = result;
+			}
+			
+			// Process dashes in background vocals if enabled
+			if (settings.handleDashes) {
+				let result = '';
+				for (let i = 0; i < processedVocal.length; i++) {
+					if (processedVocal[i] === '-') {
+						if (i + 1 < processedVocal.length) {
+							const nextChar = processedVocal[i + 1];
+							if (nextChar === ' ') {
+								result += '— ';
+								i++; // Skip the space
+							} else if (nextChar === '-') {
+								result += '—';
+								i++; // Skip the second dash
+							} else if (i > 0 && shouldEscapeInlineHyphen(processedVocal[i - 1], nextChar)) {
+								result += '-\\';
+							} else {
+								result += '—';
+							}
 						} else {
-							processed += '—';
+							result += '—';
 						}
 					} else {
-						processed += '—';
+						result += processedVocal[i];
 					}
-				} else {
-					processed += part[i];
 				}
+				processedVocal = result;
 			}
-			return processed.trim();
+			
+			return processedVocal.trim();
 		}).join(', ');
 		
-		// Capitalize only the first character of the entire line
+		// Capitalize the first letter of the background vocals line
 		if (bgLine.length > 0) {
 			bgLine = bgLine.charAt(0).toUpperCase() + bgLine.slice(1);
 		}
