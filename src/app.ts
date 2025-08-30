@@ -759,6 +759,11 @@ async function convertText() {
 	}
 }
 
+// Check if a character is a CJK character (Chinese, Japanese, Korean)
+function isCJKChar(ch: string): boolean {
+    return /[\p{Script=Han}\p{Script=Hiragana}\p{Script=Katakana}\p{Script=Hangul}]/u.test(ch);
+}
+
 // Process a single line of text
 function processLine(line: string) {
 	if (!line || typeof line !== 'string') return line || '';
@@ -811,11 +816,10 @@ function processLine(line: string) {
 		// Handle CJK character splitting if enabled
 		if (settings.splitCJK) {
 			const char = line[i];
-			// Check if character is CJK (CJK Unified Ideographs, Hiragana, Katakana, Hangul)
-			const isCJK = /[\u3040-\u30ff\u3400-\u4dbf\u4e00-\u9fff\uf900-\ufaff\uff66-\uff9f]/.test(char);
-			if (isCJK) {
+			// Check if character is CJK and handle splitting if needed
+			if (isCJKChar(char)) {
 				// Check if next character is also CJK
-				if (i + 1 < line.length && /[\u3040-\u30ff\u3400-\u4dbf\u4e00-\u9fff\uf900-\ufaff\uff66-\uff9f]/.test(line[i + 1])) {
+				if (i + 1 < line.length && isCJKChar(line[i + 1])) {
 					// Add backslash after CJK character if followed by another CJK character
 					mainLine += char + '\\';
 				} else {
@@ -859,7 +863,7 @@ function processLine(line: string) {
 		.replace(/\s*,\s*/g, ', ')  // Ensure single space after commas
 		.replace(/\s+/g, ' ')       // Replace multiple spaces with single space
 		.replace(/\s+,/g, ',')      // Remove spaces before commas
-		.replace(/(\w)\s+(?=[,.!?])/g, '$1')  // Remove spaces before punctuation
+		.replace(/\s+(?=[,.;:!?])/g, '')        // Remove spaces before punctuation
 		.trim();
 
 	// Process background vocals if any
@@ -873,15 +877,13 @@ function processLine(line: string) {
 				let result = '';
 				for (let i = 0; i < processedVocal.length; i++) {
 					const char = processedVocal[i];
-					const isCJK = /[\u3040-\u30ff\u3400-\u4dbf\u4e00-\u9fff\uf900-\ufaff\uff66-\uff9f]/.test(char);
-					
-					result += char;
-					
-					// Add backslash after CJK character if followed by another CJK character
-					if (isCJK && i < processedVocal.length - 1) {
-						const nextChar = processedVocal[i + 1];
-						const nextIsCJK = /[\u3040-\u30ff\u3400-\u4dbf\u4e00-\u9fff\uf900-\ufaff\uff66-\uff9f]/.test(nextChar);
-						if (nextIsCJK) {
+				
+				result += char;
+				
+				// Add backslash after CJK character if followed by another CJK character
+				if (isCJKChar(char) && i < processedVocal.length - 1) {
+					const nextChar = processedVocal[i + 1];
+					if (isCJKChar(nextChar)) {
 							result += '\\';
 						}
 					}
