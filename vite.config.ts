@@ -54,6 +54,11 @@ export default defineConfig({
               },
             },
           },
+          {
+            urlPattern: /^\/guide\/?$/,
+            handler: "NetworkFirst",
+            options: { cacheName: "html-guide" }
+          }
         ],
       },
     }),
