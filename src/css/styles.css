@@ -6,7 +6,7 @@ body:not(.js-enabled) *:not(noscript) {
 
 /* Show noscript message when JavaScript is disabled */
 noscript {
-    display: block !important;
+    display: flex !important;
     position: fixed;
     top: 0;
     left: 0;
@@ -15,7 +15,6 @@ noscript {
     background: var(--bg-color, #f8f9fa);
     color: var(--text-color, #212529);
     z-index: 9999;
-    display: flex;
     align-items: center;
     justify-content: center;
     font-family: 'Inter', system-ui, -apple-system, sans-serif;
@@ -152,14 +151,7 @@ p {
 }
 
 a {
-    color: var(--primary-color);
     text-decoration: none;
-    transition: color 0.2s;
-}
-
-a:hover {
-    color: var(--primary-hover);
-    text-decoration: underline;
 }
 
 /* Layout */
@@ -1078,17 +1070,6 @@ input:checked + .slider:before {
     z-index: 100;
 }
 
-/* Floating Buttons Container */
-.floating-buttons {
-    position: fixed;
-    left: 50%;
-    bottom: 2rem;
-    transform: translateX(-50%);
-    display: flex;
-    gap: 1rem;
-    z-index: 100;
-}
-
 /* Floating Buttons */
 .floating-btn {
     width: 48px;
@@ -1110,6 +1091,7 @@ input:checked + .slider:before {
 .floating-btn:hover {
     transform: translateY(-2px);
     box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
+    color: var(--primary-hover);
 }
 
 .settings-btn i {
@@ -1561,15 +1543,6 @@ input:checked + .slider:before {
 
 .spinning-loader > svg {
     animation: spin 1s infinite linear;
-}
-
-@keyframes spin {
-    0% {
-        rotate: 0deg;
-    }
-    100% {
-        rotate: 360deg;
-    }
 }
 
 .initLoader {
