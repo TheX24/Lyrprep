@@ -5,6 +5,7 @@ export default defineConfig({
   plugins: [
     VitePWA({
       registerType: "autoUpdate",
+      injectRegister: 'auto',
       devOptions: { enabled: false },
       manifest: {
         name: "Lyrprep",
@@ -26,7 +27,8 @@ export default defineConfig({
         screenshots: [],
       },
       workbox: {
-        globPatterns: ["**/*.{js,css,html,png,svg,woff,woff2,ttf,eot}"],
+        navigateFallbackDenylist: [/^\/guide(\/.*)?$/],
+        globPatterns: ["**/*.{js,css,html,png,gif,svg,woff,woff2,ttf,eot}"],
         runtimeCaching: [
           // External Image Caching
           {
@@ -52,8 +54,21 @@ export default defineConfig({
               },
             },
           },
+          {
+            urlPattern: /^\/guide\/?$/,
+            handler: "NetworkFirst",
+            options: { cacheName: "html-guide" }
+          }
         ],
       },
     }),
   ],
+  build: {
+    rollupOptions: {
+      input: {
+        main: "index.html",
+        guide: "guide/index.html",
+      },
+    },
+  },
 });

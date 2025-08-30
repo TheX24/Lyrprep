@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1" />
+	<title>
+		Step-by-step guide for creating word-by-word synced lyrics for Spicy
+		Lyrics
+	</title>
+	<link rel="stylesheet" href="./github-markdown.css" />
+
+	<!-- PWA Support -->
+	<meta name="theme-color" content="#28a745" />
+	<meta name="mobile-web-app-capable" content="yes" />
+	<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+	<link rel="apple-touch-icon" href="/icon.png" />
+
+	<!-- Favicon -->
+	<link rel="icon" type="image/png" href="/icon.png" />
+	<style>
+		body {
+			margin: 0;
+		}
+
+		.markdown-body-content {
+			box-sizing: border-box;
+			min-width: 200px;
+			max-width: 980px;
+			margin: 0 auto;
+			padding: 45px;
+		}
+
+		@media (max-width: 767px) {
+			.markdown-body-content {
+				padding: 15px;
+			}
+		}
+
+		.markdown-body {
+			--base-size-8: 8px;
+			--base-size-16: 16px;
+		}
+	</style>
+</head>
+
+<body class="markdown-body">
+	<article class="markdown-body-content">
+		<h1>
+			Step-by-step guide for creating word-by-word synced lyrics for Spicy
+			Lyrics
+		</h1>
+		<p>
+			Made by
+			<strong><a class="user-mention notranslate" target="_blank" rel="noopener noreferrer" data-hovercard-type="user"
+					data-hovercard-url="/users/roranfeed/hovercard" data-octo-click="hovercard-link-click"
+					data-octo-dimensions="link_type:self" href="https://github.com/roranfeed">@roranfeed</a></strong>,
+			<strong><a class="user-mention notranslate" target="_blank" rel="noopener noreferrer" data-hovercard-type="user"
+					data-hovercard-url="/users/tx24/hovercard" data-octo-click="hovercard-link-click"
+					data-octo-dimensions="link_type:self" href="https://github.com/tx24">@tx24</a></strong>,
+			<strong><a class="user-mention notranslate" target="_blank" rel="noopener noreferrer" data-hovercard-type="user"
+					data-hovercard-url="/users/Spikerko/hovercard" data-octo-click="hovercard-link-click"
+					data-octo-dimensions="link_type:self" href="https://github.com/Spikerko">@Spikerko</a></strong>
+		<div class="markdown-alert markdown-alert-warning">
+			<p class="markdown-alert-title">
+				<svg class="octicon octicon-alert mr-2" viewBox="0 0 16 16" version="1.1" width="16" height="16"
+					aria-hidden="true">
+					<path
+						d="M6.457 1.047c.659-1.234 2.427-1.234 3.086 0l6.082 11.378A1.75 1.75 0 0 1 14.082 15H1.918a1.75 1.75 0 0 1-1.543-2.575Zm1.763.707a.25.25 0 0 0-.44 0L1.698 13.132a.25.25 0 0 0 .22.368h12.164a.25.25 0 0 0 .22-.368Zm.53 3.996v2.5a.75.75 0 0 1-1.5 0v-2.5a.75.75 0 0 1 1.5 0ZM9 11a1 1 0 1 1-2 0 1 1 0 0 1 2 0Z">
+					</path>
+				</svg>Warning
+			</p>
+			<p>
+				<strong>Do not use AI or any other "Spicy Lyrics non-verified tool" to make
+					or modify TTML files.</strong>
+			</p>
+		</div>
+		<p>
+			We will use
+			<a href="https://streetlegithub.github.io/amll-ttml-tool-english" target="_blank" rel="nofollow">AMLL TTML Tool Fork by
+				Streetle</a>
+		</p>
+		<h2>1. Upload a song</h2>
+		<p>
+			<a target="_blank" rel="noopener noreferrer" href="./assets/step_1.gif"><img src="./assets/step_1.gif"
+					alt="Upload a song in AMLL TTML Tool (animated)" style="max-width: 100%" /></a>
+		</p>
+		<div class="markdown-alert markdown-alert-tip">
+			<p class="markdown-alert-title">
+				<svg class="octicon octicon-light-bulb mr-2" viewBox="0 0 16 16" version="1.1" width="16" height="16"
+					aria-hidden="true">
+					<path
+						d="M8 1.5c-2.363 0-4 1.69-4 3.75 0 .984.424 1.625.984 2.304l.214.253c.223.264.47.556.673.848.284.411.537.896.621 1.49a.75.75 0 0 1-1.484.211c-.04-.282-.163-.547-.37-.847a8.456 8.456 0 0 0-.542-.68c-.084-.1-.173-.205-.268-.32C3.201 7.75 2.5 6.766 2.5 5.25 2.5 2.31 4.863 0 8 0s5.5 2.31 5.5 5.25c0 1.516-.701 2.5-1.328 3.259-.095.115-.184.22-.268.319-.207.245-.383.453-.541.681-.208.3-.33.565-.37.847a.751.751 0 0 1-1.485-.212c.084-.593.337-1.078.621-1.489.203-.292.45-.584.673-.848.075-.088.147-.173.213-.253.561-.679.985-1.32.985-2.304 0-2.06-1.637-3.75-4-3.75ZM5.75 12h4.5a.75.75 0 0 1 0 1.5h-4.5a.75.75 0 0 1 0-1.5ZM6 15.25a.75.75 0 0 1 .75-.75h2.5a.75.75 0 0 1 0 1.5h-2.5a.75.75 0 0 1-.75-.75Z">
+					</path>
+				</svg>Tip
+			</p>
+			<ul>
+				<li>
+					You can download a song
+					<a href="https://spotidown.app/" target="_blank" rel="nofollow">here</a>.
+				</li>
+				<li>
+					You can also adjust the volume and playback speed by hovering over
+					the icon.
+				</li>
+			</ul>
+		</div>
+		<h2>2. Prepare the lyrics</h2>
+		<ol>
+			<li>
+				Click on the little search icon at the top-right corner of the input
+				box.
+			</li>
+			<li>Enter the song link and click search</li>
+			<li>Click on the arrow to process if it hasn't already</li>
+			<li>Copy the output</li>
+		</ol>
+		<div class="markdown-alert markdown-alert-important">
+			<p class="markdown-alert-title">
+				<svg class="octicon octicon-report mr-2" viewBox="0 0 16 16" version="1.1" width="16" height="16"
+					aria-hidden="true">
+					<path
+						d="M0 1.75C0 .784.784 0 1.75 0h12.5C15.216 0 16 .784 16 1.75v9.5A1.75 1.75 0 0 1 14.25 13H8.06l-2.573 2.573A1.458 1.458 0 0 1 3 14.543V13H1.75A1.75 1.75 0 0 1 0 11.25Zm1.75-.25a.25.25 0 0 0-.25.25v9.5c0 .138.112.25.25.25h2a.75.75 0 0 1 .75.75v2.19l2.72-2.72a.749.749 0 0 1 .53-.22h6.5a.25.25 0 0 0 .25-.25v-9.5a.25.25 0 0 0-.25-.25Zm7 2.25v2.5a.75.75 0 0 1-1.5 0v-2.5a.75.75 0 0 1 1.5 0ZM9 9a1 1 0 1 1-2 0 1 1 0 0 1 2 0Z">
+					</path>
+				</svg>Important
+			</p>
+			<p>
+				If you don't find any lyrics, try searching with LRCLIB (which often
+				has more songs).
+			</p>
+		</div>
+		<h2>3. Import the lyrics</h2>
+		<div class="markdown-alert markdown-alert-important">
+			<p class="markdown-alert-title">
+				<svg class="octicon octicon-report mr-2" viewBox="0 0 16 16" version="1.1" width="16" height="16"
+					aria-hidden="true">
+					<path
+						d="M0 1.75C0 .784.784 0 1.75 0h12.5C15.216 0 16 .784 16 1.75v9.5A1.75 1.75 0 0 1 14.25 13H8.06l-2.573 2.573A1.458 1.458 0 0 1 3 14.543V13H1.75A1.75 1.75 0 0 1 0 11.25Zm1.75-.25a.25.25 0 0 0-.25.25v9.5c0 .138.112.25.25.25h2a.75.75 0 0 1 .75.75v2.19l2.72-2.72a.749.749 0 0 1 .53-.22h6.5a.25.25 0 0 0 .25-.25v-9.5a.25.25 0 0 0-.25-.25Zm7 2.25v2.5a.75.75 0 0 1-1.5 0v-2.5a.75.75 0 0 1 1.5 0ZM9 9a1 1 0 1 1-2 0 1 1 0 0 1 2 0Z">
+					</path>
+				</svg>Important
+			</p>
+			<p>
+				Make sure to have this switch enabled.<br />
+				<a target="_blank" rel="noopener noreferrer" href="./assets/step_3_switch.png"><img width="399"
+						height="449" alt="Create background lines on import toggle enabled"
+						src="./assets/step_3_switch.png" style="max-width: 100%; height: auto; max-height: 449px" /></a>
+			</p>
+		</div>
+		<p>
+			<a target="_blank" rel="noopener noreferrer" href="./assets/step_3.gif"><img src="./assets/step_3.gif"
+					alt="Import lyrics screen" style="max-width: 100%" /></a>
+		</p>
+		<h2>4. Switch to the "Sync Mode" tab, select the first word and sync!</h2>
+		<p>
+			<a target="_blank" rel="noopener noreferrer" href="./assets/step_4.gif"><img src="./assets/step_4.gif"
+					alt="Sync Mode demonstration (animated)" style="max-width: 100%" /></a><br />
+			Main keybinds:
+		</p>
+		<ul>
+			<li>F - sets the start time of the word</li>
+			<li>
+				G - sets the end time of the word and the start of the next word (if
+				the performer sings without pauses)
+			</li>
+			<li>
+				H - sets the end time of the word (if there is a pause before the next
+				word)
+			</li>
+			<li>A/D - switches words left/right</li>
+			<li>
+				Left arrow/right arrow - rewind/fast forward the audio by 5 seconds
+			</li>
+		</ul>
+		<div class="markdown-alert markdown-alert-tip">
+			<p class="markdown-alert-title">
+				<svg class="octicon octicon-light-bulb mr-2" viewBox="0 0 16 16" version="1.1" width="16" height="16"
+					aria-hidden="true">
+					<path
+						d="M8 1.5c-2.363 0-4 1.69-4 3.75 0 .984.424 1.625.984 2.304l.214.253c.223.264.47.556.673.848.284.411.537.896.621 1.49a.75.75 0 0 1-1.484.211c-.04-.282-.163-.547-.37-.847a8.456 8.456 0 0 0-.542-.68c-.084-.1-.173-.205-.268-.32C3.201 7.75 2.5 6.766 2.5 5.25 2.5 2.31 4.863 0 8 0s5.5 2.31 5.5 5.25c0 1.516-.701 2.5-1.328 3.259-.095.115-.184.22-.268.319-.207.245-.383.453-.541.681-.208.3-.33.565-.37.847a.751.751 0 0 1-1.485-.212c.084-.593.337-1.078.621-1.489.203-.292.45-.584.673-.848.075-.088.147-.173.213-.253.561-.679.985-1.32.985-2.304 0-2.06-1.637-3.75-4-3.75ZM5.75 12h4.5a.75.75 0 0 1 0 1.5h-4.5a.75.75 0 0 1 0-1.5ZM6 15.25a.75.75 0 0 1 .75-.75h2.5a.75.75 0 0 1 0 1.5h-2.5a.75.75 0 0 1-.75-.75Z">
+					</path>
+				</svg>Tip
+			</p>
+			<ul>
+				<li>You can edit the text and add new lines in the Edit tab</li>
+				<li>
+					If the singer sings too fast, reduce the playback speed by hovering
+					over the musical note icon
+				</li>
+				<li>
+					It is VERY IMPORTANT to have the lowest possible audio latency, as
+					this is important for accuracy (the lowest latency is achieved by
+					using a wired connection, if available, for the audio device you are
+					using)
+				</li>
+				<li>
+					You can make a line a background line by selecting the line and
+					checking "Background Vocal" in "Line Properties" under "Edit Mode"
+				</li>
+				<li>
+					You can do the same for a second singer by checking "Duet Vocal"
+				</li>
+			</ul>
+		</div>
+		<h3>
+			This is a fairly lengthy process and requires exceptional precision, but
+			here is a brief description of the process:
+		</h3>
+		<p>
+			<strong>1.</strong> Play the song, and when you hear the beginning of a
+			word, press F and G (or H) when the next word begins.
+		</p>
+		<p>
+			<a target="_blank" rel="noopener noreferrer" href="./assets/step_4_example.gif"><img
+					src="./assets/step_4_example.gif" alt="Example setting word boundaries (animated)"
+					style="max-width: 100%" /></a>
+		</p>
+		<p style="text-align: center">
+			<sub>This is an approximate demonstration of how it works.</sub>
+		</p>
+		<p>
+			<strong>2.</strong> Process the line and double-check the
+			synchronization for errors, then move on to the next line.<br />
+			<strong>3.</strong> When you have finished synchronizing, perform a
+			final check and proceed to the next step.
+		</p>
+		<h2>5. Export the lyrics</h2>
+		<p>
+			<a target="_blank" rel="noopener noreferrer" href="./assets/step_5.gif"><img src="./assets/step_5.gif"
+					alt="Export lyrics from AMLL TTML Tool (animated)" style="max-width: 100%" /></a>
+		</p>
+		<h2>6. Final edits</h2>
+		<p>
+			Open the downloaded file in Notepad, and continue following the steps
+			below:
+		</p>
+		<p>
+			If you want to see the "Credits" at the end of the lyrics container in
+			Spicy Lyrics, you need to mention the song writers.<br />
+			And to do that, put this into the
+			<code class="notranslate">&lt;metadata&gt;</code> element (after the tt
+			agents):
+		</p>
+		<pre class="notranslate"><code class="notranslate">&lt;iTunesMetadata xmlns="http://music.apple.com/lyric-ttml-internal" leadingSilence="0"&gt;
+&lt;translations/&gt;
+&lt;songwriters&gt;
+&lt;songwriter&gt;John Doe&lt;/songwriter&gt;
+&lt;songwriter&gt;Jane Doe&lt;/songwriter&gt;
+&lt;songwriter&gt;John Nolan&lt;/songwriter&gt;
+&lt;/songwriters&gt;
+&lt;/iTunesMetadata&gt;
+</code></pre>
+		<div class="markdown-alert markdown-alert-tip">
+			<p class="markdown-alert-title">
+				<svg class="octicon octicon-light-bulb mr-2" viewBox="0 0 16 16" version="1.1" width="16" height="16"
+					aria-hidden="true">
+					<path
+						d="M8 1.5c-2.363 0-4 1.69-4 3.75 0 .984.424 1.625.984 2.304l.214.253c.223.264.47.556.673.848.284.411.537.896.621 1.49a.75.75 0 0 1-1.484.211c-.04-.282-.163-.547-.37-.847a8.456 8.456 0 0 0-.542-.68c-.084-.1-.173-.205-.268-.32C3.201 7.75 2.5 6.766 2.5 5.25 2.5 2.31 4.863 0 8 0s5.5 2.31 5.5 5.25c0 1.516-.701 2.5-1.328 3.259-.095.115-.184.22-.268.319-.207.245-.383.453-.541.681-.208.3-.33.565-.37.847a.751.751 0 0 1-1.485-.212c.084-.593.337-1.078.621-1.489.203-.292.45-.584.673-.848.075-.088.147-.173.213-.253.561-.679.985-1.32.985-2.304 0-2.06-1.637-3.75-4-3.75ZM5.75 12h4.5a.75.75 0 0 1 0 1.5h-4.5a.75.75 0 0 1 0-1.5ZM6 15.25a.75.75 0 0 1 .75-.75h2.5a.75.75 0 0 1 0 1.5h-2.5a.75.75 0 0 1-.75-.75Z">
+					</path>
+				</svg>Tip
+			</p>
+			<p>
+				You can find the authors on Spicy Lyrics if you scroll to the end of
+				the song lyrics.<br />
+				<a target="_blank" rel="noopener noreferrer" href="./assets/step_6_authors.png"><img width="1280"
+						height="593" alt="Authors section in Spicy Lyrics" src="./assets/step_6_authors.png"
+						style="max-width: 100%; height: auto; max-height: 593px" /></a>
+			</p>
+		</div>
+		<div class="markdown-alert markdown-alert-note">
+			<p class="markdown-alert-title">
+				<svg class="octicon octicon-info mr-2" viewBox="0 0 16 16" version="1.1" width="16" height="16"
+					aria-hidden="true">
+					<path
+						d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8Zm8-6.5a6.5 6.5 0 1 0 0 13 6.5 6.5 0 0 0 0-13ZM6.5 7.75A.75.75 0 0 1 7.25 7h1a.75.75 0 0 1 .75.75v2.75h.25a.75.75 0 0 1 0 1.5h-2a.75.75 0 0 1 0-1.5h.25v-2h-.25a.75.75 0 0 1-.75-.75ZM8 6a1 1 0 1 1 0-2 1 1 0 0 1 0 2Z">
+					</path>
+				</svg>Note
+			</p>
+			<p>
+				Replace John Doe, Jane Doe and John Nolan with the actual song
+				writers.
+			</p>
+		</div>
+		<div class="markdown-alert markdown-alert-warning">
+			<p class="markdown-alert-title">
+				<svg class="octicon octicon-alert mr-2" viewBox="0 0 16 16" version="1.1" width="16" height="16"
+					aria-hidden="true">
+					<path
+						d="M6.457 1.047c.659-1.234 2.427-1.234 3.086 0l6.082 11.378A1.75 1.75 0 0 1 14.082 15H1.918a1.75 1.75 0 0 1-1.543-2.575Zm1.763.707a.25.25 0 0 0-.44 0L1.698 13.132a.25.25 0 0 0 .22.368h12.164a.25.25 0 0 0 .22-.368Zm.53 3.996v2.5a.75.75 0 0 1-1.5 0v-2.5a.75.75 0 0 1 1.5 0ZM9 11a1 1 0 1 1-2 0 1 1 0 0 1 2 0Z">
+					</path>
+				</svg>Warning
+			</p>
+			<p>Each author must be added individually.</p>
+		</div>
+		<p>
+			After that, you need to put the following attributes onto the
+			<code class="notranslate">&lt;tt&gt;</code> element:
+		</p>
+		<pre class="notranslate"><code class="notranslate">itunes:timing="Word" // "Word" or "Line" or "None"
+xml:lang="en" // A language code under the definition ISO 639-1
+</code></pre>
+		<p>
+			So your <code class="notranslate">&lt;tt&gt;</code> element should look
+			like this:
+		</p>
+		<pre class="notranslate"><code class="notranslate">&lt;tt xmlns="http://www.w3.org/ns/ttml" xmlns:itunes="http://music.apple.com/lyric-ttml-internal" xmlns:ttm="http://www.w3.org/ns/ttml#metadata" itunes:timing="(TIMING)" xml:lang="(ISO 639-1 LANGUAGE CODE)"&gt; ...
+</code></pre>
+		<h2>7. Final check</h2>
+		<p>
+			Enable "Dev Mode" in the extension's settings and upload your TTML
+			file.<br />
+			If it uploaded successfully, all lines are in place, and there are no
+			errors, then congratulations! You have accomplished this challenging
+			task!
+		</p>
+	</article>
+</body>
+
+</html>

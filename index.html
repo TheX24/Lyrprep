@@ -7,7 +7,7 @@
     <meta name="description" content="A beautiful, minimal tool for preprocessing lyrics with real-time conversion, + LRCLIB API and the Spicy Lyrics API integration.">
     
     <!-- Favicon -->
-    <link rel="icon" type="image/png" href="icon.png">
+    <link rel="icon" type="image/png" href="/icon.png">
     
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -24,7 +24,7 @@
     <meta name="theme-color" content="#28a745">
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <link rel="apple-touch-icon" href="https://img.icons8.com/color/192/000000/musical-notes.png">
+    <link rel="apple-touch-icon" href="/icon.png">
 
     <script
       src="./src/lucide-icons.ts"
@@ -71,7 +71,7 @@
     <!-- Floating Buttons Container -->
     <div class="floating-buttons">
         <!-- Help Button -->
-        <a id="help-btn" href="./guide/index.html" class="floating-btn help-btn" aria-label="Help">
+        <a id="help-btn" href="./guide/" class="floating-btn help-btn" aria-label="Help">
             <i class="fas fa-question"></i>
         </a>
         
@@ -95,23 +95,6 @@
     
     <!-- Toast Notification -->
     <div id="toast" class="toast"></div>
-    
-    <!-- PWA Service Worker -->
-    <!-- <script>
-        // Register service worker for PWA
-        // Added prevention, to not cache content in dev mode
-        if ('serviceWorker' in navigator && window.location.hostname !== "localhost" && window.location.hostname !== "127.0.0.1") {
-            window.addEventListener('load', () => {
-                navigator.serviceWorker.register('sw.js')
-                    .then(registration => {
-                        console.log('ServiceWorker registration successful');
-                    })
-                    .catch(err => {
-                        console.log('ServiceWorker registration failed: ', err);
-                    });
-            });
-        }
-    </script> -->
 
     <script>document.body.classList.add("js-enabled")</script>
 </body>
