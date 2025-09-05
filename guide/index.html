@@ -234,45 +234,23 @@
 				<a target="_blank" rel="noopener noreferrer" href="./assets/step_5.gif"><img src="./assets/step_5.gif"
 						alt="Export lyrics from AMLL TTML Tool (animated)" style="max-width: 100%" /></a>
 			</p>
-			<h2>6. Final edits</h2>
-			<p>
-				Open the downloaded file in Notepad, and continue following the steps
-				below:
-			</p>
+			<h2>6. Adding song writers</h2>
 			<p>
 				If you want to see the "Credits" at the end of the lyrics container in
-				Spicy Lyrics, you need to mention the song writers.<br />
+				Spicy Lyrics, you need to mention the song writers.<br/>
 				And to do that, put this into the
 				<code class="notranslate">&lt;metadata&gt;</code> element (after the tt
 				agents):
 			</p>
 			<pre class="notranslate"><code class="notranslate">&lt;iTunesMetadata xmlns="http://music.apple.com/lyric-ttml-internal" leadingSilence="0"&gt;
-	&lt;translations/&gt;
-	&lt;songwriters&gt;
-	&lt;songwriter&gt;John Doe&lt;/songwriter&gt;
-	&lt;songwriter&gt;Jane Doe&lt;/songwriter&gt;
-	&lt;songwriter&gt;John Nolan&lt;/songwriter&gt;
-	&lt;/songwriters&gt;
-	&lt;/iTunesMetadata&gt;
-	</code></pre>
-			<div class="markdown-alert markdown-alert-tip">
-				<p class="markdown-alert-title">
-					<svg class="octicon octicon-light-bulb mr-2" viewBox="0 0 16 16" version="1.1" width="16" height="16"
-						aria-hidden="true">
-						<path
-							d="M8 1.5c-2.363 0-4 1.69-4 3.75 0 .984.424 1.625.984 2.304l.214.253c.223.264.47.556.673.848.284.411.537.896.621 1.49a.75.75 0 0 1-1.484.211c-.04-.282-.163-.547-.37-.847a8.456 8.456 0 0 0-.542-.68c-.084-.1-.173-.205-.268-.32C3.201 7.75 2.5 6.766 2.5 5.25 2.5 2.31 4.863 0 8 0s5.5 2.31 5.5 5.25c0 1.516-.701 2.5-1.328 3.259-.095.115-.184.22-.268.319-.207.245-.383.453-.541.681-.208.3-.33.565-.37.847a.751.751 0 0 1-1.485-.212c.084-.593.337-1.078.621-1.489.203-.292.45-.584.673-.848.075-.088.147-.173.213-.253.561-.679.985-1.32.985-2.304 0-2.06-1.637-3.75-4-3.75ZM5.75 12h4.5a.75.75 0 0 1 0 1.5h-4.5a.75.75 0 0 1 0-1.5ZM6 15.25a.75.75 0 0 1 .75-.75h2.5a.75.75 0 0 1 0 1.5h-2.5a.75.75 0 0 1-.75-.75Z">
-						</path>
-					</svg>Tip
-				</p>
-				<p>
-					You can find the authors on Spicy Lyrics if you scroll to the end of
-					the song lyrics.<br />
-					<a target="_blank" rel="noopener noreferrer" href="./assets/step_6_authors.png"><img width="1280"
-							height="593" alt="Authors section in Spicy Lyrics" src="./assets/step_6_authors.png"
-							style="max-width: 100%; height: auto; max-height: 593px" /></a>
-				</p>
-			</div>
-			<div class="markdown-alert markdown-alert-note">
+&lt;translations/&gt;
+&lt;songwriters&gt;
+&lt;songwriter&gt;John Doe&lt;/songwriter&gt;
+&lt;songwriter&gt;Jane Doe&lt;/songwriter&gt;
+&lt;songwriter&gt;John Nolan&lt;/songwriter&gt;
+&lt;/songwriters&gt;
+&lt;/iTunesMetadata&gt;</code></pre>
+<div class="markdown-alert markdown-alert-note">
 				<p class="markdown-alert-title">
 					<svg class="octicon octicon-info mr-2" viewBox="0 0 16 16" version="1.1" width="16" height="16"
 						aria-hidden="true">
@@ -295,28 +273,30 @@
 						</path>
 					</svg>Warning
 				</p>
-				<p>Each author must be added individually.</p>
+				<p>Each song writer must be added individually.</p>
 			</div>
+			<div class="markdown-alert markdown-alert-tip">
+				<p class="markdown-alert-title">
+					<svg class="octicon octicon-light-bulb mr-2" viewBox="0 0 16 16" version="1.1" width="16" height="16"
+						aria-hidden="true">
+						<path
+							d="M8 1.5c-2.363 0-4 1.69-4 3.75 0 .984.424 1.625.984 2.304l.214.253c.223.264.47.556.673.848.284.411.537.896.621 1.49a.75.75 0 0 1-1.484.211c-.04-.282-.163-.547-.37-.847a8.456 8.456 0 0 0-.542-.68c-.084-.1-.173-.205-.268-.32C3.201 7.75 2.5 6.766 2.5 5.25 2.5 2.31 4.863 0 8 0s5.5 2.31 5.5 5.25c0 1.516-.701 2.5-1.328 3.259-.095.115-.184.22-.268.319-.207.245-.383.453-.541.681-.208.3-.33.565-.37.847a.751.751 0 0 1-1.485-.212c.084-.593.337-1.078.621-1.489.203-.292.45-.584.673-.848.075-.088.147-.173.213-.253.561-.679.985-1.32.985-2.304 0-2.06-1.637-3.75-4-3.75ZM5.75 12h4.5a.75.75 0 0 1 0 1.5h-4.5a.75.75 0 0 1 0-1.5ZM6 15.25a.75.75 0 0 1 .75-.75h2.5a.75.75 0 0 1 0 1.5h-2.5a.75.75 0 0 1-.75-.75Z">
+						</path>
+					</svg>Tip
+				</p>
+				<p>
+					You can find the song writers on Spicy Lyrics if you scroll to the end of
+					the song lyrics.<br />
+					<a target="_blank" rel="noopener noreferrer" href="./assets/step_6_authors.png"><img width="1280"
+							height="593" alt="Authors section in Spicy Lyrics" src="./assets/step_6_authors.png"
+							style="max-width: 100%; height: auto; max-height: 593px" /></a>
+				</p>
+			</div>
+			<h2>7. Checks and Uploading</h2>
 			<p>
-				After that, you need to put the following attributes onto the
-				<code class="notranslate">&lt;tt&gt;</code> element:
-			</p>
-			<pre class="notranslate"><code class="notranslate">itunes:timing="Word" // "Word" or "Line" or "None"
-	xml:lang="en" // A language code under the definition ISO 639-1
-	</code></pre>
-			<p>
-				So your <code class="notranslate">&lt;tt&gt;</code> element should look
-				like this:
-			</p>
-			<pre class="notranslate"><code class="notranslate">&lt;tt xmlns="http://www.w3.org/ns/ttml" xmlns:itunes="http://music.apple.com/lyric-ttml-internal" xmlns:ttm="http://www.w3.org/ns/ttml#metadata" itunes:timing="(TIMING)" xml:lang="(ISO 639-1 LANGUAGE CODE)"&gt; ...
-	</code></pre>
-			<h2>7. Final check</h2>
-			<p>
-				Enable "Dev Mode" in the extension's settings and upload your TTML
-				file.<br />
-				If it uploaded successfully, all lines are in place, and there are no
-				errors, then congratulations! You have accomplished this challenging
-				task!
+				Enable "Dev Mode" in the extension's settings and upload your TTML file by clicking on the "&lt;&gt;" button at the bottom of the lyrics page, then click on "Upload" and select the file.<br>
+				If it has uploaded and parsed successfully, all the lines are in place, and there are no errors, then contact Spikerko or one of the mods in the Discord server with your file and link to the song.<br>
+				If the file is all good, you will receive the "TTML Uploader" role and then make a post in #TTML-Uploads.
 			</p>
 		</article>
 	</div>
