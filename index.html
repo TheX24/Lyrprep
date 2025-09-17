@@ -12,7 +12,7 @@
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Josefin+Sans:ital,wght@0,100..700;1,100..700&family=Noto+Color+Emoji&display=swap" rel="stylesheet">
     
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.0/css/all.min.css" integrity="sha512-DxV+EoADOkOygM4IR9yXP8Sb2qwgidEmeqAEmDKIOfPRQZOWbXCzLC6vjbZyy0vPisbH2SyW27+ddLVCN+OMzQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
@@ -32,8 +32,41 @@
       defer
     ></script>
 
+    <script async>
+      (function() {
+        const listeners = {};
+        let idCounter = 0;
+
+        window.InternalEvent = {
+          listen(event, handler) {
+            if (!listeners[event]) listeners[event] = {};
+            const id = ++idCounter;
+            listeners[event][id] = handler;
+            return id;
+          },
+          unListen(event, id) {
+            if (listeners[event] && listeners[event][id]) {
+              delete listeners[event][id];
+            }
+          },
+          evoke(event, data) {
+            if (!listeners[event]) return;
+            Object.values(listeners[event]).forEach(fn => {
+              try { fn(data); } catch (e) { /* Optionally log error */ }
+            });
+          }
+        };
+      })();
+    </script>
+
     <script
         src="./src/segment.ts"
+        type="module"
+        defer
+    ></script>
+
+    <script
+        src="./src/font-selector.ts"
         type="module"
         defer
     ></script>

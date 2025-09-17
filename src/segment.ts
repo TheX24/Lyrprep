@@ -61,6 +61,10 @@ document.addEventListener("DOMContentLoaded", async () => {
                     for (const el of elements) {
                         el.outerHTML = content;
                         addLoadedSegments();
+                        // Evoke the segment:load event with the event name
+                        if (window.InternalEvent && typeof window.InternalEvent.evoke === "function") {
+                            window.InternalEvent.evoke("segment:load", nameAttr);
+                        }
                     }
                     // console.log(`Segment loader: Successfully replaced ${elements.length} instance(s) of segment "${nameAttr}" with content`);
                     return true;
