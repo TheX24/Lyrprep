@@ -146,7 +146,7 @@
 					</svg>Important
 				</p>
 				<p>
-					Make sure to have this switch enabled.<br />
+					Make sure to have this switch ("Enable Special Prefix") enabled.<br />
 					<a target="_blank" rel="noopener noreferrer" href="./assets/step_3_switch.png"><img width="399"
 							height="449" alt="Create background lines on import toggle enabled"
 							src="./assets/step_3_switch.png" style="max-width: 100%; height: auto; max-height: 449px" /></a>
@@ -205,6 +205,10 @@
 					<li>
 						You can do the same for a second singer by checking "Duet Vocal"
 					</li>
+					<li>
+						Checking the "Obscene Word" checkbox under the "Word Content" textarea
+						will not change anything inside of SpicyLyrics.
+					</li>
 				</ul>
 			</div>
 			<h3>
@@ -239,8 +243,7 @@
 				If you want to see the "Credits" at the end of the lyrics container in
 				Spicy Lyrics, you need to mention the song writers.<br/>
 				And to do that, put this into the
-				<code class="notranslate">&lt;metadata&gt;</code> element (after the tt
-				agents):
+				<code class="notranslate">&lt;metadata&gt;</code> element (right before the <code class="notranslate">&lt;/metadata&gt;</code>):
 			</p>
 			<pre class="notranslate"><code class="notranslate">&lt;iTunesMetadata xmlns="http://music.apple.com/lyric-ttml-internal" leadingSilence="0"&gt;
 &lt;translations/&gt;
@@ -275,6 +278,21 @@
 				</p>
 				<p>Each song writer must be added individually.</p>
 			</div>
+			<div class="markdown-alert markdown-alert-note">
+				<p class="markdown-alert-title">
+					<svg class="octicon octicon-info mr-2" viewBox="0 0 16 16" version="1.1" width="16" height="16"
+						aria-hidden="true">
+						<path
+							d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8Zm8-6.5a6.5 6.5 0 1 0 0 13 6.5 6.5 0 0 0 0-13ZM6.5 7.75A.75.75 0 0 1 7.25 7h1a.75.75 0 0 1 .75.75v2.75h.25a.75.75 0 0 1 0 1.5h-2a.75.75 0 0 1 0-1.5h.25v-2h-.25a.75.75 0 0 1-.75-.75ZM8 6a1 1 0 1 1 0-2 1 1 0 0 1 0 2Z">
+						</path>
+					</svg>Note
+				</p>
+				<p>
+					Alternatively you can use the AMLL TTML Tool website's own Metadata Editor menu under
+					<code class="notranslate">Edit &gt; Edit Lyrics Metadata &gt; Add New Metadata &gt; Songwiter</code>.
+					You can add all the songwiters here. The other metadata settings do nothing.
+				</p>
+			</div>
 			<div class="markdown-alert markdown-alert-tip">
 				<p class="markdown-alert-title">
 					<svg class="octicon octicon-light-bulb mr-2" viewBox="0 0 16 16" version="1.1" width="16" height="16"
@@ -285,8 +303,9 @@
 					</svg>Tip
 				</p>
 				<p>
-					You can find the song writers on Spicy Lyrics if you scroll to the end of
-					the song lyrics.<br />
+					You can find the songwriters on Spicy Lyrics if you scroll to the end of
+					the song lyrics. After your TTML got uploaded you will see your discord username, alongside 
+					with the uploader's username (The uploader is usually the moderator who checks and approves your lyrics.)<br />
 					<a target="_blank" rel="noopener noreferrer" href="./assets/step_6_authors.png"><img width="1280"
 							height="593" alt="Authors section in Spicy Lyrics" src="./assets/step_6_authors.png"
 							style="max-width: 100%; height: auto; max-height: 593px" /></a>
@@ -297,8 +316,9 @@
 				Enable "Dev Mode" in the extension's settings and upload your TTML file by clicking on the "&lt;&gt;" button at the bottom of the lyrics page, then click on "Upload" and select the file.<br>
 			</p>
 
-			<h3>If it has uploaded and parsed successfully, all the lines are in place, and there are no errors, then go to the "create-a-ticket" channel in the Spicy Lyrics Discord Server</h3>
+			<h3>If it has uploaded and parsed successfully, all the lines are in place, and there are no errors, then go to the "create-a-ticket" channel in the Spicy Lyrics Discord Server.</h3>
 			<h3>If the file is all good, you will receive the "TTML Uploader" role and then make a post in #TTML-Uploads.</h3>
+			<h3>You can quote-on-quote upgrade your "TTML Uploader" role by uploading more often and making more precisely done lyrics.</h3>
 		</article>
 	</div>
 </body>
