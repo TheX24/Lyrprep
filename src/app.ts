@@ -1,4 +1,5 @@
 import DB from "./tools/iDB";
+import "./font-selector.ts"
 // IndexedDB config moved here (stores are fixed by the DB class)
 const iDBConfig = {
 	dbName: 'LyrprepDB',
@@ -9,34 +10,35 @@ const iDBConfig = {
 };
 const iDB = new DB(iDBConfig);
 // DOM Elements
-const inputText = document.getElementById('input-text') as HTMLTextAreaElement | HTMLInputElement;
-const outputText = document.getElementById('output-text') as HTMLTextAreaElement | HTMLInputElement;
-const convertBtn = document.getElementById('convert-btn') as HTMLButtonElement;
-const clearInputBtn = document.getElementById('clear-input') as HTMLButtonElement;
-const copyOutputBtn = document.getElementById('copy-output') as HTMLButtonElement;
-const settingsBtn = document.getElementById('settings-btn') as HTMLButtonElement;
-const closeSettingsBtn = document.getElementById('close-settings') as HTMLButtonElement;
-const settingsPanel = document.getElementById('settings-panel') as HTMLElement;
-const themeToggle = document.getElementById('theme-toggle') as HTMLInputElement;
-const realtimeToggle = document.getElementById('realtime-toggle') as HTMLInputElement;
-const toast = document.getElementById('toast') as HTMLElement;
-const overlay = document.getElementById('overlay') as HTMLElement;
-const searchBtn = document.getElementById('search-lyrics') as HTMLButtonElement;
-const searchModal = document.getElementById('search-modal') as HTMLElement;
-const closeSearchBtn = document.getElementById('close-search') as HTMLButtonElement;
+const inputText = document.querySelector('.input-text') as HTMLTextAreaElement | HTMLInputElement;
+const outputText = document.querySelector('.output-text') as HTMLTextAreaElement | HTMLInputElement;
+const convertBtn = document.querySelector('.convert-btn') as HTMLButtonElement;
+const clearInputBtn = document.querySelector('.clear-input') as HTMLButtonElement;
+const copyOutputBtn = document.querySelector('.copy-output') as HTMLButtonElement;
+const settingsBtn = document.querySelector('.settings-btn') as HTMLButtonElement;
+const closeSettingsBtn = document.querySelector('.close-settings') as HTMLButtonElement;
+const settingsPanel = document.querySelector('.settings-panel') as HTMLElement;
+const themeToggle = document.querySelector('.dark-theme-toggle') as HTMLInputElement;
+const seasonalThemeToggle = document.querySelector('.seasonal-theme-toggle') as HTMLInputElement;
+const realtimeToggle = document.querySelector('.realtime-toggle') as HTMLInputElement;
+const toast = document.querySelector('.toast') as HTMLElement;
+const overlay = document.querySelector('.overlay') as HTMLElement;
+const searchBtn = document.querySelector('.search-lyrics') as HTMLButtonElement;
+const searchModal = document.querySelector('.search-modal') as HTMLElement;
+const closeSearchBtn = document.querySelector('.close-search') as HTMLButtonElement;
 const searchForm = document.querySelector('.search-form') as HTMLFormElement;
-const searchResults = document.getElementById('search-results') as HTMLElement;
-const searchTrackInput = document.getElementById('search-track') as HTMLInputElement;
-const searchArtistInput = document.getElementById('search-artist') as HTMLInputElement;
-const searchAlbumInput = document.getElementById('search-album') as HTMLInputElement;
+const searchResults = document.querySelector('.search-results') as HTMLElement;
+const searchTrackInput = document.querySelector('.search-track') as HTMLInputElement;
+const searchArtistInput = document.querySelector('.search-artist') as HTMLInputElement;
+const searchAlbumInput = document.querySelector('.search-album') as HTMLInputElement;
 //const swapProvidersButton = document.querySelector('.swapProvidersButton');
 
-const searchSpotifyUri = document.getElementById('search-spotify-url') as HTMLInputElement;
-const initLoaderModal = document.querySelector(".initLoader") as HTMLElement;
+const searchSpotifyUri = document.querySelector('.search-spotify-url') as HTMLInputElement;
+const initLoaderModal = document.querySelector(".main__init-Loader") as HTMLElement;
 
-const initLoaderTitle = initLoaderModal.querySelector<HTMLElement>(".initLoaderContent .initLoaderTitle");
+const initLoaderTitle = initLoaderModal.querySelector<HTMLElement>(".main__init-Loader-Content .main__init-Loader-Title");
 
-// const searchModalBtn = document.getElementById('search-btn') as HTMLButtonElement;
+// const searchModalBtn = document.querySelector('.search-btn') as HTMLButtonElement;
 
 
 // Removed unused waitUntil helper to satisfy noUnusedLocals
@@ -55,7 +57,8 @@ const settings = {
 	addSpaces: true,
 	splitCJK: true,
 	removeEmptyLines: true,
-	theme: 'system'
+	theme: 'system',
+	seasonalTheme: true,
 };
 
 let currentHCaptchaWidget: number | null = null;
@@ -94,10 +97,11 @@ async function initSitekey() {
     }
 
     if (siteKeyRetries > siteKeyMaxRetries) {
-        console.error("error while getting hCaptcha sitekey");
-        showToast("Error while getting the hCaptcha siteKey, try reloading");
-        return;
-    }
+		console.error("error while getting hCaptcha sitekey");
+		showToast("Error while getting the hCaptcha siteKey, try reloading");
+		return;
+	}
+	
 	try {
         const siteKeyResponse = await fetch(`${spicyLyricsApiUrlBase}/sk`);
 
@@ -160,7 +164,7 @@ window.onloadHCaptcha = async () => {
 
 function ensureHCaptchaRendered() {
 	try {
-		const container = document.getElementById('sl-hcaptcha-content');
+		const container = document.querySelector('.sl-hcaptcha-content');
 		const modalIsActive = searchModal && searchModal.classList.contains('active');
 		const spicyActive = searchForm && searchForm.classList.contains('spicylyrics');
 		if (!hCaptchaLoaded || !hCaptchaSiteKey || !container || !modalIsActive || !spicyActive || !shouldRenderHCaptcha) return;
@@ -194,7 +198,7 @@ function resetHCaptcha() {
 
 function cleanupHCaptcha() {
 	try {
-		const container = document.getElementById('sl-hcaptcha-content');
+		const container = document.querySelector('.sl-hcaptcha-content');
 		if (typeof hcaptcha !== 'undefined' && currentHCaptchaWidget !== null) {
 			try { hcaptcha.remove(currentHCaptchaWidget); } catch (e) {
 				try { hcaptcha.reset(currentHCaptchaWidget); } catch (_) {}
@@ -210,7 +214,7 @@ function cleanupHCaptcha() {
 		shouldRenderHCaptcha = false;
 		// Re-enable the submit button if it was disabled for captcha
 		try {
-			const submitBtn = document.getElementById('search-btn') as HTMLButtonElement | null;
+			const submitBtn = document.querySelector('.search-btn') as HTMLButtonElement | null;
 			if (submitBtn) submitBtn.removeAttribute('disabled');
 		} catch (_) {}
 	}
@@ -230,6 +234,8 @@ const searchProviders = [
 
 // Initialize the app
 async function init() {
+	// Set initial theme
+	await setInitialTheme();
 
 	await initSitekey();
 
@@ -241,10 +247,7 @@ async function init() {
 
 	// Ensure only visible provider fields are validated
 	updateSearchProviderFields();
-	
-	// Set initial theme based on system preference
-	await setInitialTheme();
-	
+
 	// Set initial state of toggles
 	updateTogglesFromSettings();
 
@@ -309,15 +312,16 @@ function setupEventListeners() {
 	});
 	
 	// Settings toggles
-	(document.getElementById('option-remove-timestamps') as HTMLInputElement).addEventListener('change', updateSettings);
-	(document.getElementById('option-handle-dashes') as HTMLInputElement).addEventListener('change', updateSettings);
-	(document.getElementById('option-handle-parentheses') as HTMLInputElement).addEventListener('change', updateSettings);
-	(document.getElementById('option-add-spaces') as HTMLInputElement).addEventListener('change', updateSettings);
-	(document.getElementById('option-split-cjk') as HTMLInputElement).addEventListener('change', updateSettings);
-	(document.getElementById('option-remove-empty-lines') as HTMLInputElement).addEventListener('change', updateSettings);
+	(document.querySelector('.option-remove-timestamps') as HTMLInputElement).addEventListener('change', updateSettings);
+	(document.querySelector('.option-handle-dashes') as HTMLInputElement).addEventListener('change', updateSettings);
+	(document.querySelector('.option-handle-parentheses') as HTMLInputElement).addEventListener('change', updateSettings);
+	(document.querySelector('.option-add-spaces') as HTMLInputElement).addEventListener('change', updateSettings);
+	(document.querySelector('.option-split-cjk') as HTMLInputElement).addEventListener('change', updateSettings);
+	(document.querySelector('.option-remove-empty-lines') as HTMLInputElement).addEventListener('change', updateSettings);
 	
 	// Theme toggle
 	themeToggle.addEventListener('change', toggleTheme);
+	seasonalThemeToggle.addEventListener('change', toggleSeasonalTheme);
 	
 	// Search form submission
 	searchForm.addEventListener('submit', (e) => {
@@ -359,6 +363,15 @@ async function setInitialTheme() {
 	} else {
 		settings.theme = 'system';
 	}
+
+	let savedSeasonalTheme;
+	try { savedSeasonalTheme = await iDB.get('seasonalTheme'); } catch (_) {}
+	
+	if (savedTheme) {
+		settings.seasonalTheme = savedSeasonalTheme == "true";
+	} else {
+		settings.seasonalTheme = true;
+	}
 	
 	applyTheme();
 }
@@ -376,6 +389,16 @@ function applyTheme() {
 	if (themeToggle) {
 		themeToggle.checked = document.documentElement.getAttribute('data-theme') === 'dark';
 	}
+
+	if (seasonalThemeToggle) {
+		seasonalThemeToggle.checked = settings.seasonalTheme;
+	}
+
+	if (settings.seasonalTheme) {
+		document.body.classList.add("theme-seasonal");
+	} else {
+		document.body.classList.remove("theme-seasonal");
+	}
 }
 
 // Toggle between light and dark theme
@@ -387,6 +410,17 @@ async function toggleTheme() {
 	}
 	
 	await iDB.savePermanent('theme', settings.theme, undefined);
+	applyTheme();
+}
+
+async function toggleSeasonalTheme() {
+	if (seasonalThemeToggle.checked) {
+		settings.seasonalTheme = true;
+	} else {
+		settings.seasonalTheme = false;
+	}
+	
+	await iDB.savePermanent('seasonalTheme', settings.seasonalTheme, undefined);
 	applyTheme();
 }
 
@@ -542,7 +576,7 @@ async function searchLyrics() {
 						ensureHCaptchaRendered();
 						// Disable the submit button until captcha is solved
 						try {
-							const submitBtn = document.getElementById('search-btn') as HTMLButtonElement | null;
+							const submitBtn = document.querySelector('.search-btn') as HTMLButtonElement | null;
 							if (submitBtn) submitBtn.setAttribute('disabled', 'true');
 						} catch (_) {}
 						// Do not reset captcha in finally; we just asked user to solve it
@@ -598,7 +632,7 @@ function displaySearchResults(results: Array<{ plainLyrics?: string; trackName?:
 
 // Show/hide loading state
 function showLoadingState(isLoading: boolean) {
-	const searchBtn = document.getElementById('search-btn');
+	const searchBtn = document.querySelector('.search-btn');
 	if (isLoading) {
 		(searchBtn as HTMLButtonElement | null)?.setAttribute('disabled', 'true');
 		if (searchBtn) (searchBtn as HTMLButtonElement).innerHTML = '<i class="fas fa-spinner fa-spin"></i> Searching...';
@@ -628,13 +662,13 @@ function escapeHtml(unsafe: string) {
 }
 
 // Update settings from UI
-	async function updateSettings() {
-	settings.removeTimestamps = (document.getElementById('option-remove-timestamps') as HTMLInputElement).checked;
-	settings.handleDashes = (document.getElementById('option-handle-dashes') as HTMLInputElement).checked;
-	settings.handleParentheses = (document.getElementById('option-handle-parentheses') as HTMLInputElement).checked;
-	settings.addSpaces = (document.getElementById('option-add-spaces') as HTMLInputElement).checked;
-	settings.splitCJK = (document.getElementById('option-split-cjk') as HTMLInputElement).checked;
-	settings.removeEmptyLines = (document.getElementById('option-remove-empty-lines') as HTMLInputElement).checked;
+async function updateSettings() {
+	settings.removeTimestamps = (document.querySelector('.option-remove-timestamps') as HTMLInputElement).checked;
+	settings.handleDashes = (document.querySelector('.option-handle-dashes') as HTMLInputElement).checked;
+	settings.handleParentheses = (document.querySelector('.option-handle-parentheses') as HTMLInputElement).checked;
+	settings.addSpaces = (document.querySelector('.option-add-spaces') as HTMLInputElement).checked;
+	settings.splitCJK = (document.querySelector('.option-split-cjk') as HTMLInputElement).checked;
+	settings.removeEmptyLines = (document.querySelector('.option-remove-empty-lines') as HTMLInputElement).checked;
 	
 	await saveSettings();
 	
@@ -662,12 +696,12 @@ async function loadSettings() {
 
 // Update UI toggles from settings
 function updateTogglesFromSettings() {
-	(document.getElementById('option-remove-timestamps') as HTMLInputElement).checked = settings.removeTimestamps;
-	(document.getElementById('option-handle-dashes') as HTMLInputElement).checked = settings.handleDashes;
-	(document.getElementById('option-handle-parentheses') as HTMLInputElement).checked = settings.handleParentheses;
-	(document.getElementById('option-add-spaces') as HTMLInputElement).checked = settings.addSpaces;
-	(document.getElementById('option-split-cjk') as HTMLInputElement).checked = settings.splitCJK;
-	(document.getElementById('option-remove-empty-lines') as HTMLInputElement).checked = settings.removeEmptyLines;
+	(document.querySelector('.option-remove-timestamps') as HTMLInputElement).checked = settings.removeTimestamps;
+	(document.querySelector('.option-handle-dashes') as HTMLInputElement).checked = settings.handleDashes;
+	(document.querySelector('.option-handle-parentheses') as HTMLInputElement).checked = settings.handleParentheses;
+	(document.querySelector('.option-add-spaces') as HTMLInputElement).checked = settings.addSpaces;
+	(document.querySelector('.option-split-cjk') as HTMLInputElement).checked = settings.splitCJK;
+	(document.querySelector('.option-remove-empty-lines') as HTMLInputElement).checked = settings.removeEmptyLines;
 	
 	// Set theme toggle
 	if (themeToggle) {
@@ -678,7 +712,7 @@ function updateTogglesFromSettings() {
 // (removed unused removeEmptyLines helper)
 
 
-let currentSaveTextTimeout: number | null = null;
+let currentSaveTextTimeout: any = null;
 
 async function clearSavedTextLyrics() {
 	await iDB.savePermanent("lastLyrics", "");
@@ -695,7 +729,7 @@ async function loadSavedTextLyrics() {
 
 loadSavedTextLyrics();
 
-// Main conversion function
+// Main conversion functio.
 async function convertText() {
 	try {
 		let text = inputText.value;

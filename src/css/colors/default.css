@@ -1,0 +1,54 @@
+/* Base Styles and Variables */
+:root {
+    /* Light theme colors */
+    --bg-color: #f8f9fa;
+    --text-color: #212529;
+    --primary-color: #28a745;
+    --primary-hover: #218838;
+    --secondary-color: #6c757d;
+    --border-color: #dee2e6;
+    --box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    --card-bg: #ffffff;
+    --input-bg: #ffffff;
+    --input-text: #212529;
+    --icon-color: #6c757d;
+    --icon-hover: #495057;
+    --settings-bg: #ffffff;
+    --settings-border: #e9ecef;
+    --settings-header-bg: #f8f9fa;
+    --modal-bg: #ffffff;
+    --modal-header-bg: #f8f9fa;
+    --modal-border: #e9ecef;
+    --search-result-hover: #f8f9fa;
+    --toast-bg: #343a40;
+    --toast-text: #ffffff;
+    --error-color: #dc3545;
+    --success-color: #28a745;
+    --warning-color: #ffc107;
+    --info-color: #17a2b8;
+}
+
+/* Dark theme colors */
+[data-theme="dark"] {
+    --bg-color: #1a1a1a;
+    --text-color: #e9ecef;
+    --primary-color: #28a745;
+    --primary-hover: #34ce57;
+    --secondary-color: #adb5bd;
+    --border-color: #495057;
+    --box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+    --card-bg: #2d2d2d;
+    --input-bg: #343a40;
+    --input-text: #f8f9fa;
+    --icon-color: #adb5bd;
+    --icon-hover: #e9ecef;
+    --settings-bg: #343a40;
+    --settings-border: #495057;
+    --settings-header-bg: #2c3034;
+    --modal-bg: #343a40;
+    --modal-header-bg: #2c3034;
+    --modal-border: #495057;
+    --search-result-hover: #3e444a;
+    --toast-bg: #f8f9fa;
+    --toast-text: #212529;
+}

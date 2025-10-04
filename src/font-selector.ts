@@ -1,5 +1,5 @@
 
-let fontSelector = document.getElementById("font-selector") as HTMLSelectElement | null;
+let fontSelector = document.querySelector(".font-selector") as HTMLSelectElement | null;
 
 // Apply font to body or main content container
 const applyFont = (font: string) => {
@@ -14,23 +14,16 @@ const applyFont = (font: string) => {
   document.body.style.setProperty("--font-selection", fontName);
 };
 
+if (fontSelector) {
+  // Load saved font from localStorage
+  const savedFont = localStorage.getItem("selectedFont") || "inter";
+  fontSelector.value = savedFont;
+  applyFont(savedFont);
 
-window.InternalEvent.listen("segment:load", async (segment) => {
-  if (segment === "settings_panel") {
-    fontSelector = document.getElementById("font-selector") as HTMLSelectElement | null;
-    while (!fontSelector) {
-      await new Promise((r) => setTimeout(r, 100))
-    }
-    // Load saved font from localStorage
-    const savedFont = localStorage.getItem("selectedFont") || "inter";
-    fontSelector.value = savedFont;
-    applyFont(savedFont);
-
-    fontSelector.addEventListener("change", (_) => {
-      if (!fontSelector) return;
-      const selectedFont = fontSelector.value;
-      localStorage.setItem("selectedFont", selectedFont);
-      applyFont(selectedFont);
-    });
-  }
-})
+  fontSelector.addEventListener("change", (_) => {
+    if (!fontSelector) return;
+    const selectedFont = fontSelector.value;
+    localStorage.setItem("selectedFont", selectedFont);
+    applyFont(selectedFont);
+  });
+}

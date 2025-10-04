@@ -31,7 +31,7 @@ A powerful web application for formatting and preprocessing song lyrics with rea
 
 1. **Input Your Lyrics**
    - Paste directly into the text area, or
-   - Click the search icon (🔍) to find lyrics by song/artist
+   - Click the search icon (🔍) to find lyrics by song/artist/Spotify Link
 
 2. **Customize Processing** (via Settings ⚙️)
    - Toggle individual processing options
@@ -43,16 +43,10 @@ A powerful web application for formatting and preprocessing song lyrics with rea
    - Click the copy button to copy to clipboard
    - Toggle between formatted and raw output
 
-## 📱 Installation (PWA)
-
-1. Open the app in a modern browser (Chrome, Edge, or Safari)
-2. Click the install prompt or use the browser's "Add to Home Screen" option
-3. Use the app even when offline
-
 ## 📝 Notes
 
 - All processing happens in your browser (no data is sent to any server)
-- Settings are saved in your browser's local storage
+- Settings are saved in your browser's Indexed DB
 - For best results, use the latest version of Chrome, Firefox, Safari, or Edge
 
 ## Dependencies
