@@ -129,7 +129,7 @@ async function initSitekey() {
 
 	const spinner = initLoaderModal.querySelector<HTMLElement>(".main__init-Loader-Content .spinning-loader");
 	if (spinner) {
-		spinner.classList.remove("activeElement");
+		spinner.classList.remove("activeAnimation");
 	}
 }
 
