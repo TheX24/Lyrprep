@@ -3,7 +3,7 @@ import "./font-selector.ts"
 // IndexedDB config moved here (stores are fixed by the DB class)
 const iDBConfig = {
 	dbName: 'LyrprepDB',
-	version: 1,
+	version: 2,
 	defaults: {
 		expireTtlMs: 1000 * 60 * 60 * 24 * 7,
 	},
@@ -126,6 +126,11 @@ async function initSitekey() {
         siteKeyRetries++;
         initSitekey();
     }
+
+	const spinner = initLoaderModal.querySelector<HTMLElement>(".main__init-Loader-Content .spinning-loader");
+	if (spinner) {
+		spinner.classList.remove("activeElement");
+	}
 }
 
 
@@ -164,7 +169,7 @@ window.onloadHCaptcha = async () => {
 
 function ensureHCaptchaRendered() {
 	try {
-		const container = document.querySelector('.sl-hcaptcha-content');
+		const container = document.querySelector('#sl-hcaptcha-content');
 		const modalIsActive = searchModal && searchModal.classList.contains('active');
 		const spicyActive = searchForm && searchForm.classList.contains('spicylyrics');
 		if (!hCaptchaLoaded || !hCaptchaSiteKey || !container || !modalIsActive || !spicyActive || !shouldRenderHCaptcha) return;
@@ -250,7 +255,6 @@ async function init() {
 
 	// Set initial state of toggles
 	updateTogglesFromSettings();
-
 }
 
 // Set up event listeners

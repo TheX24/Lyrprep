@@ -1473,16 +1473,27 @@ input:checked + .slider:before {
     border-radius: 12px;
     border: 1px solid var(--modal-border);
     bottom: 0;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
     transition: bottom 0.5s, height 0.3s;
 }
 
+.search-results:not(:has(.search-result-item)) {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+
+.search-container:has(.search-form.lrclib) {
+    box-shadow: none !important;
+}
 
 .search-container:has(.search-form.spicylyrics) + .search-results {
     bottom: calc(var(--search-results-mh) * 1);
     height: 5px;
 }
 
-@media (max-height: 635px) {
+@media (max-height: 695px) {
     .search-modal {
         --search-results-mh: 90vh;
         flex-direction: row;
@@ -1498,11 +1509,13 @@ input:checked + .slider:before {
 
     .search-container {
         right: 0;
-        transition: right 0.35s !important;
+        transform: translateX(0);
+        transition: right 0.35s, transform 0.35s !important;
     }
 
     .search-container:has(.search-form.spicylyrics) {
-        right: -300px;
+        right: -50%;
+        transform: translateX(-50%);
     }
 
     .search-container:has(.search-form.spicylyrics) + .search-results {
@@ -1551,7 +1564,7 @@ input:checked + .slider:before {
     gap: .5cqw;
     font-size: .75rem;
     background-color: var(--toast-text);
-    padding: .6cqh 1cqh;
+    padding: .6cqh;
     border-radius: 100em;
     margin-left: 5px;
 }
@@ -1589,7 +1602,7 @@ input:checked + .slider:before {
     pointer-events: none !important;
 }
 
-.spinning-loader > svg {
+.spinning-loader.activeAnimation > svg {
     animation: spin 1s infinite linear;
 }
 
