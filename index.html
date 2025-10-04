@@ -59,14 +59,13 @@
       })();
     </script>
 
-    <script src="https://js.hcaptcha.com/1/api.js?onload=onloadHCaptcha&render=explicit" defer></script>
-
     <script
         src="./src/app.ts"
         type="module"
         defer
     ></script>
 
+    <!-- <script src="https://js.hcaptcha.com/1/api.js?onload=onloadHCaptcha&render=explicit" defer></script> -->
 </head>
 <body>
     <noscript>You need to enable JavaScript to use this site</noscript>
@@ -319,7 +318,7 @@
     <div class="main__init-Loader active">
       <div class="main__init-Loader-Content">
         <p class="main__init-Loader-Title">Loading...</p>
-        <div class="spinning-loader">
+        <div class="spinning-loader activeElement">
           <i data-lucide="loader-circle" style="--size: 40px; width: var(--size); height: var(--size);"></i>
         </div>
       </div>
