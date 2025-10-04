@@ -257,9 +257,6 @@ async function init() {
 function setupEventListeners() {
 	// Convert button click
 	convertBtn.addEventListener('click', convertText);
-
-
-	//swapProvidersButton.addEventListener("click", swapLyricsProviders)
 	
 	searchProviders.forEach(provider => {
 		const el = provider.element as HTMLElement | null;
