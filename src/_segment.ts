@@ -1,13 +1,13 @@
 document.addEventListener("DOMContentLoaded", async () => {
 
-    const initLoaderTitle = document.querySelector<HTMLElement>(".initLoader .initLoaderContent .initLoaderTitle");
+    const initLoaderTitle = document.querySelector<HTMLElement>(".main__init-Loader .main__init-Loader-Content .main__init-Loader-Title");
 
     while (!initLoaderTitle) {
         await new Promise((r) => setTimeout(r, 100));
     }
 
-    const loadedSegmentsSpan = initLoaderTitle.querySelector<HTMLElement>(".loadedSegments");
-    const segmentsCountSpan = initLoaderTitle.querySelector<HTMLElement>(".segmentsCount");
+    const loadedSegmentsSpan = initLoaderTitle.querySelector<HTMLElement>(".main__init-Loader-loadedSegments");
+    const segmentsCountSpan = initLoaderTitle.querySelector<HTMLElement>(".main__init-Loader-segmentsCount");
 
     // console.log("Segment loader: DOM content loaded, starting segment processing");
     const segmentNodeList = document.querySelectorAll("segment");

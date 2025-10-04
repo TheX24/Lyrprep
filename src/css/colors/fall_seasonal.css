@@ -1,0 +1,58 @@
+/* Base Styles and Variables */
+.theme-seasonal {
+    /* Fall/Autumn theme - Light */
+    --bg-color: #f7efe5;              /* warm, soft cream */
+    --text-color: #4b2e05;            /* deep brown */
+    --primary-color: #c97a3a;         /* pumpkin orange */
+    --primary-hover: #a65c1b;         /* burnt orange */
+    --secondary-color: #b05e2e;       /* cinnamon brown */
+    --border-color: #e2b97f;          /* muted gold */
+    --box-shadow: 0 4px 6px rgba(120, 72, 0, 0.08);
+    --card-bg: #fff8f0;               /* off-white with warmth */
+    --input-bg: #f3e3d3;              /* light tan */
+    --input-text: #4b2e05;
+    --icon-color: #b05e2e;            /* cinnamon brown */
+    --icon-hover: #c97a3a;            /* pumpkin orange */
+    --settings-bg: #fff8f0;
+    --settings-border: #e2b97f;
+    --settings-header-bg: #f7efe5;
+    --modal-bg: #fff8f0;
+    --modal-header-bg: #f7efe5;
+    --modal-border: #e2b97f;
+    --search-result-hover: #f3e3d3;
+    --toast-bg: #b05e2e;
+    --toast-text: #fff8f0;
+    --error-color: #b23c1f;           /* deep red-orange */
+    --success-color: #7c9a3e;         /* olive green */
+    --warning-color: #e2b97f;         /* muted gold */
+    --info-color: #7a6c4d;            /* faded brown */
+}
+
+/* Fall/Autumn theme - Dark */
+[data-theme="dark"] .theme-seasonal {
+    --bg-color: #2B1602;              /* deep brown */
+    --text-color: #f7efe5;            /* warm cream */
+    --primary-color: #e08e3c;         /* brighter pumpkin */
+    --primary-hover: #c97a3a;         /* pumpkin orange */
+    --secondary-color: #e2b97f;       /* muted gold */
+    --border-color: #7a6c4d;          /* faded brown */
+    --box-shadow: 0 4px 6px rgba(120, 72, 0, 0.18);
+    --card-bg: #3a2412;               /* dark brown */
+    --input-bg: #4b2e05;              /* deep brown */
+    --input-text: #f7efe5;
+    --icon-color: #e2b97f;            /* muted gold */
+    --icon-hover: #e08e3c;            /* brighter pumpkin */
+    --settings-bg: #3a2412;
+    --settings-border: #7a6c4d;
+    --settings-header-bg: #2d1c0b;
+    --modal-bg: #3a2412;
+    --modal-header-bg: #2d1c0b;
+    --modal-border: #7a6c4d;
+    --search-result-hover: #4b2e05;
+    --toast-bg: #e2b97f;
+    --toast-text: #4b2e05;
+    --error-color: #ff7043;           /* vivid orange-red */
+    --success-color: #b7c97a;         /* muted olive */
+    --warning-color: #e08e3c;         /* pumpkin */
+    --info-color: #e2b97f;            /* muted gold */
+}
