@@ -420,7 +420,7 @@ async function toggleSeasonalTheme() {
 		settings.seasonalTheme = false;
 	}
 	
-	await iDB.savePermanent('seasonalTheme', settings.seasonalTheme, undefined);
+	await iDB.savePermanent('seasonalTheme', String(settings.seasonalTheme), undefined);
 	applyTheme();
 }
 
