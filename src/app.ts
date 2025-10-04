@@ -239,13 +239,11 @@ const searchProviders = [
 
 // Initialize the app
 async function init() {
-	// Set initial theme
-	await setInitialTheme();
-
-	await initSitekey();
-
 	// Load settings from storage
 	await loadSettings();
+
+	// Set initial theme
+	await setInitialTheme();
 	
 	// Set up event listeners
 	setupEventListeners();
@@ -412,6 +410,7 @@ async function toggleTheme() {
 	
 	await iDB.savePermanent('theme', settings.theme, undefined);
 	applyTheme();
+	await saveSettings();
 }
 
 async function toggleSeasonalTheme() {
@@ -423,6 +422,7 @@ async function toggleSeasonalTheme() {
 	
 	await iDB.savePermanent('seasonalTheme', String(settings.seasonalTheme), undefined);
 	applyTheme();
+	await saveSettings();
 }
 
 // Toggle settings panel
