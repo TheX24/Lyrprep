@@ -1,5 +1,5 @@
 /* Import fonts */
-@import url("/fonts/OpenDyslexic.css");
+@import url("../fonts/OpenDyslexic.css");
 @import url("https://fonts.spikerko.org/spicy-lyrics/source.css");
 @import url("./colors/default.css");
 @import url("./colors/fall_seasonal.css");
@@ -1602,8 +1602,9 @@ input:checked + .slider:before {
     pointer-events: none !important;
 }
 
+
 .spinning-loader.activeAnimation > svg {
-    animation: spin 1s infinite linear;
+    animation: spin .75s infinite linear;
 }
 
 .main__init-Loader {
