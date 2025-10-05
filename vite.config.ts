@@ -77,6 +77,23 @@ export default defineConfig({
         main: "index.html",
         guide: "guide/index.html",
       },
+      output: {
+        manualChunks(id) {
+          switch (true) {
+            case id.includes('modules/Cache.ts'):
+              return '1';
+            case id.includes('app.ts'):
+              return '2';
+            case id.includes('font-selector.ts'):
+              return '3';
+            case id.includes('lucide-icons.ts'):
+              return '4';
+          }
+        },
+        chunkFileNames: `_static/js/[hash].[name].js`,
+        entryFileNames: `_static/js/[hash].0.js`,
+        assetFileNames: "_static/[hash][extname]",
+      }
     },
   },
 });

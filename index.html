@@ -65,7 +65,7 @@
         defer
     ></script>
 
-    <!-- <script src="https://js.hcaptcha.com/1/api.js?onload=onloadHCaptcha&render=explicit" defer></script> -->
+    <!-- <script src="https://js.hcaptcha.com/1/api.js?onload=onloadHCaptcha&render=explicit" async defer></script> -->
 </head>
 <body>
     <noscript>You need to enable JavaScript to use this site</noscript>
@@ -98,7 +98,7 @@
                           </div>
                       </div>
                       <div class="text-box-wrapper">
-                          <textarea class="input-text" placeholder="Paste your lyrics here or search for lyrics..." rows="10" autofocus></textarea>
+                          <textarea class="input-text" id="input-text" name="input-text" placeholder="Paste your lyrics here or search for lyrics..." rows="10" autofocus></textarea>
                       </div>
                   </div>
                   
@@ -110,7 +110,7 @@
                       <div class="realtime-toggle">
                           <span>Real-time</span>
                           <label class="switch">
-                              <input type="checkbox" class="realtime-toggle" checked>
+                              <input type="checkbox" class="realtime-toggle" id="realtime-toggle" name="realtime-toggle" checked>
                               <span class="slider"></span>
                           </label>
                       </div>
@@ -127,7 +127,7 @@
                           </div>
                       </div>
                       <div class="text-box-wrapper">
-                          <textarea class="output-text" placeholder="Your processed lyrics will appear here..." rows="10" readonly></textarea>
+                          <textarea class="output-text" id="output-text" name="output-text" placeholder="Your processed lyrics will appear here..." rows="10" readonly></textarea>
                       </div>
                   </div>
               </div>
@@ -147,7 +147,7 @@
                 <h4>Processing Options</h4>
                 <div class="settings-options">
                     <label class="setting-option">
-                        <input type="checkbox" class="option-remove-timestamps" checked>
+                        <input type="checkbox" class="option-remove-timestamps" id="option-remove-timestamps" name="option-remove-timestamps" checked>
                         <span class="checkmark"></span>
                         <span>Remove uneccessary elements</span>
                         <div class="info-icon" data-tooltip="Removes timestamps, lyric tags, and other uneccessary elements">
@@ -155,7 +155,7 @@
                         </div>
                     </label>
                     <label class="setting-option">
-                        <input type="checkbox" class="option-handle-dashes" checked>
+                        <input type="checkbox" class="option-handle-dashes" id="option-handle-dashes" name="option-handle-dashes" checked>
                         <span class="checkmark"></span>
                         <span>Process dashes</span>
                         <div class="info-icon" data-tooltip="Splits dashes in between words into separate words and replaces lyric cut-off dashes with em-dashes">
@@ -163,7 +163,7 @@
                         </div>
                     </label>
                     <label class="setting-option">
-                        <input type="checkbox" class="option-handle-parentheses" checked>
+                        <input type="checkbox" class="option-handle-parentheses" id="option-handle-parentheses" name="option-handle-parentheses" checked>
                         <span class="checkmark"></span>
                         <span>Split background lines</span>
                         <div class="info-icon" data-tooltip="Splits lines with background vocals (text in parentheses) into separate lines and adds a tag">
@@ -171,7 +171,7 @@
                         </div>
                     </label>
                     <label class="setting-option">
-                        <input type="checkbox" class="option-add-spaces" checked>
+                        <input type="checkbox" class="option-add-spaces" id="option-add-spaces" name="option-add-spaces" checked>
                         <span class="checkmark"></span>
                         <span>Split spaces from words</span>
                         <div class="info-icon" data-tooltip="Split spaces into separate 'words'">
@@ -179,7 +179,7 @@
                         </div>
                     </label>
                     <label class="setting-option">
-                        <input type="checkbox" class="option-split-cjk" aria-describedby="tooltip-split-cjk" checked>
+                        <input type="checkbox" class="option-split-cjk" id="option-split-cjk" name="option-split-cjk" aria-describedby="tooltip-split-cjk" checked>
                         <span class="checkmark"></span>
                         <span>Split <abbr title="Chinese, Japanese, and Korean">CJK</abbr> characters</span>
                         <div class="info-icon" id="tooltip-split-cjk" data-tooltip="Splits CJK characters into separate 'words'">
@@ -187,7 +187,7 @@
                         </div>
                     </label>
                     <label class="setting-option">
-                        <input type="checkbox" class="option-remove-empty-lines" checked>
+                        <input type="checkbox" class="option-remove-empty-lines" id="option-remove-empty-lines" name="option-remove-empty-lines" checked>
                         <span class="checkmark"></span>
                         <span>Remove empty lines</span>
                         <div class="info-icon" data-tooltip="Removes any blank lines from the final output">
@@ -202,7 +202,7 @@
                 <div class="theme-toggle-container">
                     <span>Dark Mode</span>
                     <label class="switch">
-                        <input type="checkbox" class="dark-theme-toggle">
+                        <input type="checkbox" class="dark-theme-toggle" id="dark-theme-toggle" name="dark-theme-toggle">
                         <span class="slider"></span>
                     </label>
                 </div>
@@ -210,13 +210,13 @@
                 <div class="seasonal-theme-toggle-container">
                   <span>Enable Seasonal Themes</span>
                   <label class="switch">
-                      <input type="checkbox" class="seasonal-theme-toggle">
+                      <input type="checkbox" class="seasonal-theme-toggle" id="seasonal-theme-toggle" name="seasonal-theme-toggle">
                       <span class="slider"></span>
                   </label>
                 </div>
                 <div class="font-selector-container">
                     <label for="font-selector">Font</label>
-                    <select class="font-selector">
+                    <select class="font-selector" id="font-selector" name="font-selector">
                         <option value="inter">Inter</option>
                         <option value="spicy-lyrics">Spicy Lyrics</option>
                         <option value="josefin-sans">Josefin Sans</option>
@@ -241,10 +241,10 @@
                 <div style="display: flex; gap: 0.95cqh; justify-content: center;">
                     <h3>Search Lyrics</h3>
                     <div class="providersTab">
-                        <div class="provider sl disabled">
-                            <span>Spicy Lyrics (Temporarily disabled)</span>
+                        <div class="provider sl active">
+                            <span>Spicy Lyrics</span>
                         </div>
-                        <div class="provider lrclib active">
+                        <div class="provider lrclib">
                             <span>LRCLIB</span>
                         </div>
                     </div>
@@ -254,22 +254,22 @@
                 </button>
             </div>
             
-            <form class="search-form lrclib">
+            <form class="search-form spicylyrics">
                 <div class="formGroups">
                   <div class="lrclib-formGroup formGroup">
                       <p style="text-align: center; font-size: 1.25rem; font-weight: 700; margin-bottom: 0">LRCLIB Search</p>
                       <div class="form-group">
                           <label for="search-track">Track Name</label>
-                          <input type="text" class="search-track form-control" placeholder="Enter track name" required>
+                          <input type="text" class="search-track form-control" id="search-track" name="search-track" placeholder="Enter track name" required>
                       </div>
                       <div style="display: flex; gap: 1rem;">
                           <div class="form-group" style="flex: 1;">
                               <label for="search-artist">Artist (optional)</label>
-                              <input type="text" class="search-artist form-control" placeholder="Enter artist name">
+                              <input type="text" class="search-artist form-control" id="search-artist" name="search-artist" placeholder="Enter artist name">
                           </div>
                           <div class="form-group" style="flex: 1;">
                               <label for="search-album">Album (optional)</label>
-                              <input type="text" class="search-album form-control" placeholder="Enter album name">
+                              <input type="text" class="search-album form-control" id="search-album" name="search-album" placeholder="Enter album name">
                           </div>
                       </div>
                   </div>
@@ -278,7 +278,7 @@
                       <p style="text-align: center; font-size: 1.25rem; font-weight: 700; margin-bottom: 0">Spicy Lyrics Search</p>
                       <div class="form-group">
                           <label for="search-spotify-url">Spotify URL</label>
-                          <input type="text" class="search-spotify-url form-control" placeholder="Enter the Spotify URL" required>
+                          <input type="text" class="search-spotify-url form-control" id="search-spotify-url" name="search-spotify-url" placeholder="Enter the Spotify URL" required>
                       </div>
 
                       <div class="hcaptcha-container">

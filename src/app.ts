@@ -1,14 +1,34 @@
-import DB from "./tools/iDB";
 import "./font-selector.ts"
-// IndexedDB config moved here (stores are fixed by the DB class)
-const iDBConfig = {
-	dbName: 'LyrprepDB',
-	version: 2,
-	defaults: {
-		expireTtlMs: 1000 * 60 * 60 * 24 * 7,
-	},
-};
-const iDB = new DB(iDBConfig);
+import { GetExpireStore, GetInstantStore } from "./modules/Cache.ts";
+
+const instantStore = GetInstantStore(
+  `Lyrprep/InstantStore`,
+  1,
+  {
+    SK_Store: "",
+    settings: {
+      removeTimestamps: true,
+      handleDashes: true,
+      handleParentheses: true,
+      addSpaces: true,
+      splitCJK: true,
+      removeEmptyLines: true,
+      theme: 'system',
+      seasonalTheme: true,
+    },
+    lastLyrics: "",
+  }
+);
+
+const cacheStore = GetExpireStore(
+	"Lyprep/ExpireStore",
+	1,
+	{
+		Duration: 1,
+		Unit: "Hours"
+	}
+)
+
 // DOM Elements
 const inputText = document.querySelector('.input-text') as HTMLTextAreaElement | HTMLInputElement;
 const outputText = document.querySelector('.output-text') as HTMLTextAreaElement | HTMLInputElement;
@@ -20,7 +40,7 @@ const closeSettingsBtn = document.querySelector('.close-settings') as HTMLButton
 const settingsPanel = document.querySelector('.settings-panel') as HTMLElement;
 const themeToggle = document.querySelector('.dark-theme-toggle') as HTMLInputElement;
 const seasonalThemeToggle = document.querySelector('.seasonal-theme-toggle') as HTMLInputElement;
-const realtimeToggle = document.querySelector('.realtime-toggle') as HTMLInputElement;
+const realtimeToggle = document.querySelector('#realtime-toggle') as HTMLInputElement;
 const toast = document.querySelector('.toast') as HTMLElement;
 const overlay = document.querySelector('.overlay') as HTMLElement;
 const searchBtn = document.querySelector('.search-lyrics') as HTMLButtonElement;
@@ -50,16 +70,16 @@ const spicyLyricsApiUrlBase = `https://api.spicylyrics.org/lyrprep`;
 // const CURRENT_STORE_VERSION = 1;
 
 // Settings state
-const settings = {
-	removeTimestamps: true,
-	handleDashes: true,
-	handleParentheses: true,
-	addSpaces: true,
-	splitCJK: true,
-	removeEmptyLines: true,
-	theme: 'system',
-	seasonalTheme: true,
-};
+// const settings = {
+// 	removeTimestamps: true,
+// 	handleDashes: true,
+// 	handleParentheses: true,
+// 	addSpaces: true,
+// 	splitCJK: true,
+// 	removeEmptyLines: true,
+// 	theme: 'system',
+// 	seasonalTheme: true,
+// };
 
 let currentHCaptchaWidget: number | null = null;
 
@@ -78,11 +98,11 @@ let shouldRenderHCaptcha = false;
 let isAwaitingHCaptcha = false;
 
 
-async function initSitekey() {
+/* async function initSitekey() {
     if (hCaptchaSiteKey != null) return;
 
     if (!navigator.onLine) {
-        const savedSK = await iDB.get("SK_Store");
+        const savedSK = instantStore.Items.SK_Store;
         if (savedSK) {
             hCaptchaSiteKey = savedSK;
 			siteKeyRetries = 0;
@@ -113,7 +133,8 @@ async function initSitekey() {
         const siteKey = siteKeyData.split("\x1e").join("-");
 
         hCaptchaSiteKey = siteKey;
-        await iDB.savePermanent("SK_Store", siteKey, undefined)
+        instantStore.Items.SK_Store = siteKey;
+        instantStore.SaveChanges();
         siteKeyRetries = 0;
 
 		if (initLoaderTitle) initLoaderTitle.innerHTML = `Done!`;
@@ -126,17 +147,12 @@ async function initSitekey() {
         siteKeyRetries++;
         initSitekey();
     }
-
-	const spinner = initLoaderModal.querySelector<HTMLElement>(".main__init-Loader-Content .spinning-loader");
-	if (spinner) {
-		spinner.classList.remove("activeAnimation");
-	}
-}
+} */
 
 
 const hCaptchaCallbacks = {
 	onSolve: (token: string) => {
-		// console.log('hCaptcha solved successfully');
+		 console.log('hCaptcha solved successfully');
 		currentHCaptchaToken = token;
 		// currentHCaptchaKey = key;
 		// Auto-resume SL search if applicable
@@ -162,10 +178,11 @@ const hCaptchaCallbacks = {
 	}
 }
 
-window.onloadHCaptcha = async () => {
+/* window.onloadHCaptcha = async () => {
 	hCaptchaLoaded = true;
+	console.log("hCaptcha loaded!")
 	ensureHCaptchaRendered();
-}
+} */
 
 function ensureHCaptchaRendered() {
 	try {
@@ -177,8 +194,10 @@ function ensureHCaptchaRendered() {
 		// Don't render twice into the same container
 		if (container.childElementCount > 0 && currentHCaptchaWidget !== null) return;
 
+		console.log("SiteKey", "cbe4a368-ada0-43b6-8470-d3f0f5d21214")
+
 		currentHCaptchaWidget = hcaptcha.render(container, {
-			sitekey: hCaptchaSiteKey,
+			sitekey: "cbe4a368-ada0-43b6-8470-d3f0f5d21214",
 			callback: (token: string) => hCaptchaCallbacks.onSolve(token),
 			'expired-callback': () => hCaptchaCallbacks.onExpired(),
 			'error-callback': (err: unknown) => hCaptchaCallbacks.onError(err),
@@ -242,7 +261,7 @@ async function init() {
 	// Set initial theme
 	await setInitialTheme();
 
-	await initSitekey();
+	//await initSitekey();
 
 	// Load settings from storage
 	await loadSettings();
@@ -255,6 +274,21 @@ async function init() {
 
 	// Set initial state of toggles
 	updateTogglesFromSettings();
+
+	{
+		if (initLoaderTitle) initLoaderTitle.innerHTML = `Done!`;
+		if (typeof overlay !== 'undefined' && typeof initLoaderModal !== undefined) {
+			if (!searchModal.classList.contains("active") && !settingsPanel.classList.contains("active")) overlay.classList.remove("active");
+			initLoaderModal.classList.remove("active");
+		}
+
+		setTimeout(() => {
+			const spinner = initLoaderModal.querySelector<HTMLElement>(".main__init-Loader-Content .spinning-loader");
+			if (spinner) {
+				spinner.classList.remove("activeAnimation");
+			}
+		}, 1000);
+	}
 }
 
 // Set up event listeners
@@ -357,21 +391,21 @@ function setupEventListeners() {
 async function setInitialTheme() {
     // const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
 	let savedTheme;
-	try { savedTheme = await iDB.get('theme'); } catch (_) {}
+	try { savedTheme = instantStore.Items.settings.theme; } catch (_) {}
 	
 	if (savedTheme) {
-		settings.theme = savedTheme;
+		instantStore.Items.settings.theme = savedTheme;
 	} else {
-		settings.theme = 'system';
+		instantStore.Items.settings.theme = 'system';
 	}
 
 	let savedSeasonalTheme;
-	try { savedSeasonalTheme = await iDB.get('seasonalTheme'); } catch (_) {}
+	try { savedSeasonalTheme = instantStore.Items.settings.seasonalTheme; } catch (_) {}
 	
 	if (savedTheme) {
-		settings.seasonalTheme = savedSeasonalTheme == "true";
+		instantStore.Items.settings.seasonalTheme = savedSeasonalTheme ?? true;
 	} else {
-		settings.seasonalTheme = true;
+		instantStore.Items.settings.seasonalTheme = true;
 	}
 	
 	applyTheme();
@@ -379,11 +413,11 @@ async function setInitialTheme() {
 
 // Apply current theme
 function applyTheme() {
-	if (settings.theme === 'system') {
+	if (instantStore.Items.settings.theme === 'system') {
 		const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
 		document.documentElement.setAttribute('data-theme', prefersDark ? 'dark' : 'light');
 	} else {
-		document.documentElement.setAttribute('data-theme', settings.theme);
+		document.documentElement.setAttribute('data-theme', instantStore.Items.settings.theme);
 	}
 	
 	// Update theme toggle
@@ -392,10 +426,10 @@ function applyTheme() {
 	}
 
 	if (seasonalThemeToggle) {
-		seasonalThemeToggle.checked = settings.seasonalTheme;
+		seasonalThemeToggle.checked = instantStore.Items.settings.seasonalTheme;
 	}
 
-	if (settings.seasonalTheme) {
+	if (instantStore.Items.settings.seasonalTheme) {
 		document.body.classList.add("theme-seasonal");
 	} else {
 		document.body.classList.remove("theme-seasonal");
@@ -405,23 +439,23 @@ function applyTheme() {
 // Toggle between light and dark theme
 async function toggleTheme() {
 	if (themeToggle.checked) {
-		settings.theme = 'dark';
+		instantStore.Items.settings.theme = 'dark';
 	} else {
-		settings.theme = 'light';
+		instantStore.Items.settings.theme = 'light';
 	}
 	
-	await iDB.savePermanent('theme', settings.theme, undefined);
+	instantStore.SaveChanges();
 	applyTheme();
 }
 
 async function toggleSeasonalTheme() {
 	if (seasonalThemeToggle.checked) {
-		settings.seasonalTheme = true;
+		instantStore.Items.settings.seasonalTheme = true;
 	} else {
-		settings.seasonalTheme = false;
+		instantStore.Items.settings.seasonalTheme = false;
 	}
 	
-	await iDB.savePermanent('seasonalTheme', String(settings.seasonalTheme), undefined);
+	instantStore.SaveChanges();
 	applyTheme();
 }
 
@@ -526,14 +560,13 @@ async function searchLyrics() {
 			trackId = trackUrl
 		}
 
-
 		if (trackId) {
 			showLoadingState(true);
 
-			const cachedContent = await iDB.get(`sl:${trackId}`);
+			const cachedContent = await cacheStore.GetItem(`lyrics:${trackId}`);
 
 			// console.log("Cached Content", cachedContent);
-			if (cachedContent !== undefined) {
+			if (typeof cachedContent === "string" && cachedContent.length > 0) {
 				// console.log("Cached Content - not undefined");
 				const lyrics = parseLyrics(cachedContent);
 
@@ -596,7 +629,7 @@ async function searchLyrics() {
 
 				const lyrics = parseLyrics(data);
 
-				await iDB.saveExpiring(`sl:${trackId}`, data, 1000 * 60 * 30, undefined);
+				await cacheStore.SetItem(`lyrics:${trackId}`, lyrics);
 
 				lyricsContinue(lyrics);
 			} catch (error) {
@@ -664,12 +697,12 @@ function escapeHtml(unsafe: string) {
 
 // Update settings from UI
 async function updateSettings() {
-	settings.removeTimestamps = (document.querySelector('.option-remove-timestamps') as HTMLInputElement).checked;
-	settings.handleDashes = (document.querySelector('.option-handle-dashes') as HTMLInputElement).checked;
-	settings.handleParentheses = (document.querySelector('.option-handle-parentheses') as HTMLInputElement).checked;
-	settings.addSpaces = (document.querySelector('.option-add-spaces') as HTMLInputElement).checked;
-	settings.splitCJK = (document.querySelector('.option-split-cjk') as HTMLInputElement).checked;
-	settings.removeEmptyLines = (document.querySelector('.option-remove-empty-lines') as HTMLInputElement).checked;
+	instantStore.Items.settings.removeTimestamps = (document.querySelector('.option-remove-timestamps') as HTMLInputElement).checked;
+	instantStore.Items.settings.handleDashes = (document.querySelector('.option-handle-dashes') as HTMLInputElement).checked;
+	instantStore.Items.settings.handleParentheses = (document.querySelector('.option-handle-parentheses') as HTMLInputElement).checked;
+	instantStore.Items.settings.addSpaces = (document.querySelector('.option-add-spaces') as HTMLInputElement).checked;
+	instantStore.Items.settings.splitCJK = (document.querySelector('.option-split-cjk') as HTMLInputElement).checked;
+	instantStore.Items.settings.removeEmptyLines = (document.querySelector('.option-remove-empty-lines') as HTMLInputElement).checked;
 	
 	await saveSettings();
 	
@@ -680,15 +713,14 @@ async function updateSettings() {
 
 // Save settings to localStorage
 async function saveSettings() {
-	await iDB.savePermanent('lyrprepSettings', settings, undefined);
+	instantStore.SaveChanges();
 }
 
 // Load settings from localStorage
 async function loadSettings() {
-	let savedSettings;
-	try { savedSettings = await iDB.get('lyrprepSettings'); } catch (_) {}
-	if (savedSettings) {
-		try { Object.assign(settings, JSON.parse(savedSettings)); } catch (_) {}
+	let savedSettings = instantStore.Items.settings;
+	if (savedSettings && typeof savedSettings === 'object') {
+		try { Object.assign(instantStore.Items.settings, savedSettings); } catch (_) {}
 	}
 	
 	// Apply loaded settings to UI
@@ -697,12 +729,12 @@ async function loadSettings() {
 
 // Update UI toggles from settings
 function updateTogglesFromSettings() {
-	(document.querySelector('.option-remove-timestamps') as HTMLInputElement).checked = settings.removeTimestamps;
-	(document.querySelector('.option-handle-dashes') as HTMLInputElement).checked = settings.handleDashes;
-	(document.querySelector('.option-handle-parentheses') as HTMLInputElement).checked = settings.handleParentheses;
-	(document.querySelector('.option-add-spaces') as HTMLInputElement).checked = settings.addSpaces;
-	(document.querySelector('.option-split-cjk') as HTMLInputElement).checked = settings.splitCJK;
-	(document.querySelector('.option-remove-empty-lines') as HTMLInputElement).checked = settings.removeEmptyLines;
+	(document.querySelector('.option-remove-timestamps') as HTMLInputElement).checked = instantStore.Items.settings.removeTimestamps;
+	(document.querySelector('.option-handle-dashes') as HTMLInputElement).checked = instantStore.Items.settings.handleDashes;
+	(document.querySelector('.option-handle-parentheses') as HTMLInputElement).checked = instantStore.Items.settings.handleParentheses;
+	(document.querySelector('.option-add-spaces') as HTMLInputElement).checked = instantStore.Items.settings.addSpaces;
+	(document.querySelector('.option-split-cjk') as HTMLInputElement).checked = instantStore.Items.settings.splitCJK;
+	(document.querySelector('.option-remove-empty-lines') as HTMLInputElement).checked = instantStore.Items.settings.removeEmptyLines;
 	
 	// Set theme toggle
 	if (themeToggle) {
@@ -716,11 +748,12 @@ function updateTogglesFromSettings() {
 let currentSaveTextTimeout: any = null;
 
 async function clearSavedTextLyrics() {
-	await iDB.savePermanent("lastLyrics", "");
+	instantStore.Items.lastLyrics = "";
+	instantStore.SaveChanges();
 }
 
 async function loadSavedTextLyrics() {
-	const value = await iDB.get("lastLyrics");
+	const value = instantStore.Items.lastLyrics;
 	if (value === undefined) return;
 	const lyrics = value.split("\x1e").join("\n");
 	if (lyrics === undefined) return;
@@ -729,6 +762,7 @@ async function loadSavedTextLyrics() {
 }
 
 loadSavedTextLyrics();
+loadSettings();
 
 // Main conversion functio.
 async function convertText() {
@@ -739,14 +773,11 @@ async function convertText() {
 			clearTimeout(currentSaveTextTimeout);
 			currentSaveTextTimeout = null;
 		}
-		currentSaveTextTimeout =
-			setTimeout(
-				() => (
-					iDB
-						.savePermanent("lastLyrics", (text !== "" ? text.split("\n").join("\x1e") : ""))
-				),
-				1000
-			)
+
+		currentSaveTextTimeout = setTimeout(() => {
+			instantStore.Items.lastLyrics = (text !== "" ? text.split("\n").join("\x1e") : "");
+			instantStore.SaveChanges();
+		}, 200);
 
 		if (!text.trim()) {
 			outputText.value = '';
@@ -779,12 +810,12 @@ async function convertText() {
 		outputText.value = processedLines.join('\n');
 		
 		// Remove empty lines if setting is enabled
-		if (settings.removeEmptyLines) {
+		if (instantStore.Items.settings.removeEmptyLines) {
 			outputText.value = outputText.value.split('\n').filter(line => line.trim() !== '').join('\n');
 		}
 		
 		// If addSpaces is enabled, replace spaces with backslash-space-backslash
-		if (settings.addSpaces) {
+		if (instantStore.Items.settings.addSpaces) {
 			outputText.value = outputText.value.replace(/ /g, '\\ \\');
 		}
 		
@@ -804,12 +835,12 @@ function processLine(line: string) {
 	if (!line || typeof line !== 'string') return line || '';
 	
 	// If all processing options are off, return the line as is
-	if (!settings.removeTimestamps && !settings.handleDashes && !settings.handleParentheses && !settings.splitCJK) {
+	if (!instantStore.Items.settings.removeTimestamps && !instantStore.Items.settings.handleDashes && !instantStore.Items.settings.handleParentheses && !instantStore.Items.settings.splitCJK) {
 		return line;
 	}
 	
 	// Remove anything within square brackets if enabled
-	if (settings.removeTimestamps) {
+	if (instantStore.Items.settings.removeTimestamps) {
 		line = line.replace(/\[.*?\]/g, '').trim();
 	}
 
@@ -828,7 +859,7 @@ function processLine(line: string) {
 	// First, extract all parenthetical content and build the main line
 	for (let i = 0; i < line.length; i++) {
 		// Handle parenthetical content if enabled
-		if (settings.handleParentheses) {
+		if (instantStore.Items.settings.handleParentheses) {
 			// Check for opening parentheses (both ASCII and CJK)
 			const isOpeningParen = ['(', '（', '「', '『', '【', '〈', '《'].includes(line[i]);
 			// Check for closing parentheses (both ASCII and CJK)
@@ -849,7 +880,7 @@ function processLine(line: string) {
 		}
 
 		// Handle CJK character splitting if enabled
-		if (settings.splitCJK) {
+		if (instantStore.Items.settings.splitCJK) {
 			const char = line[i];
 			// Check if character is CJK and handle splitting if needed
 			if (isCJKChar(char)) {
@@ -865,7 +896,7 @@ function processLine(line: string) {
 		}
 
 		// Handle dashes if enabled
-		if (settings.handleDashes && line[i] === '-') {
+		if (instantStore.Items.settings.handleDashes && line[i] === '-') {
 			if (i + 1 < line.length) {
 				const nextChar = line[i + 1];
 				if (nextChar === ' ') {
@@ -908,7 +939,7 @@ function processLine(line: string) {
 			let processedVocal = vocal;
 			
 			// Apply CJK splitting to background vocals if enabled
-			if (settings.splitCJK) {
+			if (instantStore.Items.settings.splitCJK) {
 				let result = '';
 				for (let i = 0; i < processedVocal.length; i++) {
 					const char = processedVocal[i];
@@ -927,7 +958,7 @@ function processLine(line: string) {
 			}
 			
 			// Process dashes in background vocals if enabled
-			if (settings.handleDashes) {
+			if (instantStore.Items.settings.handleDashes) {
 				let result = '';
 				for (let i = 0; i < processedVocal.length; i++) {
 					if (processedVocal[i] === '-') {
@@ -977,13 +1008,20 @@ async function copyToClipboard() {
 	}
 }
 
+let toastInt: any = null;
+
 // Show toast notification
 function showToast(message: string, duration = 3000) {
+	if (toastInt) {
+		clearTimeout(toastInt);
+		toastInt = null;
+	}
+
 	toast.textContent = message;
 	toast.classList.add('show');
 	
 	// Hide after duration
-	setTimeout(() => {
+	toastInt = setTimeout(() => {
 		toast.classList.remove('show');
 	}, duration);
 }
@@ -1062,7 +1100,7 @@ function updateSearchProviderFields() {
 init();
 // Listen for system theme changes
 window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => {
-	if (settings.theme === 'system') {
+	if (instantStore.Items.settings.theme === 'system') {
 		applyTheme();
 	}
 });
@@ -1136,7 +1174,7 @@ window.addEventListener('online', () => {
 	updateOfflineStatus();
     hCaptchaSiteKey = null;
     siteKeyRetries = 0;
-    initSitekey();
+    //initSitekey();
     showToast("Back online!");
 	offlineNoticeElement?.classList.remove("active");
 });
