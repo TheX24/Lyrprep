@@ -3,6 +3,10 @@ import { defineConfig } from "vite";
 import classManglerPlugin from "./vite-plugins/vite-class-mangler";
 import removeHtmlCommentsPlugin from "./vite-plugins/remove-html-comments";
 
+const idToChunk = new Map();
+const reservedChunks = new Set(["_1", "0"]);
+const ChunkIdConfig = { min: 1, max: 8 };
+
 export default defineConfig({
   plugins: [
     // VitePWA({
@@ -65,8 +69,8 @@ export default defineConfig({
     classManglerPlugin({
       length: 20,
       generateMapping: true,
-      mappingPath: 'class-mapping.json',
-      ignore: ['sr-only'],
+      mappingPath: "class-mapping.json",
+      ignore: ["sr-only"],
       skipStartsWith: ["fa", "main__"],
     }),
     removeHtmlCommentsPlugin(),
@@ -79,21 +83,56 @@ export default defineConfig({
       },
       output: {
         manualChunks(id) {
-          switch (true) {
-            case id.includes('modules/Cache.ts'):
-              return '1';
-            case id.includes('app.ts'):
-              return '2';
-            case id.includes('font-selector.ts'):
-              return '3';
-            case id.includes('lucide-icons.ts'):
-              return '4';
+          if (idToChunk.has(id)) {
+            const assigned = idToChunk.get(id);
+            if (reservedChunks.has(assigned)) {
+              throw new Error(
+                `Chunk '${assigned}' is reserved and cannot be used`
+              );
+            }
+            return assigned;
           }
+
+          if (id.includes("/src/") || id.includes("node_modules")) {
+            if (id.includes("node_modules")) {
+              idToChunk.set(id, "_1");
+              return "_1";
+            }
+
+            if (id.includes("/src/")) {
+              const min = ChunkIdConfig.min;
+              const max = ChunkIdConfig.max;
+              const range = max - min + 1;
+              const hash = Array.from(id).reduce(
+                (acc, char) => acc + char.charCodeAt(0),
+                0
+              );
+              let random = Math.abs(Math.sin(hash)) * 10000;
+              let chunkNumber = Math.floor(random % range) + min;
+              let chunkId = String(chunkNumber);
+
+              // If reserved, increment (wrap around) until non-reserved is found
+              let attempts = 0;
+              while (reservedChunks.has(chunkId) && attempts < range + 1) {
+                chunkNumber = ((chunkNumber - min + 1) % range) + min;
+                chunkId = String(chunkNumber);
+                attempts++;
+              }
+              if (reservedChunks.has(chunkId)) {
+                throw new Error(
+                  `Cannot allocate chunk, chunkId '${chunkId}' is reserved`
+                );
+              }
+              idToChunk.set(id, chunkId);
+              return chunkId;
+            }
+          }
+          return undefined;
         },
         chunkFileNames: `_static/js/[hash].[name].js`,
         entryFileNames: `_static/js/[hash].0.js`,
-        assetFileNames: "_static/[hash][extname]",
-      }
+        assetFileNames: "_static/assets/[hash][extname]",
+      },
     },
   },
 });
