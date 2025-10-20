@@ -54,9 +54,6 @@ const searchAlbumInput = document.querySelector('.search-album') as HTMLInputEle
 //const swapProvidersButton = document.querySelector('.swapProvidersButton');
 
 const searchSpotifyUri = document.querySelector('.search-spotify-url') as HTMLInputElement;
-const initLoaderModal = document.querySelector(".main__init-Loader") as HTMLElement;
-
-const initLoaderTitle = initLoaderModal.querySelector<HTMLElement>(".main__init-Loader-Content .main__init-Loader-Title");
 
 // const searchModalBtn = document.querySelector('.search-btn') as HTMLButtonElement;
 
@@ -276,18 +273,9 @@ async function init() {
 	updateTogglesFromSettings();
 
 	{
-		if (initLoaderTitle) initLoaderTitle.innerHTML = `Done!`;
-		if (typeof overlay !== 'undefined' && typeof initLoaderModal !== undefined) {
+		if (typeof overlay !== 'undefined') {
 			if (!searchModal.classList.contains("active") && !settingsPanel.classList.contains("active")) overlay.classList.remove("active");
-			initLoaderModal.classList.remove("active");
 		}
-
-		setTimeout(() => {
-			const spinner = initLoaderModal.querySelector<HTMLElement>(".main__init-Loader-Content .spinning-loader");
-			if (spinner) {
-				spinner.classList.remove("activeAnimation");
-			}
-		}, 1000);
 	}
 }
 

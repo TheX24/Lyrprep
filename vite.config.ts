@@ -4,8 +4,8 @@ import classManglerPlugin from "./vite-plugins/vite-class-mangler";
 import removeHtmlCommentsPlugin from "./vite-plugins/remove-html-comments";
 
 const idToChunk = new Map();
-const reservedChunks = new Set(["_1", "0"]);
-const ChunkIdConfig = { min: 1, max: 8 };
+const reservedChunks = new Set(["pkg", "entry"]);
+const ChunkIdConfig = { min: 1000, max: 10000 };
 
 export default defineConfig({
   plugins: [
@@ -67,11 +67,13 @@ export default defineConfig({
     //   },
     // }),
     classManglerPlugin({
-      length: 20,
+      min: 3,
+      max: 8,
       generateMapping: true,
+      classNameGeneratorAlg: "generic",
       mappingPath: "class-mapping.json",
-      ignore: ["sr-only"],
-      skipStartsWith: ["fa", "main__"],
+      skipStartsWith: ["fa"],
+      ignore: ["v_appRoot"]
     }),
     removeHtmlCommentsPlugin(),
   ],
@@ -95,8 +97,8 @@ export default defineConfig({
 
           if (id.includes("/src/") || id.includes("node_modules")) {
             if (id.includes("node_modules")) {
-              idToChunk.set(id, "_1");
-              return "_1";
+              idToChunk.set(id, "pkg");
+              return "pkg";
             }
 
             if (id.includes("/src/")) {
@@ -129,9 +131,9 @@ export default defineConfig({
           }
           return undefined;
         },
-        chunkFileNames: `_static/js/[hash].[name].js`,
-        entryFileNames: `_static/js/[hash].0.js`,
-        assetFileNames: "_static/assets/[hash][extname]",
+        chunkFileNames: `_vitestatic/js/[name]/[name]-[hash].js`,
+        entryFileNames: `_vitestatic/js/entry/entry-[hash].js`,
+        assetFileNames: "_vitestatic/assets/[extname]/[hash][extname]",
       },
     },
   },
