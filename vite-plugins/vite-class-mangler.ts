@@ -189,16 +189,18 @@ export default function classManglerPlugin(options: ClassManglerOptions = {}): P
       /class(?:Name)?\s*=\s*["']([^"']+)["']/g,
       // JSX: className={`foo bar`}
       /className\s*=\s*\{[`'"]([^`'"]+)[`'"]\}/g,
-      // JS: classList.add('foo', "bar", ...)
-      /classList\.(?:add|remove|toggle)\s*\(\s*([^)]+)\)/g,
+      // JS: classList.add('foo', "bar", ...), .contains(), .replace() etc.
+      /classList\.(?:add|remove|toggle|contains|replace)\s*\(\s*([^)]+)\)/g,
       // JS: setAttribute('class', 'foo bar')
       /\.setAttribute\s*\(\s*['"]class['"]\s*,\s*['"]([^'"]+)['"]\s*\)/g,
       // Svelte: class:foo
       /class:([a-zA-Z][a-zA-Z0-9_-]*)/g,
       // getElementsByClassName('foo bar') or getElementsByClassName("foo bar")
       /getElementsByClassName\s*\(\s*["']([^"']+)["']\s*\)/g,
-      // querySelector/All with any quote or backtick type, capturing class selectors
-      /querySelector(All)?\s*\(\s*([`"'"])([^`"']+)\2\s*\)/g,
+      // querySelector/All with optional TypeScript generic and any quote or backtick type
+      /querySelector(All)?(?:<[^>]*>)?\s*\(\s*([`"'"])([^`"']+)\2\s*\)/g,
+      // .closest('.some-class')
+      /\.closest\s*\(\s*([`"'"])([^`"']+)\1\s*\)/g,
     ];
   
     // Helper to extract class names from a string (space/comma separated)
@@ -213,8 +215,8 @@ export default function classManglerPlugin(options: ClassManglerOptions = {}): P
     patterns.forEach((pattern) => {
       let match;
       while ((match = pattern.exec(content)) !== null) {
-        // classList.add/remove/toggle args
-        if (pattern.source.startsWith('classList')) {
+        // classList methods can have multiple string arguments
+        if (pattern.source.includes('classList')) {
           const argPattern = /['"`]([^'"`]+)['"`]/g;
           let argMatch;
           while ((argMatch = argPattern.exec(match[1])) !== null) {
@@ -230,10 +232,22 @@ export default function classManglerPlugin(options: ClassManglerOptions = {}): P
           classes.push(...extractNames(match[1]));
         }
         // querySelector/All with any quote type
-        else if (pattern.source.startsWith('querySelector')) {
-          // Selectors captured in match[3]
+        else if (pattern.source.includes('querySelector')) {
+          // Selectors captured in match[3] (since the generic is a non-capturing group)
           const selector = match[3];
           if (!selector) continue; // Defensive check
+          // Find all .classname selectors in the string
+          const classSelectorPattern = /\.([a-zA-Z][a-zA-Z0-9_-]*)/g;
+          let csMatch;
+          while ((csMatch = classSelectorPattern.exec(selector)) !== null) {
+            classes.push(csMatch[1]);
+          }
+        }
+        // closest('.some-class')
+        else if (pattern.source.includes('closest')) {
+          // Selectors captured in match[2]
+          const selector = match[2];
+          if (!selector) continue;
           // Find all .classname selectors in the string
           const classSelectorPattern = /\.([a-zA-Z][a-zA-Z0-9_-]*)/g;
           let csMatch;
@@ -308,73 +322,97 @@ export default function classManglerPlugin(options: ClassManglerOptions = {}): P
         });
       }
     } else {
-      // Transform class names in templates/JS using precise matching
-      
-      // Method 1: Handle class attributes by splitting and mapping (most robust)
-      transformedContent = transformedContent.replace(
-        /class(?:Name)?\s*=\s*(["`'])([^"`']*?)\1/g,
-        (match, quote, classNames) => {
-          const mangledClasses = classNames
-            .split(/\s+/)
-            .filter(cls => cls.length > 0)
-            .map(cls => classMapping[cls] || cls)
-            .join(' ');
-          return `class${match.includes('Name') ? 'Name' : ''}=${quote}${mangledClasses}${quote}`;
-        }
-      );
-  
-      // Method 2: Handle classList operations with exact matching
-      for (const [originalClass, mangledClass] of Object.entries(classMapping)) {
-        const classListMethods = ['add', 'remove', 'toggle', 'contains'];
-        const quoteTypes = [`'`, `"`, '`'];
-        
-        for (const method of classListMethods) {
-          for (const quote of quoteTypes) {
-            const searchString = `classList.${method}(${quote}${originalClass}${quote})`;
-            if (transformedContent.includes(searchString)) {
-              transformedContent = transformedContent.split(searchString)
-                .join(`classList.${method}(${quote}${mangledClass}${quote})`);
+        // This function uses callbacks with String.prototype.replace to robustly handle transformations
+        // without complex and brittle loops over the class mapping.
+
+        // Sort classes by length, descending, to prevent replacing 'btn' inside 'btn-primary'
+        const sortedClasses = Object.keys(classMapping).sort((a, b) => b.length - a.length);
+
+        // Method 1: Handle class="foo bar" or className="foo bar"
+        transformedContent = transformedContent.replace(
+            /class(?:Name)?\s*=\s*(["`'])([^"`']*?)\1/g,
+            (match, quote, classNames) => {
+                const mangledClasses = classNames
+                    .split(/\s+/)
+                    .filter(cls => cls.length > 0)
+                    .map(cls => classMapping[cls] || cls)
+                    .join(' ');
+                return `class${match.includes('Name') ? 'Name' : ''}=${quote}${mangledClasses}${quote}`;
             }
+        );
+
+        // Method 2: Handle getElementsByClassName("foo bar")
+        transformedContent = transformedContent.replace(
+          /getElementsByClassName\s*\(([`"'`])([^`"']+?)\1\)/g,
+          (match, quote, classNames) => {
+            const mangledClasses = classNames
+              .split(/\s+/)
+              .filter(cls => cls.length > 0)
+              .map(cls => classMapping[cls] || cls)
+              .join(' ');
+            return `getElementsByClassName(${quote}${mangledClasses}${quote})`;
           }
-        }
-        
-        // Method 3: Handle querySelector with exact class selector matching
-        const quoteTypes2 = [`'`, `"`, '`'];
-        quoteTypes2.forEach(quote => {
-          const querySelectorPatterns = [
-            `querySelector(${quote}.${originalClass}${quote})`,
-            `querySelectorAll(${quote}.${originalClass}${quote})`
-          ];
-          
-          querySelectorPatterns.forEach(pattern => {
-            if (transformedContent.includes(pattern)) {
-              const mangledPattern = pattern.replace(originalClass, mangledClass);
-              transformedContent = transformedContent.split(pattern).join(mangledPattern);
+        );
+
+        // Method 3: Handle querySelector('.foo.bar') with optional TS Generics
+        transformedContent = transformedContent.replace(
+            /querySelector(All)?(<[^>]*>)?\s*\(([`"'`])(.*?)\3\)/g,
+            (match, all, generic, quote, selector) => {
+                let newSelector = selector;
+                for (const originalClass of sortedClasses) {
+                    if (newSelector.includes(`.${originalClass}`)) {
+                        const mangledClass = classMapping[originalClass];
+                        // Regex to match .className not followed by other valid class characters
+                        const pattern = new RegExp(`\\.${escapeRegExp(originalClass)}(?![a-zA-Z0-9_-])`, 'g');
+                        newSelector = newSelector.replace(pattern, `.${mangledClass}`);
+                    }
+                }
+                return `querySelector${all || ''}${generic || ''}(${quote}${newSelector}${quote})`;
             }
-          });
-        });
-  
-        // Method 4: Handle template string class usage like `.${className}` or `"${className}"`
-        const templatePatterns = [
-          `.${originalClass} `,
-          `.${originalClass}"`,
-          `.${originalClass}'`,
-          `.${originalClass}\``,
-          `.${originalClass}}`,  // For template literals
-          `.${originalClass})`,  // For function calls
-        ];
-        
-        templatePatterns.forEach(pattern => {
-          if (transformedContent.includes(pattern)) {
-            const mangledPattern = pattern.replace(originalClass, mangledClass);
-            transformedContent = transformedContent.split(pattern).join(mangledPattern);
-          }
-        });
-      }
+        );
+
+        // Method 4: Handle classList methods like .add('foo', 'bar')
+        transformedContent = transformedContent.replace(
+            /classList\.(add|remove|toggle|contains|replace)\([^)]*\)/g,
+            (match) => {
+                let newMatch = match;
+                for (const originalClass of sortedClasses) {
+                    if (!newMatch.includes(originalClass)) continue;
+
+                    const mangledClass = classMapping[originalClass];
+                    // Replace the class name inside quotes
+                    const quoteTypes = [`'`, `"`, '`'];
+                    quoteTypes.forEach(quote => {
+                        const pattern = `${quote}${originalClass}${quote}`;
+                        if (newMatch.includes(pattern)) {
+                            newMatch = newMatch.replace(new RegExp(escapeRegExp(pattern), 'g'), `${quote}${mangledClass}${quote}`);
+                        }
+                    });
+                }
+                return newMatch;
+            }
+        );
+
+        // Method 5: Handle closest('.foo.bar')
+        transformedContent = transformedContent.replace(
+            /\.closest\s*\(([`"'`])(.*?)\1\)/g,
+            (match, quote, selector) => {
+                let newSelector = selector;
+                for (const originalClass of sortedClasses) {
+                    if (newSelector.includes(`.${originalClass}`)) {
+                        const mangledClass = classMapping[originalClass];
+                        // Regex to match .className not followed by other valid class characters
+                        const pattern = new RegExp(`\\.${escapeRegExp(originalClass)}(?![a-zA-Z0-9_-])`, 'g');
+                        newSelector = newSelector.replace(pattern, `.${mangledClass}`);
+                    }
+                }
+                return `.closest(${quote}${newSelector}${quote})`;
+            }
+        );
     }
   
     return transformedContent;
-  }  
+  }
 
   // Save mapping to file with directory creation and skip statistics
   function saveMappingFile(): void {
@@ -552,3 +590,4 @@ export default function classManglerPlugin(options: ClassManglerOptions = {}): P
 }
 
 export type { ClassManglerOptions };
+
