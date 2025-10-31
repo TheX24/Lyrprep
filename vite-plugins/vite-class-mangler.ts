@@ -486,62 +486,108 @@ export default function classManglerPlugin(options: ClassManglerOptions = {}): P
         return null;
       }
 
-
       const cleanId = id.split('?')[0];
       const fileExtension = path.extname(cleanId);
 
       if (id.includes('node_modules')) {
         return null;
       }
-
       
       if (!suffixes.includes(fileExtension)) {
         return null;
       }
-
       
-      let shouldTransform = false;
       let extractedClasses: string[] = [];
+      let shouldTransform = false;
 
       try {
+        // --- BRANCH 1: Pure CSS Files (e.g., .css, .scss) ---
         if (fileExtension === '.css' || fileExtension === '.scss' || fileExtension === '.sass' || fileExtension === '.less') {
           if (mangleCss) {
             extractedClasses = extractCssClassNames(code);
             shouldTransform = extractedClasses.length > 0;
+
+            if (!shouldTransform) {
+              return null;
+            }
+
+            // Populate map
+            extractedClasses.forEach(className => {
+              if (className && !shouldSkipClass(className)) {
+                getMangledClassName(className);
+              }
+            });
+
+            // Transform
+            const transformedCode = transformContent(code, true); // isCSS = true
+            log("Processed File (CSS)", id);
+            return {
+              code: transformedCode,
+              map: null
+            };
           }
-        } else {
-          extractedClasses = extractClassNames(code);
-          shouldTransform = extractedClasses.length > 0;
-        }
-
-        if (!shouldTransform) {
+          // If mangleCss is false, just return null and do nothing
           return null;
-        }
+        } 
+        
+        // --- BRANCH 2: HTML/JS/Vue/Svelte/etc. Files ---
+        else { 
+          // 1. Extract from HTML/JS attributes and scripts
+          extractedClasses = extractClassNames(code); 
 
-        // Process classes and track skipped ones
-        let mangledCount = 0;
-        let skippedCount = 0;
+          // 2. Extract from <style> tags
+          const styleTagRegex = /<style[^>]*>([\s\S]*?)<\/style>/g;
+          let styleMatch;
+          const styleTagClasses: string[] = [];
 
-        extractedClasses.forEach(className => {
-          if (className) {
-            if (shouldSkipClass(className)) {
-              skippedCount++;
-            } else {
-              getMangledClassName(className);
-              mangledCount++;
+          if (mangleCss) { // Only do this if mangleCss is on
+            while ((styleMatch = styleTagRegex.exec(code)) !== null) {
+              const styleContent = styleMatch[1];
+              if (styleContent) {
+                styleTagClasses.push(...extractCssClassNames(styleContent));
+              }
             }
           }
-        });
 
-        const isCSS = fileExtension === '.css' || fileExtension === '.scss' || fileExtension === '.sass' || fileExtension === '.less';
-        const transformedCode = transformContent(code, isCSS);
+          // Combine all unique classes
+          const allExtractedClasses = [...new Set([...extractedClasses, ...styleTagClasses])];
+          
+          if (allExtractedClasses.length === 0) {
+            return null; // No classes found at all
+          }
 
-        log("Processed File", id)
+          // 3. Process and populate the mapping
+          allExtractedClasses.forEach(className => {
+            if (className && !shouldSkipClass(className)) {
+              getMangledClassName(className); // Populates the map
+            }
+          });
 
-        return {
-          code: transformedCode,
-          map: null
-        };
+          // 4. Transform the content
+          // First, transform the HTML/JS part
+          let transformedCode = transformContent(code, false); // isCSS = false
+
+          // Second, transform the CSS inside the <style> tags
+          if (mangleCss && styleTagClasses.length > 0) {
+            // We use the regex again on the *already transformed* (HTML-wise) code.
+            // This is safe, as transformContent(isCSS=false) doesn't touch <style> contents.
+            transformedCode = transformedCode.replace(
+              styleTagRegex,
+              (fullMatch, styleContent) => {
+                const transformedStyleContent = transformContent(styleContent, true); // isCSS = true
+                // Reconstruct the full match, replacing only the content
+                return fullMatch.replace(styleContent, transformedStyleContent);
+              }
+            );
+          }
+          
+          log("Processed File (HTML/JS/Vue/etc.)", id);
+
+          return {
+            code: transformedCode,
+            map: null
+          };
+        }
       } catch (error) {
         logError(`Error transforming ${id}:`, error);
         return {
