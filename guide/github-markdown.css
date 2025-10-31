@@ -1226,3 +1226,22 @@
     min-height: 52px;
   }
   
+  .markdown-alert-caution {
+  	border-left: .25em solid #d1242f;
+    background-color: transparent;
+  	padding: 0.5em 1em;
+  	margin: 1em 0;
+  }
+
+  .markdown-alert-caution .markdown-alert-title {
+    display: flex;
+  	align-items: center;
+  	font-weight: 600;
+  	color: #d1242f;
+  	margin-bottom: 0.5em;
+  }
+
+  .markdown-alert-caution .octicon {
+  	fill: #d1242f;
+  	margin-right: 0.5em;
+  }

@@ -59,6 +59,9 @@
 			<p>
 				Made by
 				<strong><a class="user-mention notranslate" target="_blank" rel="noopener noreferrer" data-hovercard-type="user"
+						data-hovercard-url="/users/Balint2201/hovercard" data-octo-click="hovercard-link-click"
+						data-octo-dimensions="link_type:self" href="https://github.com/Balint2201">@Balint2201</a></strong>,
+				<strong><a class="user-mention notranslate" target="_blank" rel="noopener noreferrer" data-hovercard-type="user"
 						data-hovercard-url="/users/roranfeed/hovercard" data-octo-click="hovercard-link-click"
 						data-octo-dimensions="link_type:self" href="https://github.com/roranfeed">@roranfeed</a></strong>,
 				<strong><a class="user-mention notranslate" target="_blank" rel="noopener noreferrer" data-hovercard-type="user"
@@ -146,7 +149,7 @@
 					</svg>Important
 				</p>
 				<p>
-					Make sure to have this switch enabled.<br />
+					Make sure to have this switch ("Enable Special Prefix") enabled.<br />
 					<a target="_blank" rel="noopener noreferrer" href="./assets/step_3_switch.png"><img width="399"
 							height="449" alt="Create background lines on import toggle enabled"
 							src="./assets/step_3_switch.png" style="max-width: 100%; height: auto; max-height: 449px" /></a>
@@ -205,6 +208,10 @@
 					<li>
 						You can do the same for a second singer by checking "Duet Vocal"
 					</li>
+					<li>
+						Checking the "Obscene Word" checkbox under the "Word Content" textarea
+						will not change anything inside of SpicyLyrics.
+					</li>
 				</ul>
 			</div>
 			<h3>
@@ -239,8 +246,7 @@
 				If you want to see the "Credits" at the end of the lyrics container in
 				Spicy Lyrics, you need to mention the song writers.<br/>
 				And to do that, put this into the
-				<code class="notranslate">&lt;metadata&gt;</code> element (after the tt
-				agents):
+				<code class="notranslate">&lt;metadata&gt;</code> element (right before the <code class="notranslate">&lt;/metadata&gt;</code>):
 			</p>
 			<pre class="notranslate"><code class="notranslate">&lt;iTunesMetadata xmlns="http://music.apple.com/lyric-ttml-internal" leadingSilence="0"&gt;
 &lt;translations/&gt;
@@ -250,7 +256,20 @@
 &lt;songwriter&gt;John Nolan&lt;/songwriter&gt;
 &lt;/songwriters&gt;
 &lt;/iTunesMetadata&gt;</code></pre>
-<div class="markdown-alert markdown-alert-note">
+		<div class="markdown-alert markdown-alert-caution">
+			<p class="markdown-alert-title">
+				<svg class="octicon octicon-alert mr-2" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true">
+					<path
+						d="M4.47.22A.749.749 0 0 1 5 0h6c.199 0 .389.079.53.22l4.25 4.25c.141.14.22.331.22.53v6a.749.749 0 0 1-.22.53l-4.25 4.25A.749.749 0 0 1 11 16H5a.749.749 0 0 1-.53-.22L.22 11.53A.749.749 0 0 1 0 11V5c0-.199.079-.389.22-.53Zm.84 1.28L1.5 5.31v5.38l3.81 3.81h5.38l3.81-3.81V5.31L10.69 1.5ZM8 4a.75.75 0 0 1 .75.75v3.5a.75.75 0 0 1-1.5 0v-3.5A.75.75 0 0 1 8 4Zm0 8a1 1 0 1 1 0-2 1 1 0 0 1 0 2Z">
+					</path>
+				</svg>
+				Caution
+			</p>
+			<p>
+				 Never beautify your TTMLs because your file won't be able to load properly/at all. The extension needs to read it, not us.
+			</p>
+		</div>
+		<div class="markdown-alert markdown-alert-note">
 				<p class="markdown-alert-title">
 					<svg class="octicon octicon-info mr-2" viewBox="0 0 16 16" version="1.1" width="16" height="16"
 						aria-hidden="true">
@@ -275,6 +294,21 @@
 				</p>
 				<p>Each song writer must be added individually.</p>
 			</div>
+			<div class="markdown-alert markdown-alert-note">
+				<p class="markdown-alert-title">
+					<svg class="octicon octicon-info mr-2" viewBox="0 0 16 16" version="1.1" width="16" height="16"
+						aria-hidden="true">
+						<path
+							d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8Zm8-6.5a6.5 6.5 0 1 0 0 13 6.5 6.5 0 0 0 0-13ZM6.5 7.75A.75.75 0 0 1 7.25 7h1a.75.75 0 0 1 .75.75v2.75h.25a.75.75 0 0 1 0 1.5h-2a.75.75 0 0 1 0-1.5h.25v-2h-.25a.75.75 0 0 1-.75-.75ZM8 6a1 1 0 1 1 0-2 1 1 0 0 1 0 2Z">
+						</path>
+					</svg>Note
+				</p>
+				<p>
+					Alternatively you can use the AMLL TTML Tool website's own Metadata Editor menu under
+					<code class="notranslate">Edit &gt; Edit Lyrics Metadata &gt; Add New Metadata &gt; Songwriter</code>.
+					You can add all the songwriters here. The other metadata settings do nothing.
+				</p>
+			</div>
 			<div class="markdown-alert markdown-alert-tip">
 				<p class="markdown-alert-title">
 					<svg class="octicon octicon-light-bulb mr-2" viewBox="0 0 16 16" version="1.1" width="16" height="16"
@@ -285,8 +319,9 @@
 					</svg>Tip
 				</p>
 				<p>
-					You can find the song writers on Spicy Lyrics if you scroll to the end of
-					the song lyrics.<br />
+					You can find the songwriters on Spicy Lyrics if you scroll to the end of
+					the song lyrics. After your TTML got uploaded by a Mod, you will see your discord username, alongside 
+					the uploader's username (The uploader is usually the moderator who checks and approves your lyrics).<br />
 					<a target="_blank" rel="noopener noreferrer" href="./assets/step_6_authors.png"><img width="1280"
 							height="593" alt="Authors section in Spicy Lyrics" src="./assets/step_6_authors.png"
 							style="max-width: 100%; height: auto; max-height: 593px" /></a>
@@ -297,8 +332,10 @@
 				Enable "Dev Mode" in the extension's settings and upload your TTML file by clicking on the "&lt;&gt;" button at the bottom of the lyrics page, then click on "Upload" and select the file.<br>
 			</p>
 
-			<h3>If it has uploaded and parsed successfully, all the lines are in place, and there are no errors, then go to the "create-a-ticket" channel in the Spicy Lyrics Discord Server</h3>
-			<h3>If the file is all good, you will receive the "TTML Uploader" role and then make a post in #TTML-Uploads.</h3>
+			<h3>If it has uploaded and parsed successfully, all the lines are in place, and there are no errors, then go to the "create-a-ticket" channel in the Spicy Lyrics Discord Server.</h3>
+			<h3>If the file is all good, you will receive the "TTML Maker" role and then make a post in #TTML-Uploads (avilable after receiving the rank).</h3>
+			<h3>You can upgrade your "TTML Maker" role by uploading more often and making more accurately synced lyrics.</h3>
+			<h3>By creating a post you automatically accept the TTML Maker's Privacy Policy.</h3>
 		</article>
 	</div>
 </body>
