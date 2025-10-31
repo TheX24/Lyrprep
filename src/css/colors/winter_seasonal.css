@@ -1,0 +1,58 @@
+/* Winter Seasonal Theme Colors */
+:root {
+  /* Light theme - Winter */
+  --bg-color: #f5fafd;               /* pale icy blue */
+  --text-color: #213547;             /* deep winter navy */
+  --primary-color: #3797c9;          /* cool frosty blue */
+  --primary-hover: #226890;          /* darker frosty blue */
+  --secondary-color: #7fb5c5;        /* muted ice blue */
+  --border-color: #d0e4ef;           /* pale blue-gray */
+  --box-shadow: 0 4px 6px rgba(60, 120, 200, 0.10);
+  --card-bg: #ffffff;                /* clean snow white */
+  --input-bg: #eaf5fb;               /* soft pale blue */
+  --input-text: #213547;
+  --icon-color: #5e94ab;             /* blue steel */
+  --icon-hover: #3797c9;
+  --settings-bg: #ffffff;
+  --settings-border: #d0e4ef;
+  --settings-header-bg: #f5fafd;
+  --modal-bg: #f5fafd;
+  --modal-header-bg: #eaf5fb;
+  --modal-border: #d0e4ef;
+  --search-result-hover: #eaf5fb;
+  --toast-bg: #466b8d;               /* steel blue */
+  --toast-text: #f5fafd;
+  --error-color: #b02542;            /* cranberry red */
+  --success-color: #56b3b4;          /* icy teal */
+  --warning-color: #dbc779;          /* cool muted gold */
+  --info-color: #45aeea;             /* bright ice blue */
+}
+
+/* Winter Dark Theme */
+[data-theme="dark"] {
+  --bg-color: #22303a;               /* deep twilight blue */
+  --text-color: #eaf5fb;             /* icy white */
+  --primary-color: #45aeea;          /* bright icy blue */
+  --primary-hover: #3797c9;          /* cool frosty blue */
+  --secondary-color: #7fb5c5;
+  --border-color: #40647a;           /* blue-gray */
+  --box-shadow: 0 4px 6px rgba(60, 120, 200, 0.17);
+  --card-bg: #263646;                /* cold blue-gray */
+  --input-bg: #2d4257;               /* dark iced blue */
+  --input-text: #eaf5fb;
+  --icon-color: #7fb5c5;
+  --icon-hover: #45aeea;
+  --settings-bg: #263646;
+  --settings-border: #40647a;
+  --settings-header-bg: #264058;
+  --modal-bg: #263646;
+  --modal-header-bg: #264058;
+  --modal-border: #40647a;
+  --search-result-hover: #2d4257;
+  --toast-bg: #b5cce5;               /* light icy blue */
+  --toast-text: #22303a;
+  --error-color: #ff5470;            /* frosty rose */
+  --success-color: #81e7df;          /* crisp teal */
+  --warning-color: #dbc779;          /* cool muted gold */
+  --info-color: #45aeea;             /* bright ice blue */
+}
