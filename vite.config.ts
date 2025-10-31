@@ -131,8 +131,8 @@ export default defineConfig({
           }
           return undefined;
         },
-        chunkFileNames: `_vitestatic/js/[name]/[name]-[hash].js`,
-        entryFileNames: `_vitestatic/js/entry/entry-[hash].js`,
+        chunkFileNames: `_vitestatic/js/chunks/[name].[hash].js`,
+        entryFileNames: `_vitestatic/js/entry.[hash].js`,
         assetFileNames: "_vitestatic/assets/[extname]/[hash][extname]",
       },
     },
