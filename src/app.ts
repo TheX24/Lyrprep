@@ -3,7 +3,7 @@ import { GetExpireStore, GetInstantStore } from "./modules/Cache.ts";
 import { isFromInterface, requestContent, wd_UserId } from "./wdelivery/main.ts";
 
 const instantStore = GetInstantStore(
-  `${wd_UserId}Lyrprep/InstantStore`,
+  `${wd_UserId}/Lyrprep/InstantStore`,
   1,
   {
     SK_Store: "",

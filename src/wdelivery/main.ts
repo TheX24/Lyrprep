@@ -2,7 +2,7 @@ const queryParams = new URLSearchParams(window.location.search);
 export const isFromInterface = queryParams.get("wdelivery-source") === "interface" && (window.self !== window.top);
 export const interfaceHost = "https://interface.spicylyrics.org";
 const wDeliveryClientContextString = queryParams.get("wdeliveryclient-context");
-const wDeliveryClientContext = wDeliveryClientContextString != null ? JSON.parse(wDeliveryClientContextString) : {};
+const wDeliveryClientContext = wDeliveryClientContextString != null && isFromInterface ? JSON.parse(wDeliveryClientContextString) : {};
 export const wd_UserId = wDeliveryClientContext?.tUserId ?? "default";
 
 if (isFromInterface) {
