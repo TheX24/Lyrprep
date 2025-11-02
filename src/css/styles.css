@@ -1904,19 +1904,18 @@ input:checked + .slider:before {
   color: #fff !important;
   font-weight: 500;
   text-decoration: none;
-  transition: background 0.14s, color 0.14s, box-shadow 0.15s;
+  transition: color 0.14s;
   cursor: pointer;
   vertical-align: middle;
   white-space: nowrap;
   outline: none;
-  text-decoration: none;
+  text-decoration: underline;
 }
 
 .generic__link_button:hover,
 .generic__link_button:focus-visible,
 .generic__link_button:active {
   color: #C5C5C5 !important;
-  text-decoration: underline;
 }
 
 .provider:not(.disabled) .tooltip {
