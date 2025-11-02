@@ -1,6 +1,6 @@
 const queryParams = new URLSearchParams(window.location.search);
 export const isFromInterface = queryParams.get("wdelivery-source") === "interface" && (window.self !== window.top);
-export const interfaceHost = "http://localhost:3000"//"https://interface.spicylyrics.org";
+export const interfaceHost = "https://interface.spicylyrics.org";
 
 if (isFromInterface) {
   document.body.classList.add("wdelivery-source_interface");
