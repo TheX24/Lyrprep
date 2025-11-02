@@ -7,6 +7,17 @@ const idToChunk = new Map();
 const reservedChunks = new Set(["pkg", "entry"]);
 const ChunkIdConfig = { min: 1000, max: 10000 };
 
+const randomString = (length = 16) => {
+  const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+  let result = '';
+  for (let i = 0; i < length; ++i) {
+    result += chars.charAt(Math.floor(Math.random() * chars.length));
+  }
+  return result;
+};
+
+const buildString = randomString();
+
 export default defineConfig({
   plugins: [
     // VitePWA({
@@ -131,9 +142,9 @@ export default defineConfig({
           }
           return undefined;
         },
-        chunkFileNames: `_vitestatic/js/chunks/[name].[hash].js`,
-        entryFileNames: `_vitestatic/js/entry.[hash].js`,
-        assetFileNames: "_vitestatic/assets/[extname]/[hash][extname]",
+        chunkFileNames: `_vitestatic/js/chunks/[name].[hash].${buildString}.js`,
+        entryFileNames: `_vitestatic/js/entry.[hash].${buildString}.js`,
+        assetFileNames: `_vitestatic/assets/[extname]/${buildString}.[hash][extname]`,
       },
     },
   },
