@@ -1,5 +1,6 @@
 import "./font-selector.ts"
 import { GetExpireStore, GetInstantStore } from "./modules/Cache.ts";
+import { isFromInterface, requestContent } from "./wdelivery/main.ts";
 
 const instantStore = GetInstantStore(
   `Lyrprep/InstantStore`,
@@ -253,6 +254,18 @@ const searchProviders = [
 	}
 ]
 
+if (isFromInterface) {
+	const lrcLibSPButton = searchProviders.find(provider => provider.name === "lrclib")?.element as HTMLElement;
+	const spicyLyricsSPButton = searchProviders.find(provider => provider.name === "spicylyrics")?.element as HTMLElement;
+
+	swapLyricsProviders();
+	if (lrcLibSPButton) lrcLibSPButton.classList.remove("active");
+	if (spicyLyricsSPButton) {
+		spicyLyricsSPButton.classList.remove("disabled");
+		spicyLyricsSPButton.classList.add("active")
+	}
+}
+
 // Initialize the app
 async function init() {
 	// Set initial theme
@@ -288,7 +301,7 @@ function setupEventListeners() {
 		const el = provider.element as HTMLElement | null;
 		if (!el) return;
 		el.addEventListener("click", () => {
-			if (el.classList.contains("active")) return;
+			if (el.classList.contains("active") || el.classList.contains("disabled")) return;
 
 			// Remove active class from all providers
 			searchProviders.forEach(p => p.element && p.element.classList.remove("active"));
@@ -573,8 +586,58 @@ async function searchLyrics() {
 				return;
 			};
 
+			if (isFromInterface) {
+				try {
+					const data = await requestContent("sl-lyrics", { trackId });
 
-			let skipCaptchaReset = false;
+					if (data && typeof data === "object" && data.error) {
+						showLoadingState(false);
+						showToast("Error getting lyrics from WDelivery source: " + data.error, 15000);
+						return;
+					}
+
+					if (!data || typeof data !== "string" || data.trim() === "") {
+						showLoadingState(false);
+						showToast("No lyrics data received from interface.");
+						return;
+					}
+
+					let lyrics;
+					try {
+						lyrics = parseLyrics(data);
+					} catch (err) {
+						console.error("Error parsing lyrics from interface data", err);
+						showLoadingState(false);
+						showToast("Failed to parse lyrics from result.");
+						return;
+					}
+
+					if (!lyrics || lyrics.trim() === "") {
+						showLoadingState(false);
+						showToast("No lyrics found for this track.");
+						return;
+					}
+
+					try {
+						await cacheStore.SetItem(`lyrics:${trackId}`, lyrics);
+					} catch (cacheError) {
+						console.warn("Failed to cache lyrics from interface", cacheError);
+					}
+
+					lyricsContinue(lyrics);
+
+					return;
+				} catch (interfaceError) {
+					console.error("Error retrieving lyrics from interface", interfaceError);
+					showLoadingState(false);
+					showToast("Error retrieving lyrics from interface.");
+					return;
+				}
+			}
+
+
+
+/* 			let skipCaptchaReset = false;
 			try {
 				const response = await fetch(`${spicyLyricsApiUrlBase}/lyrics`, {
 					method: "POST",
@@ -635,7 +698,7 @@ async function searchLyrics() {
 				} else {
 					cleanupHCaptcha();
 				}
-			}
+			} */
 		}
 	}
 }
@@ -1015,6 +1078,7 @@ function showToast(message: string, duration = 3000) {
 }
 
 function swapLyricsProviders() {
+	if (!isFromInterface) return;
 	if (searchForm.classList.contains("spicylyrics")) {
 		searchForm.classList.remove("spicylyrics")
 		searchForm.classList.add("lrclib")
@@ -1131,11 +1195,13 @@ function updateOfflineStatus() {
 			lrcLibSPButton.classList.remove("disabled");
 		}
 
-		if (wasOnLrcLib) {
+		if (wasOnLrcLib && isFromInterface) {
 			swapLyricsProviders();
 			if (lrcLibSPButton) lrcLibSPButton.classList.add("active");
 			if (spicyLyricsSPButton) spicyLyricsSPButton.classList.remove("active");
 		}
+
+		searchBtn.classList.remove("disabled");
 
 		wasOnLrcLib = false;
 
@@ -1147,6 +1213,11 @@ function updateOfflineStatus() {
 	}
 
 	if (isLrcLibFormScreen) {
+		if (!isFromInterface) {
+			if (searchModal.classList.contains('active')) toggleSearchModal();
+			searchBtn.classList.add("disabled");
+			return
+		}
 		wasOnLrcLib = true;
 		swapLyricsProviders();
 		if (lrcLibSPButton) lrcLibSPButton.classList.remove("active");
