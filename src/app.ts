@@ -1,9 +1,9 @@
 import "./font-selector.ts"
 import { GetExpireStore, GetInstantStore } from "./modules/Cache.ts";
-import { isFromInterface, requestContent } from "./wdelivery/main.ts";
+import { isFromInterface, requestContent, wd_UserId } from "./wdelivery/main.ts";
 
 const instantStore = GetInstantStore(
-  `Lyrprep/InstantStore`,
+  `${wd_UserId}Lyrprep/InstantStore`,
   1,
   {
     SK_Store: "",
