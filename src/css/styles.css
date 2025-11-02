@@ -909,7 +909,6 @@ input:checked + .slider:before {
 
 .search-form {
   padding: var(--search-form-padding);
-  border-bottom: 1px solid var(--border-color);
 }
 
 .form-group {
