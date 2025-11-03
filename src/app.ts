@@ -624,6 +624,7 @@ async function searchLyrics() {
 						console.warn("Failed to cache lyrics from interface", cacheError);
 					}
 
+					showLoadingState(false);
 					lyricsContinue(lyrics);
 
 					return;
