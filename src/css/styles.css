@@ -588,7 +588,7 @@ input:checked + .slider:before {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 1.25rem 1.5rem;
+  padding: 0.85rem 1.5rem;
   background-color: var(--modal-header-bg);
   border-bottom: 1px solid var(--border-color);
   position: sticky;
