@@ -104,3 +104,6 @@ fetch("/markdown/Guide.md")
     // Finally, update the container's HTML
     container.innerHTML = html;
   });
+
+
+document.querySelector<HTMLElement>("#guide-back-btn")?.addEventListener("click", () => window.location.href = "/");
