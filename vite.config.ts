@@ -7,7 +7,7 @@ const idToChunk = new Map();
 const reservedChunks = new Set(["pkg", "entry"]);
 const ChunkIdConfig = { min: 1000, max: 10000 };
 
-const randomString = (length = 16) => {
+const randomString = (length = 8) => {
   const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
   let result = '';
   for (let i = 0; i < length; ++i) {
@@ -84,7 +84,7 @@ export default defineConfig({
       classNameGeneratorAlg: "generic",
       mappingPath: "class-mapping.json",
       skipStartsWith: ["fa"],
-      ignore: ["v_appRoot"]
+      ignore: ["v_appRoot", "note", "tip", "warning", "important", "caution"]
     }),
     removeHtmlCommentsPlugin(),
   ],
