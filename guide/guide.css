@@ -272,3 +272,9 @@ pre code {
     transform: rotate(360deg);
   }
 }
+
+.back.int_spacePush {
+  top: 11px;
+  left: 53px;
+  padding: 7px 12px;
+}
