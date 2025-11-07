@@ -59,10 +59,23 @@ const searchSpotifyUri = document.querySelector('.search-spotify-url') as HTMLIn
 // const searchModalBtn = document.querySelector('.search-btn') as HTMLButtonElement;
 
 
+if (searchModal) {
+	searchModal.addEventListener("click", (event) => {
+		const target = event.target as HTMLElement;
+		// Check if click is on or inside either .search-container or .search-results
+		const isInsideSearchContainer = target.closest('.search-container') !== null;
+		const isInsideSearchResults = target.closest('.search-results') !== null;
+
+		// If not inside either, close the modal
+		if (!isInsideSearchContainer && !isInsideSearchResults && searchModal.classList.contains("active")) {
+			toggleSearchModal();
+		}
+	})
+}
+
 // Removed unused waitUntil helper to satisfy noUnusedLocals
 
 // Config
-const spicyLyricsApiUrlBase = `https://api.spicylyrics.org/lyrprep`;
 //const spicyLyricsApiUrlBase = `http://localhost:3001/lyrprep`;
 // Version embedded in saved payloads (not the IndexedDB schema version)
 // const CURRENT_STORE_VERSION = 1;
