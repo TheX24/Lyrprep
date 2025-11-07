@@ -1,8 +1,10 @@
+/* Import font stuff */
+@import url("../src/css/fonts/preload.css");
+
 body {
   margin: 0;
   background-color: #0d1117;
   color: #c9d1d9;
-  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
   overflow-y: scroll;
 }
 

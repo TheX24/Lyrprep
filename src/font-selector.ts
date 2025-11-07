@@ -14,12 +14,12 @@ const applyFont = (font: string) => {
   document.body.style.setProperty("--font-selection", fontName);
 };
 
-if (fontSelector) {
-  // Load saved font from localStorage
-  const savedFont = localStorage.getItem("selectedFont") || "inter";
-  fontSelector.value = savedFont;
-  applyFont(savedFont);
+// Load saved font from localStorage
+const savedFont = localStorage.getItem("selectedFont") || "inter";
+applyFont(savedFont);
 
+if (fontSelector) {
+  fontSelector.value = savedFont;
   fontSelector.addEventListener("change", (_) => {
     if (!fontSelector) return;
     const selectedFont = fontSelector.value;
