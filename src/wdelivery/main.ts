@@ -1,5 +1,5 @@
 const queryParams = new URLSearchParams(window.location.search);
-export const isFromInterface = queryParams.get("wdelivery-source") === "interface" && (window.self !== window.top);
+export const isFromInterface = true;//queryParams.get("wdelivery-source") === "interface" && (window.self !== window.top);
 export const interfaceHost = "https://interface.spicylyrics.org";
 const wDeliveryClientContextString = queryParams.get("wdeliveryclient-context");
 const wDeliveryClientContext = wDeliveryClientContextString != null && isFromInterface ? JSON.parse(wDeliveryClientContextString) : {};
@@ -7,6 +7,16 @@ export const wd_UserId = wDeliveryClientContext?.tUserId ?? "default";
 
 if (isFromInterface) {
   document.body.classList.add("wdelivery-source_interface");
+}
+
+const guideBtn = document.querySelector(".help-btn") as HTMLAnchorElement | null;
+
+if (guideBtn) {
+  guideBtn.addEventListener("click", (e) => {
+    e.preventDefault();
+    const guideHref = guideBtn.getAttribute("href");
+    window.location.href = `${guideHref?.toString()}${window.location.search}`
+  })
 }
 
 const callbacksPerId = new Map();

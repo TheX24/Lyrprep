@@ -1,3 +1,4 @@
+import { isFromInterface } from './../../src/wdelivery/main';
 import { parse } from "marked";
 
 fetch("/markdown/Guide.md")
@@ -106,4 +107,11 @@ fetch("/markdown/Guide.md")
   });
 
 
-document.querySelector<HTMLElement>("#guide-back-btn")?.addEventListener("click", () => window.location.href = "/");
+const guideBackBtn = document.querySelector<HTMLElement>("#guide-back-btn")
+
+if (guideBackBtn) {
+  if (isFromInterface) {
+    guideBackBtn.classList.add("int_spacePush");
+  }
+  guideBackBtn.addEventListener("click", () => window.location.href = `/${window.location.search}`);
+}
