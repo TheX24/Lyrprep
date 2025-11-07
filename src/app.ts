@@ -1,4 +1,4 @@
-import "./font-selector.ts"
+import "./font-selector.ts";
 import { GetExpireStore, GetInstantStore } from "./modules/Cache.ts";
 import { isFromInterface, requestContent, wd_UserId } from "./wdelivery/main.ts";
 

@@ -1,8 +1,9 @@
-/* Import fonts */
-@import url("../fonts/OpenDyslexic.css");
-@import url("https://fonts.spikerko.org/spicy-lyrics/source.css");
+/* Import colors */
 @import url("./colors/default.css");
 @import url("./colors/winter_seasonal.css");
+
+/* Import font stuff */
+@import url("./fonts/preload.css");
 
 ::root {
     --glide-transition: linear(0, 0.012 0.9%, 0.05 2%, 0.411 9.2%, 0.517 11.8%, 0.611 14.6%, 0.694 17.7%, 0.765 21.1%, 0.824 24.8%, 0.872 28.9%, 0.91 33.4%, 0.939 38.4%, 0.977 50.9%, 0.994 68.4%, 1);
@@ -50,11 +51,6 @@ body,
 }
 
 body {
-  --font-selection: "Inter";
-  --processed-font: var(--font-selection), -apple-system, BlinkMacSystemFont,
-    "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-
-  font-family: var(--processed-font);
   background-color: var(--bg-color);
   color: var(--text-color);
   line-height: 1.6;
