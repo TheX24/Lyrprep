@@ -1,4 +1,4 @@
-# Step-by-step guide for creating word-by-word synced lyrics for Spicy Lyrics
+# Step-by-step guide for creating lyrics for Spicy Lyrics
 Made by **[@Balint2201](https://github.com/Balint2201)**, **[@roranfeed](https://github.com/roranfeed)**, **[@TX24](https://github.com/TheX24)**, **[@Spikerko](https://github.com/Spikerko)**
 > [!WARNING]
 > **Do not use AI or any other "Spicy Lyrics non-verified tool" to make or modify TTML files.**
