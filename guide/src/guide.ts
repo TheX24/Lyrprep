@@ -1,4 +1,5 @@
 import "../../src/font-selector";
+import "../../src/initial/onload";
 import { isFromInterface } from '../../src/wdelivery/main';
 import { parse } from "marked";
 
