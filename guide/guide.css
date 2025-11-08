@@ -8,6 +8,10 @@ body {
   overflow-y: scroll;
 }
 
+body:not(.page-loaded) *:not(noscript) {
+  display: none;
+}
+
 /* Main markdown layout */
 .markdown-body {
   box-sizing: border-box;
