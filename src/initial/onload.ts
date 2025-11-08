@@ -26,7 +26,6 @@ function onloadMain() {
       sessionStorage.setItem("asr-checked", "true");
   
       if (preAsrHref) {
-        sessionStorage.removeItem("pre-asr-href");
         window.location.href = preAsrHref;
       } else {
         const url = new URL(window.location.href);
@@ -45,6 +44,7 @@ function onloadMain() {
       window.location.href = `https://interface.spicylyrics.org/app-scene/verify_auth?source=lprcs&dest=lprcs_dash&fail_dest=lprcs&attr=${attr}`
     } else {
       const preAsrHref = sessionStorage.getItem("pre-asr-href");
+      sessionStorage.removeItem("pre-asr-href");
       if (preAsrHref != null) {
         if (preAsrHref === window.location.href) {
           document.body.classList.add("page-loaded");
