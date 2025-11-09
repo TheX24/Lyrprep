@@ -5,7 +5,7 @@ import { isFromInterface } from "../wdelivery/main";
 const asrHost = import.meta.env.VITE_ASR_HOST ?? "https://interface.spicylyrics.org";
 
 async function onloadMain() {
-  if (!isFromInterface) {
+  if (!isFromInterface && !import.meta.env.DEV) {
     const params = new URLSearchParams(window.location.search);
     const appSceneRedirectToken = params.get("asr");
    /*  const keepCurrentHostParam = params.has("keepHost");
