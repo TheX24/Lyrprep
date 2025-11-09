@@ -31,7 +31,7 @@ export default defineConfig({
       generateMapping: true,
       classNameGeneratorAlg: "generic",
       mappingPath: "class-mapping.json",
-      skipStartsWith: ["fa"],
+      skipStartsWith: ["fa", "lucide"],
       ignore: ["v_appRoot", "note", "tip", "warning", "important", "caution"]
     }),
     removeHtmlCommentsPlugin(),
@@ -41,6 +41,7 @@ export default defineConfig({
       input: {
         main: "index.html",
         guide: "guide/index.html",
+        transfer: "transfer/index.html",
       },
       output: {
         manualChunks(id) {

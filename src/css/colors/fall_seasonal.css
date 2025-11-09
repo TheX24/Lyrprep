@@ -1,5 +1,5 @@
 /* Base Styles and Variables */
-.theme-seasonal {
+.theme-seasonal.page-loaded {
     /* Fall/Autumn theme - Light */
     --bg-color: #f7efe5;              /* warm, soft cream */
     --text-color: #4b2e05;            /* deep brown */
@@ -29,7 +29,7 @@
 }
 
 /* Fall/Autumn theme - Dark */
-[data-theme="dark"] .theme-seasonal {
+[data-theme="dark"] .theme-seasonal.page-loaded {
     --bg-color: #2B1602;              /* deep brown */
     --text-color: #f7efe5;            /* warm cream */
     --primary-color: #e08e3c;         /* brighter pumpkin */

@@ -9,10 +9,6 @@
     --glide-transition: linear(0, 0.012 0.9%, 0.05 2%, 0.411 9.2%, 0.517 11.8%, 0.611 14.6%, 0.694 17.7%, 0.765 21.1%, 0.824 24.8%, 0.872 28.9%, 0.91 33.4%, 0.939 38.4%, 0.977 50.9%, 0.994 68.4%, 1);
 }
 
-body:not(.page-loaded) *:not(noscript) {
-  display: none;
-}
-
 /* Show noscript message when JavaScript is disabled */
 noscript {
   display: flex !important;
@@ -47,6 +43,13 @@ body,
   padding: 0;
   scroll-behavior: smooth;
   overflow: hidden;
+  opacity: 1;
+  transition: opacity 0.3s;
+}
+
+body:not(.page-loaded) .v_appRoot {
+  opacity: 0;
+  pointer-events: none;
 }
 
 body {
@@ -1733,7 +1736,7 @@ input:checked + .slider:before {
 }
 
 .spinning-loader.activeAnimation > svg {
-  animation: spin 0.75s infinite linear;
+  animation: spin 0.54s infinite linear;
 }
 
 .main__init-Loader {
