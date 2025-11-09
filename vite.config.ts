@@ -5,11 +5,12 @@ import removeHtmlCommentsPlugin from "./vite-plugins/remove-html-comments";
 
 const idToChunk = new Map();
 const VENDOR_CHUNK_COUNT = 40;
-const reservedChunks = new Set(["entry", "preload"]);
+const reservedChunks = new Set(["entry", "preload", "g20"]);
 for (let i = 0; i < VENDOR_CHUNK_COUNT; i++) {
   reservedChunks.add(String(i));
 }
 
+// Re-instating this config
 const ChunkIdConfig = { min: (VENDOR_CHUNK_COUNT), max: 10000 };
 
 const randomString = (length = 6) => {
@@ -45,16 +46,27 @@ export default defineConfig({
       },
       output: {
         manualChunks(id) {
+          // --- Caching Logic ---
+          // This part is good, let's keep it.
           if (idToChunk.has(id)) {
             return idToChunk.get(id);
           }
 
+          if (id.includes("instantStore.ts") || id.includes("wdelivery/main.ts")) {
+            const chunkId = "g20"; // Name it anything
+            idToChunk.set(id, chunkId);
+            return chunkId;
+         }
+
+          // --- Preload Polyfill Chunk ---
+          // This is good, keep it.
           if (id.includes("modulepreload-polyfill")) {
             idToChunk.set(id, "preload");
             return "preload";
           }
 
-
+          // --- Vendor Chunking Logic ---
+          // This logic is great for splitting node_modules. Let's keep it.
           if (id.includes('node_modules')) {
             let chunkId = '0';
 
@@ -75,34 +87,55 @@ export default defineConfig({
             return chunkId;
           }
 
-          
+          // --- /src/ Chunking Logic (RESTORED & FIXED) ---
           if (id.includes("/src/")) {
             const min = ChunkIdConfig.min;
             const max = ChunkIdConfig.max;
             const range = max - min + 1;
-            const hash = Array.from(id).reduce(
-              (acc, char) => acc + char.charCodeAt(0),
-              0
-            );
-            let random = Math.abs(Math.sin(hash)) * 10000;
-            let chunkNumber = Math.floor(random % range) + min;
+
+            // Using a better hash function (djb2) to reduce initial collisions
+            let hash = 5381;
+            for (let i = 0; i < id.length; i++) {
+              // (hash * 33) is a "magic number" that works well
+              hash = (hash * 33) ^ id.charCodeAt(i);
+            }
+            hash = Math.abs(hash);
+
+            // Use the hash directly for chunking, not Math.sin
+            let chunkNumber = (hash % range) + min;
             let chunkId = String(chunkNumber);
 
             let attempts = 0;
-            while (reservedChunks.has(chunkId) && attempts < range + 1) {
+            // This is the key fix:
+            // We loop as long as reservedChunks *already contains* this chunkId.
+            // This checks against vendor chunks AND other /src/ chunks
+            // that have already been allocated.
+            while (reservedChunks.has(chunkId) && attempts < range) {
               chunkNumber = ((chunkNumber - min + 1) % range) + min;
               chunkId = String(chunkNumber);
               attempts++;
             }
+
             if (reservedChunks.has(chunkId)) {
+              // This should now be extremely unlikely
               throw new Error(
-                `Cannot allocate chunk for /src/ file, all attempts failed. Last try: '${chunkId}'`
+                `Cannot allocate chunk for /src/ file, all attempts failed. Last try: '${chunkId}' for id: ${id}`
               );
             }
+            
+            // This is the *other* part of the fix:
+            // Once we find a free chunk, we *reserve it* so no other
+            // file can take it, preventing collisions.
+            reservedChunks.add(chunkId);
+
+            // And finally, cache this decision.
             idToChunk.set(id, chunkId);
             return chunkId;
           }
 
+
+          // By returning undefined here for any other files,
+          // we let Rollup decide the best way to chunk them.
           return undefined;
         },
         chunkFileNames: `_vitestatic/js/chunks/[name].[hash].${buildString}.js`,
