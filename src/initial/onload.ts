@@ -76,11 +76,13 @@ async function checkAsrStatus() {
     }
 
     let attr: string | null;
+    const storeDataAlreadyTransferred = localStorage.getItem("store-data-transferred") === "true";
     try {
       attr = encodeURIComponent(
-        `_fp=${window.location.pathname}` + "&" +
-        `_pu=${compressedItems}`
+        `_fp=${window.location.pathname}` +
+        !storeDataAlreadyTransferred ? `&_pu=${compressedItems}` : ""
       );
+      localStorage.setItem("store-data-transferred", "true");
     } catch (err) {
       console.error("[asr] Error encoding attr parameter:", err);
       attr = null;
