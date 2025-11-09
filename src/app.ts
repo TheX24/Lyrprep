@@ -1,25 +1,7 @@
 import "./font-selector.ts";
-import { GetExpireStore, GetInstantStore } from "./modules/Cache.ts";
-import { isFromInterface, requestContent, wd_UserId } from "./wdelivery/main.ts";
-
-const instantStore = GetInstantStore(
-  `${wd_UserId}/Lyrprep/InstantStore`,
-  1,
-  {
-    SK_Store: "",
-    settings: {
-      removeTimestamps: true,
-      handleDashes: true,
-      handleParentheses: true,
-      addSpaces: true,
-      splitCJK: true,
-      removeEmptyLines: true,
-      theme: 'system',
-      seasonalTheme: true,
-    },
-    lastLyrics: "",
-  }
-);
+import { instantStore } from "./instantStore.ts";
+import { GetExpireStore } from "./modules/Cache.ts";
+import { isFromInterface, requestContent } from "./wdelivery/main.ts";
 
 const cacheStore = GetExpireStore(
 	"Lyprep/ExpireStore",
@@ -55,7 +37,6 @@ const searchAlbumInput = document.querySelector('.search-album') as HTMLInputEle
 //const swapProvidersButton = document.querySelector('.swapProvidersButton');
 
 const searchSpotifyUri = document.querySelector('.search-spotify-url') as HTMLInputElement;
-
 // const searchModalBtn = document.querySelector('.search-btn') as HTMLButtonElement;
 
 
@@ -75,8 +56,6 @@ if (searchModal) {
 
 // Removed unused waitUntil helper to satisfy noUnusedLocals
 
-// Config
-//const spicyLyricsApiUrlBase = `http://localhost:3001/lyrprep`;
 // Version embedded in saved payloads (not the IndexedDB schema version)
 // const CURRENT_STORE_VERSION = 1;
 
@@ -297,12 +276,6 @@ async function init() {
 
 	// Set initial state of toggles
 	updateTogglesFromSettings();
-
-	{
-		if (typeof overlay !== 'undefined') {
-			if (!searchModal.classList.contains("active") && !settingsPanel.classList.contains("active")) overlay.classList.remove("active");
-		}
-	}
 }
 
 // Set up event listeners

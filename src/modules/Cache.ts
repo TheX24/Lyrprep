@@ -29,7 +29,7 @@ export const GetInstantStore = <InstantStoreTemplate extends InstantStoreItems>(
     version: number,
     template: InstantStoreTemplate,
     forceNewData?: true
-): Readonly<InstantStoreInterface<InstantStoreTemplate>> => {
+): Readonly<InstantStoreInterface<InstantStoreTemplate> & { Overwrite: (items: InstantStoreTemplate) => void }> => {
     // Prevent duplicate retrieval
     if (RetrievedInstantStores.has(storeName)) {
         throw new Error(`Can't retrieve InstantStore (${storeName}) twice.`);
@@ -84,6 +84,11 @@ export const GetInstantStore = <InstantStoreTemplate extends InstantStoreItems>(
         Items: store.Items as InstantStoreTemplate,
         SaveChanges: () => {
             localStorage.setItem(storeName, JSON.stringify(store));
+        },
+        Overwrite: (items: InstantStoreTemplate) => {
+            // Overwrite the entire Items property
+            // We clone to avoid reference issues, matching with initialization
+            store!.Items = JSON.parse(JSON.stringify(items));
         }
     });
 }

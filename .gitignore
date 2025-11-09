@@ -24,3 +24,5 @@ dist-ssr
 *.sw?
 
 class-mapping.json
+
+.env

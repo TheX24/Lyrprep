@@ -6,7 +6,7 @@ Made by **[@Balint2201](https://github.com/Balint2201)**, **[@roranfeed](https:/
 We will use [AMLL TTML Tool Fork by Streetle](https://streetlegithub.github.io/amll-ttml-tool-english)
 
 ## 1. Upload a song
-![A GIF showing how to upload a song to the AMML TTML Tool website.](https://wdeliverystatic.global.ic.spicylyrics.org/wclient/a-cdn/lyrprep/40f40d8e0eaa25df7eb0b29c60b83394ca6c567d.gif)
+![A GIF showing how to upload a song to the AMLL TTML Tool website.](https://wdeliverystatic.global.ic.spicylyrics.org/wclient/a-cdn/lyrprep/40f40d8e0eaa25df7eb0b29c60b83394ca6c567d.gif)
 > [!TIP]
 >  - You can download a song [here](https://spotidown.app/).
 >  - You can also adjust the volume and playback speed by hovering over the icon.
