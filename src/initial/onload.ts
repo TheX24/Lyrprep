@@ -85,7 +85,7 @@ async function checkAsrStatus() {
       console.error("[asr] Error encoding attr parameter:", err);
       attr = null;
     }
-    window.location.href = `${asrHost}/app-scene/verify_auth?source=lprcs_local&dest=lprcs_dash&fail_dest=lprcs_local${attr ? `&attr=${attr}` : ""}`
+    window.location.href = `${asrHost}/app-scene/verify_auth?source=lprcs&dest=lprcs_dash&fail_dest=lprcs${attr ? `&attr=${attr}` : ""}`
   } else {
     const preAsrHref = sessionStorage.getItem("pre-asr-href");
     sessionStorage.removeItem("pre-asr-href");
