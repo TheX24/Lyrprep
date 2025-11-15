@@ -72,7 +72,7 @@ And to do that, put this into the `<metadata>` element (right before the `</meta
 > Never beautify your TTMLs because your file won't be able to load properly/at all. The extension needs to read it, not us.
 
 > [!IMPORTANT]
-> Always use the artists' real names (unless it's unknown). To find the songwriters right click on the title of the song in the bootom-left corner, then choose the `View credits` option and check the `Written by` section.
+> Always use the songwriters' real names (unless it's unknown). To find the songwriters, right-click on the song title in the bottom-left corner, then choose the `View credits` option and check the `Written by` section.
 
 > [!NOTE]
 > Replace John Doe, Jane Doe and John Nolan with the actual song writers.
@@ -90,7 +90,7 @@ And to do that, put this into the `<metadata>` element (right before the `</meta
 ## 7. Checks and Uploading
 #### Enable "Dev Mode" in the extension's settings and load your TTML file by clicking on the "`<>`" button at the top (default to be on the top but it's a setting, so might be at the bottom for you) of the lyrics page, then click on "Load" and select the file.
 > [!NOTE]
-> The "Upload" button has now been renamed to "Load" to avoid further confusion. This is to clearify the fact that <ins>when you (up)load from the DEV popup, it does NOT make the TTML publicly acessible</ins>, you need to make a ticket for that. Read below for more info. 
+> The "Upload" button has now been renamed to "Load" to avoid further confusion. This is to clarify the fact that <ins>when you (up)load from the DEV popup, it does NOT make the TTML publicly accessible</ins>, you need to make a ticket for that. Read below for more info.
 #### If it has loaded and parsed successfully, all the lines are in place, and there are no errors, then go to the "[create-a-ticket](https://discord.com/channels/1369992682214264993/1420470843414413403)" channel in the Spicy Lyrics Discord Server.
 #### If the file is all good, you will receive the "TTML Maker" role and then make a post in [#TTML-Uploads](https://discord.com/channels/1369992682214264993/1372633004584992808) (avilable after receiving the rank).
 #### You can upgrade your "TTML Maker" role by uploading more often and making more accurately synced lyrics.
