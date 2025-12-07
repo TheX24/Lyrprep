@@ -1,5 +1,4 @@
 import { instantStore } from "../instantStore";
-import { stringCompress } from "../pako/utils";
 import { isFromInterface } from "../wdelivery/main";
 
 const asrHost = import.meta.env.VITE_ASR_HOST ?? "https://interface.spicylyrics.org";
@@ -67,22 +66,11 @@ async function checkAsrStatus() {
   if (asrStatus !== "valid") {
     sessionStorage.setItem("pre-asr-href", window.location.href);
 
-    let compressedItems: string;
-    try {
-      compressedItems = stringCompress(JSON.stringify(instantStore.Items));
-    } catch (err) {
-      console.error("[asr] Error compressing instantStore.Items:", err);
-      compressedItems = "";
-    }
-
     let attr: string | null;
-    const storeDataAlreadyTransferred = localStorage.getItem("store-data-transferred") === "true";
     try {
       attr = encodeURIComponent(
-        `_fp=${window.location.pathname}` +
-        !storeDataAlreadyTransferred ? `&_pu=${compressedItems}` : ""
+        `_fp=${window.location.pathname}`
       );
-      localStorage.setItem("store-data-transferred", "true");
     } catch (err) {
       console.error("[asr] Error encoding attr parameter:", err);
       attr = null;
