@@ -6,7 +6,7 @@ Made by **[@Balint2201](https://github.com/Balint2201)**, **[@roranfeed](https:/
 We will use [AMLL TTML Tool Fork by Streetle](https://streetlegithub.github.io/amll-ttml-tool-english)
 
 ## 1. Upload a song
-![A GIF showing how to upload a song to the AMLL TTML Tool website.](https://raw.githubusercontent.com/TheX24/Lyrprep/website-dev/public/markdown/media/AudioImport.gif)
+![A GIF showing how to upload a song to the AMLL TTML Tool website.](./media/AudioImport.gif)
 > [!TIP]
 >  - You can download a song [here](https://spotidown.app/).
 >  - You can also adjust the volume and playback speed by hovering over the icon.
@@ -24,12 +24,12 @@ We will use [AMLL TTML Tool Fork by Streetle](https://streetlegithub.github.io/a
 ## 3. Import the lyrics
 > [!IMPORTANT]
 > Make sure to have this switch ("Enable Special Prefix") enabled.
-> ![An image showing the AMML TTML Tool's "Import via plain text" settings with the "Enable Special Prefix" on.](https://raw.githubusercontent.com/TheX24/Lyrprep/website-dev/public/markdown/media/enablespecialprefix.png)
+> ![An image showing the AMML TTML Tool's "Import via plain text" settings with the "Enable Special Prefix" on.](./media/enablespecialprefix.png)
 
-![A GIF showing how to use "Import via plain text" feature on the AMLL TTML Tool website.](https://raw.githubusercontent.com/TheX24/Lyrprep/website-dev/public/markdown/media/TextImport.gif)
+![A GIF showing how to use "Import via plain text" feature on the AMLL TTML Tool website.](./media/TextImport.gif)
 
 ## 4. Switch to the "Sync Mode" tab, select the first word and sync!
-![A GIF showing how to switch to the "Sync" tab and select the first word on the AMLL TTML Tool website](https://raw.githubusercontent.com/TheX24/Lyrprep/website-dev/public/markdown/media/SyncTab.gif)
+![A GIF showing how to switch to the "Sync" tab and select the first word on the AMLL TTML Tool website](./media/SyncTab.gif)
 Main keybinds:
 - F - sets the start time of the word
 - G - sets the end time of the word and the start of the next word (if the performer sings without pauses)
@@ -53,7 +53,7 @@ Main keybinds:
 3.  When you have finished synchronizing, perform a final check and proceed to the next step.
 
 ## 5. Export the lyrics
-![A GIF showing how to export a TTML on the AMLL TTML Tool website.](https://raw.githubusercontent.com/TheX24/Lyrprep/website-dev/public/markdown/media/TTMLExport.gif)
+![A GIF showing how to export a TTML on the AMLL TTML Tool website.](./media/TTMLExport.gif)
 
 ## 6. Adding song writers
 If you want to see the "Written by:" at the end of the lyrics container in Spicy Lyrics, you need to mention the song writers.
@@ -85,7 +85,7 @@ And to do that, put this into the `<metadata>` element (right before the `</meta
 
 > [!TIP]
 > You can find the songwriters on Spicy Lyrics if you scroll to the end of the song lyrics. After your TTML got uploaded by a Mod, you will see your discord username, alongside the uploader's username (The uploader is usually the moderator who checks and approves your lyrics).
-> ![An image showing the "Credists" (Now renamed to "Written by:") section in the Spotify App with Spicy Lyrics installed, at the bottom of the lyrics tab](https://raw.githubusercontent.com/TheX24/Lyrprep/website-dev/public/markdown/media/credits.png)
+> ![An image showing the "Credists" (Now renamed to "Written by:") section in the Spotify App with Spicy Lyrics installed, at the bottom of the lyrics tab](./media/credits.png)
 
 ## 7. Checks and Uploading
 #### Enable "Dev Mode" in the extension's settings and load your TTML file by clicking on the "`<>`" button at the top (default to be on the top but it's a setting, so might be at the bottom for you) of the lyrics page, then click on "Load" and select the file.
