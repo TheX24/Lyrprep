@@ -85,7 +85,7 @@ And to do that, put this into the `<metadata>` element (right before the `</meta
 
 > [!TIP]
 > You can find the songwriters on Spicy Lyrics if you scroll to the end of the song lyrics. After your TTML got uploaded by a Mod, you will see your discord username, alongside the uploader's username (The uploader is usually the moderator who checks and approves your lyrics).
-> ![An image showing the "Credits" (Now renamed to "Written by:") section in the Spotify App with Spicy Lyrics installed, at the bottom of the lyrics tab](./media/credits.png)
+> ![An image showing the "Credists" (Now renamed to "Written by:") section in the Spotify App with Spicy Lyrics installed, at the bottom of the lyrics tab](./media/credits.png)
 
 ## 7. Checks and Uploading
 #### Enable "Dev Mode" in the extension's settings and load your TTML file by clicking on the "`<>`" button at the top (default to be on the top but it's a setting, so might be at the bottom for you) of the lyrics page, then click on "Load" and select the file.
