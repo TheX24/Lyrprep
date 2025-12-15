@@ -92,6 +92,6 @@ And to do that, put this into the `<metadata>` element (right before the `</meta
 > [!NOTE]
 > The "Upload" button has now been renamed to "Load" to avoid further confusion. This is to clarify the fact that <ins>when you (up)load from the DEV popup, it does NOT make the TTML publicly accessible</ins>, you need to make a ticket for that. Read below for more info.
 #### If it has loaded and parsed successfully, all the lines are in place, and there are no errors, then go to the "[create-a-ticket](https://discord.com/channels/1369992682214264993/1420470843414413403)" channel in the Spicy Lyrics Discord Server.
-#### If the file is all good, you will receive the "TTML Maker" role and then make a post in [#TTML-Uploads](https://discord.com/channels/1369992682214264993/1372633004584992808) (avilable after receiving the rank).
+#### If the file is all good, you will receive the "TTML Maker" role and then make a post in [#TTML-Uploads](https://discord.com/channels/1369992682214264993/1372633004584992808) (available after receiving the rank).
 #### You can upgrade your "TTML Maker" role by uploading more often and making more accurately synced lyrics.
 #### By creating a post you automatically accept the [TTML Maker's Privacy Policy](https://discord.com/channels/1369992682214264993/1422189425491705896).
