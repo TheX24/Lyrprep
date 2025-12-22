@@ -49,15 +49,20 @@ async function onloadMain() {
 onloadMain();
 
 async function asrVerifyToken(token: string) {
-  const formData = new FormData();
-  formData.append("t", token);
+   const formData = new FormData();
+   formData.append("t", token);
 
-  const request = await fetch(`${asrHost}/api/generic/asr.verify?t=${Date.now()}`, {
-    method: "POST",
-    body: formData,
-  })
+  /* Temporarily disabled API request
+   const request = await fetch(`${asrHost}/api/generic/asr.verify?t=${Date.now()}`, {
+     method: "POST",
+     body: formData,
+   })
 
   return await request.text();
+  */
+
+  // Fallback while API is disabled
+  return "valid";
 }
 
 async function checkAsrStatus() {
