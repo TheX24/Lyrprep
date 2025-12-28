@@ -3,7 +3,7 @@ Made by **[@Balint2201](https://github.com/Balint2201)**, **[@roranfeed](https:/
 > [!WARNING]
 > **Do not use AI or any other "Spicy Lyrics non-verified tool" to make or modify TTML files.**
 
-We will use [AMLL TTML Tool Fork by Streetle](https://streetlegithub.github.io/amll-ttml-tool-english)
+We will use the [AMLL TTML Tool by Steve-xmh](https://amll-ttml-tool.stevexmh.net/)
 
 ## 1. Upload a song
 ![A GIF showing how to upload a song to the AMLL TTML Tool website.](https://wdeliverystatic.global.ic.spicylyrics.org/wclient/a-cdn/lyrprep/40f40d8e0eaa25df7eb0b29c60b83394ca6c567d.gif)
