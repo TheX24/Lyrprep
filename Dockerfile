@@ -10,7 +10,7 @@ RUN addgroup -g 1001 lyrprep && \
     adduser -D -u 1001 -G lyrprep lyrprep
 
 # Install dependencies first (better layer caching)
-COPY --chown=lyrprep:lyrprep package.json bun.lockb ./
+COPY --chown=lyrprep:lyrprep package.json bun.lock ./
 RUN bun install --frozen-lockfile
 
 # Copy the rest of the source and build
