@@ -9,7 +9,7 @@ WORKDIR /app
 RUN addgroup -g 1001 lyrprep && \
     adduser -D -u 1001 -G lyrprep lyrprep
 
-COPY --chown=lyrprep:lyrprep package.json bun.lockb ./
+COPY --chown=lyrprep:lyrprep package.json bun.lock ./
 RUN bun install --frozen-lockfile
 
 COPY --chown=lyrprep:lyrprep . .
