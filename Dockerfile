@@ -29,7 +29,7 @@ RUN addgroup -g 1001 lyrprep && \
 
 # Copy package.json and lockfile
 COPY --from=builder --chown=lyrprep:lyrprep /app/package.json ./
-COPY --from=builder --chown=lyrprep:lyrprep /app/bun.lockb ./
+COPY --from=builder --chown=lyrprep:lyrprep /app/bun.lock ./
 
 # Install vite (needed for preview) and dependencies
 # Ensure vite is in your 'dependencies', not 'devDependencies', or use NODE_ENV=development
