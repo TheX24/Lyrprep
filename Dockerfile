@@ -1,3 +1,4 @@
+
 # Builder: build Vite + TS app
 FROM oven/bun:alpine AS builder
 
@@ -25,19 +26,13 @@ WORKDIR /app
 RUN addgroup -g 1001 lyrprep && \
     adduser -D -u 1001 -G lyrprep lyrprep
 
-# Copy ALL necessary files from builder (config, plugins, etc.)
-# We copy everything except node_modules (will reinstall) and dist (copy separately)
-COPY --from=builder --chown=lyrprep:lyrprep /app/package.json ./
-COPY --from=builder --chown=lyrprep:lyrprep /app/bun.lock ./
-COPY --from=builder --chown=lyrprep:lyrprep /app/vite.config.ts ./
-COPY --from=builder --chown=lyrprep:lyrprep /app/vite-plugins ./vite-plugins
-COPY --from=builder --chown=lyrprep:lyrprep /app/tsconfig.json ./
+# Copy ALL source files from builder
+COPY --from=builder --chown=lyrprep:lyrprep /app/. ./
 
-# Install all dependencies including vite and plugins
+# Install ALL dependencies including devDependencies
+# Vite preview needs vite, typescript, and plugins
+ENV NODE_ENV=development
 RUN bun install --frozen-lockfile
-
-# Copy the built assets
-COPY --from=builder --chown=lyrprep:lyrprep /app/dist ./dist
 
 USER lyrprep
 
