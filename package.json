@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "bun run --bun vite",
     "build": "bun run --bun vite build",
-    "preview": "bun run --bun vite preview",
+    "preview": "bun run --bun vite preview --host",
     "lint": "bun run --bun tsc --noEmit"
   },
   "devDependencies": {
