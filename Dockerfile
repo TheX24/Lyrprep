@@ -18,22 +18,23 @@ RUN chown -R lyrprep:lyrprep /app
 USER lyrprep
 RUN bun run build
 
-# Runtime: serve static via Nginx
-FROM nginx:alpine AS runtime
+# Runtime: run preview server
+FROM oven/bun:alpine AS runtime
 
-# Create non-root user and setup directories as ROOT
+WORKDIR /app
+
+# Create non-root user
 RUN addgroup -g 1001 lyrprep && \
-    adduser -D -u 1001 -G lyrprep lyrprep && \
-    chown -R lyrprep:lyrprep /var/cache/nginx /var/log/nginx /var/run /etc/nginx/conf.d /usr/share/nginx/html
+    adduser -D -u 1001 -G lyrprep lyrprep
 
-# Write nginx config as ROOT
-RUN echo "user lyrprep; worker_processes auto; error_log /var/log/nginx/error.log warn; pid /var/run/nginx.pid; events { worker_connections 1024; } http { include /etc/nginx/mime.types; default_type application/octet-stream; sendfile on; keepalive_timeout 65; server { listen 8080; server_name _; location / { root /usr/share/nginx/html; index index.html; try_files \$uri \$uri/ /index.html; } } }" > /etc/nginx/nginx.conf
+# Copy built files and package.json from builder
+COPY --from=builder --chown=lyrprep:lyrprep /app/dist ./dist
+COPY --from=builder --chown=lyrprep:lyrprep /app/package.json ./
 
-# Switch to non-root user AFTER all setup is done
+# Install dependencies (needed for vite preview)
+RUN bun install --frozen-lockfile
+
 USER lyrprep
 
-# Copy built assets (will be owned by lyrprep since we're running as that user now)
-COPY --from=builder /app/dist /usr/share/nginx/html
-
-EXPOSE 8080
-CMD ["nginx", "-g", "daemon off;"]
+EXPOSE 4173
+CMD ["bun", "run", "preview"]
