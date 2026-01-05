@@ -1,32 +1,40 @@
-# syntax=docker/dockerfile:1
 
-###############################
 # Builder: build Vite + TS app
-###############################
-FROM node:22-alpine AS builder
+FROM oven/bun:alpine AS builder
 
 WORKDIR /app
 
-# Enable Corepack to use pnpm from lockfile
-RUN corepack enable
+# Create non-root user
+RUN addgroup -g 1001 lyrprep && \
+    adduser -D -u 1001 -G lyrprep lyrprep
 
-# Install dependencies first (better layer caching)
-COPY package.json pnpm-lock.yaml ./
-RUN pnpm install --frozen-lockfile
+COPY --chown=lyrprep:lyrprep package.json bun.lock ./
+RUN bun install --frozen-lockfile
 
-# Copy the rest of the source and build
-COPY . .
-RUN pnpm build
+COPY --chown=lyrprep:lyrprep . .
+RUN chown -R lyrprep:lyrprep /app
 
-###############################
-# Runtime: serve static via Nginx
-###############################
-FROM nginx:alpine AS runtime
+USER lyrprep
+RUN bun run build
 
-# Copy built assets to Nginx html directory
-COPY --from=builder /app/dist /usr/share/nginx/html
+# Runtime: run preview server
+FROM oven/bun:alpine AS runtime
 
-EXPOSE 80
-CMD ["nginx", "-g", "daemon off;"]
+WORKDIR /app
 
+# Create non-root user
+RUN addgroup -g 1001 lyrprep && \
+    adduser -D -u 1001 -G lyrprep lyrprep
 
+# Copy ALL source files from builder
+COPY --from=builder --chown=lyrprep:lyrprep /app/. ./
+
+# Install ALL dependencies including devDependencies
+# Vite preview needs vite, typescript, and plugins
+ENV NODE_ENV=development
+RUN bun install --frozen-lockfile
+
+USER lyrprep
+
+EXPOSE 4173
+CMD ["bun", "run", "preview"]
