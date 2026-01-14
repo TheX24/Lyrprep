@@ -3,14 +3,14 @@ Made by **[@Balint2201](https://github.com/Balint2201)**<br>
 Some sources by **[@roranfeed](https://github.com/roranfeed)**, **[@TX24](https://github.com/TheX24)** and **[@Spikerko](https://github.com/Spikerko)**
 > [!WARNING]
 > **Do not use AI or any other "Spicy Lyrics non-verified tool" to make or modify TTML files.**
-> All official tools will be available at [interface.spicylyics.org](https://interface.spicylyrics.org/dashboard/tools) once you are a TTML Maker.
+> All official tools will be available at [interface.spicylyrics.org](https://interface.spicylyrics.org/dashboard/tools) once you are a TTML Maker.
 
 We will use the [AMLL TTML Tool by Steve-xmh](https://amll-ttml-tool.stevexmh.net/) to make TTMLs.
 > [!NOTE] 
 > You can also use [AMLL TTML Tool Fork by Streetle.](https://streetlegithub.github.io/amll-ttml-tool-english) Choice mainly depends on your preference, but both of them work the same way and the guide is the same for both.
 
 <details>
-<summary>How to switch Steve-xmh' AMLL TTML Tool into English</summary>
+<summary>How to switch Steve-xmh's AMLL TTML Tool into English</summary>
 
 ![A GIF showing how to switch the website into English](../../media/balint2201/guide/langswitch.gif)
 
@@ -26,7 +26,7 @@ We will use the [AMLL TTML Tool by Steve-xmh](https://amll-ttml-tool.stevexmh.ne
 We will use [Lyrprep](https://lyrprep.spicylyrics.org/) to prepare the lyrics.
 1. Click the little search button at the top-right corner of the "INPUT" box.
 2. You will be able to enter the track name, the artist(s) and the album's name.
-3. After you entered everything you need hit "Search" and the results will come up.
+3. After you entered everything you need, hit "Search" and the results will come up.
 4. Select the best one and copy the text that comes up in the "OUTPUT" box with the little copy button.
 
 > [!NOTE]
@@ -34,7 +34,7 @@ We will use [Lyrprep](https://lyrprep.spicylyrics.org/) to prepare the lyrics.
 > - Even when you can use links to get lyrics, LRCLIB will most likely have more and better lyrics, than the one you get with a link (from Apple Music).
 
 > [!TIP]
-> If you are planning on syncing a line-by-line lyrics you should skip this step (preparing lyrics with Lyrprep)
+> If you are planning on syncing line-by-line lyrics you should skip this step (preparing lyrics with Lyrprep)
  
 ## 3. Import the lyrics
 > [!IMPORTANT]
@@ -89,7 +89,7 @@ Main keybinds:
 ![A GIF showing how to export a TTML on the AMLL TTML Tool website.](../../media/balint2201/guide/TTMLExport.gif)
 
 > [!CAUTION]
-> If the lyrics has empty lines, the TTML file won't load into Spicy Lyrics.
+> If the lyrics have empty lines, the TTML file won't load into Spicy Lyrics.
 
 ## 6. Adding songwriters
 If you want to see the "Written by:" at the end of the lyrics container in Spicy Lyrics, you need to add the songwriters.<br>
@@ -115,7 +115,7 @@ To add songwriters manually, put this into the `<metadata>` element (right befor
 ```
 
 > [!CAUTION]
-> <b>Adding songwriters manually is very risky, because it often breaks your TTMLs. We advise you to <ins>never add songwriters manually.</ins> Use the website instead.</b>
+> <b>Adding songwriters manually is very risky because it often breaks your TTMLs. We advise you to <ins>never add songwriters manually.</ins> Use the website instead.</b>
 
 
 </details>
@@ -126,7 +126,7 @@ To add songwriters manually, put this into the `<metadata>` element (right befor
 
 > [!NOTE]
 > You can't copy songwriters from Spotify unless you have devtools enabled via this PowerShell command: `spicetify enable-devtools`
-> After you enabled devtools, you can copy them by selecting them one-by-one and right-clicking them, then selecting Copy in the menu. Keep in mind that devtools can be buggy and is not intended to be used by rookies.
+> After you have enabled devtools, you can copy them by selecting them one-by-one and right-clicking them, then selecting Copy in the menu. Keep in mind that devtools can be buggy and is not intended to be used by rookies.
 
 > [!WARNING]
 > Each songwriter must be added individually.
@@ -136,7 +136,7 @@ To add songwriters manually, put this into the `<metadata>` element (right befor
 > ![An image showing the "Written by:" section in the Spotify App with Spicy Lyrics installed, at the bottom of the lyrics page](../../media/balint2201/guide/credits.png)
 
 ## 7. Checks and Uploading
-- Enable "TTML Maker Mode" in the extension's settings and load your TTML file by clicking on the "`<>`" button at the top (default to be on the top but it's a setting, so might be at the bottom for you) of the lyrics page, then click on "Load TTML" and select the file.
+- Enable "TTML Maker Mode" in the extension's settings and load your TTML file by clicking on the "`<>`" button (by default at the top, but it may be at the bottom depending on your settings) of the lyrics page, then click on "Load TTML" and select the file.
 - If it has loaded and parsed successfully, all the lines are in place, and there are no errors or mistakes, then go to the "[create-a-ticket](https://discord.com/channels/1369992682214264993/1420470843414413403)" channel in the [Spicy Lyrics Discord Server](https://discord.com/invite/uqgXU5wh8j).
 - If the file is all good, you will receive the "TTML Maker" role and then make a post in [#TTML-Uploads](https://discord.com/channels/1369992682214264993/1372633004584992808) (available after receiving the rank).
 - You can upgrade your "TTML Maker" role by uploading more often and making more accurately synced lyrics.
