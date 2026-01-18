@@ -146,7 +146,4 @@ To add songwriters manually, put this into the `<metadata>` element (right befor
 - If the file is all good, you will receive the "TTML Maker" role and then make a post in [#TTML-Uploads](https://discord.com/channels/1369992682214264993/1372633004584992808) (available after receiving the rank).
 - You can upgrade your "TTML Maker" role by uploading more often and making more accurately synced lyrics.
 
-> [!NOTE]
-> By creating a post you automatically accept the [TTML Maker's Privacy Policy.](https://discord.com/channels/1369992682214264993/1422189425491705896)
-
 <h6>This guide is improving over time, some parts are subject to changes. Thanks for reading, have a great time making some TTMLs for the community.</h6>
