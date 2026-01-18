@@ -36,5 +36,5 @@ RUN bun install --frozen-lockfile
 
 USER lyrprep
 
-EXPOSE 4173
-CMD ["bun", "run", "preview"]
+EXPOSE 3000
+CMD ["bun", "run", "start"]

@@ -2,6 +2,7 @@ import "../../src/font-selector";
 import "../../src/initial/onload";
 import { isFromInterface } from '../../src/wdelivery/main';
 import { parse } from "marked";
+import "@mux/mux-player";
 
 fetch("/markdown/Guide.md")
   .then((r: Response) => r.text())
@@ -78,7 +79,7 @@ fetch("/markdown/Guide.md")
         const content = firstBlock + bqRest;
         
         // Replace the entire <blockquote> with the new admonition <div>
-        return `<div class="admonition ${cls}"><div class="ad-title"><span class="ad-icon"></span>${label}</div>${content}</div>`;
+        return `<div class="admonition ${cls}"><div class="ad-title"><span class="ad-icon"></span>${label}</div><span class="adm-content-wrapper">${content}</span></div>`;
       });
 
 
@@ -104,8 +105,26 @@ fetch("/markdown/Guide.md")
       if (/target\s*=/i.test(attrs)) return match;
       return `<a${attrs} target="_blank">`;
     });
+
+    // Turn html string into an actual HTML element, but do NOT apply it
+    const htmlElement = document.createElement('div');
+    htmlElement.innerHTML = html;
+
+    const allImgs = htmlElement.querySelectorAll<HTMLImageElement>("img");
+    const cdnPrefix = import.meta.env.VITE_CDN_HOST_PREFIX as string;
+
+    for (const img of allImgs) {
+      img.src = img.src
+        .replace(/\{cdn_prefix\}/g, cdnPrefix)
+        .replace(/%7Bcdn_prefix%7D/gi, cdnPrefix)
+        .replace(window.location.origin + window.location.pathname, "")
+        .replace(window.location.origin + "/", "")
+      img.loading = "lazy";
+    }
+    
     // Finally, update the container's HTML
-    container.innerHTML = html;
+    container.innerHTML = htmlElement.innerHTML;
+    htmlElement.remove();
   });
 
 

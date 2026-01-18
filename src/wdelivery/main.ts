@@ -1,5 +1,4 @@
 import { instantStore, instantStoreNamingScheme } from "../instantStore";
-import { decompressString } from "../pako/utils";
 
 const queryParams = new URLSearchParams(window.location.search);
 export const isFromInterface = queryParams.get("wdelivery-source") === "interface" && (window.self !== window.top);
@@ -46,7 +45,7 @@ window.addEventListener("message", (event) => {
         // Unknown callback, ignore but warn
         console.warn(`[wdelivery] No callback found for id: ${event.data.id}`);
       }
-    } else if (event.data.type === "local_pack_update") {
+    } /* else if (event.data.type === "local_pack_update") {
       try {
         const data = event.data.data;
 
@@ -108,7 +107,7 @@ window.addEventListener("message", (event) => {
       } catch (err) {
         console.error("[wdelivery] Unexpected error during local_pack_update handling:", err);
       }
-    }
+    } */
   } catch (err) {
     console.error("[wdelivery] Error handling postMessage event:", err);
   }
