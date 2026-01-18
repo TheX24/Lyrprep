@@ -138,13 +138,13 @@ export default defineConfig({
           // we let Rollup decide the best way to chunk them.
           return undefined;
         },
-        chunkFileNames: `_vitestatic/js/chunks/[name].[hash].${buildString}.js`,
-        entryFileNames: `_vitestatic/js/entry.[hash].${buildString}.js`,
-        assetFileNames: `_vitestatic/assets/[extname]/${buildString}.[hash][extname]`,
+        chunkFileNames: `_static/js/chunks/[name].[hash].${buildString}.js`,
+        entryFileNames: `_static/js/entry.[hash].${buildString}.js`,
+        assetFileNames: `_static/assets/${buildString}.[hash][extname]`,
       },
     },
   },
   preview: {
-    allowedHosts: ["lyrprep.spicylyrics.org", "e1-fuhtp1-dp-zxhb8s1ohub8wv4x-wdelivery-internal.spicylyrics.org"]
+    allowedHosts: ["lyrprep.spicylyrics.org", "e1-fuhtp1-dp-zxhb8s1ohub8wv4x-wdelivery-internal.spicylyrics.org"],
   }
 });

@@ -109,14 +109,25 @@ body:not(.page-loaded) *:not(noscript) {
 .admonition p,
 .admonition li {
   color: #c9d1d9;
-  list-style: none;
   margin-left: 0;
   padding-left: 0;
   margin-bottom: 0;
+  position: relative;
+  list-style: none; /* Remove default bullet */
+}
+
+.admonition li::before {
+  content: "•";
+  color: #c9d1d9;
+  position: absolute;
+  left: -1.2em;
+  font-size: 1em;
+  line-height: 1;
+  top: 0.1em;
 }
 
 .admonition ul {
-  padding-left: 0;
+  padding-left: 1.2em; /* Create space for the fake bullet */
   margin-bottom: 0;
 }
 
@@ -231,7 +242,6 @@ pre code {
 }
 
 .markdown-body img {
-  max-width: 40cqw;
   border-radius: 0;
   box-shadow: none;
   display: block;
@@ -283,4 +293,10 @@ pre code {
   top: 50px;
   left: 53px;
   padding: 7px 12px;
+}
+
+
+.adm-content-wrapper,
+.adm-content-wrapper *:not(li) {
+  display: inline-block !important;
 }
