@@ -4,6 +4,9 @@ import { isFromInterface } from "../wdelivery/main";
 const asrHost = import.meta.env.VITE_ASR_HOST ?? "https://interface.spicylyrics.org";
 
 async function onloadMain() {
+  // Temporarily disabled ASR.verify redirects during 26h1 move
+  onFinish();
+  return;
   if (!isFromInterface && !import.meta.env.DEV) {
     const params = new URLSearchParams(window.location.search);
     const appSceneRedirectToken = params.get("asr");
