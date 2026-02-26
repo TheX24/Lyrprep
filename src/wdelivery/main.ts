@@ -2,7 +2,7 @@ import { instantStore, instantStoreNamingScheme } from "../instantStore";
 
 const queryParams = new URLSearchParams(window.location.search);
 export const isFromInterface = queryParams.get("wdelivery-source") === "interface" && (window.self !== window.top);
-export const interfaceHost = "https://interface.spicylyrics.org";
+export const interfaceHost = "https://spicylyrics.org";
 const wDeliveryClientContextString = queryParams.get("wdeliveryclient-context");
 const wDeliveryClientContext = wDeliveryClientContextString != null && isFromInterface ? JSON.parse(wDeliveryClientContextString) : {};
 export const wd_UserId = wDeliveryClientContext?.tUserId ?? "default";
