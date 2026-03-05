@@ -228,6 +228,66 @@ pre code {
   background: transparent;
 }
 
+.markdown-body details {
+  margin: 1rem 0;
+  border: 1px solid #343b47;
+  border-radius: 8px;
+  background: #1f2630;
+  overflow: hidden;
+}
+
+.markdown-body details > summary {
+  cursor: pointer;
+  list-style: none;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.65rem 0.95rem;
+  font-weight: 600;
+  color: #dce3ed;
+  background: #272f3a;
+  user-select: none;
+}
+
+.markdown-body details > summary::-webkit-details-marker {
+  display: none;
+}
+
+.markdown-body details > summary::before {
+  content: "";
+  width: 0;
+  height: 0;
+  border-top: 6px solid transparent;
+  border-bottom: 6px solid transparent;
+  border-left: 8px solid #c6cfdb;
+  color: #c6cfdb;
+  transform: translateY(0);
+  transform-origin: 45% 50%;
+  transition: transform 0.15s ease;
+}
+
+.markdown-body details[open] > summary::before {
+  transform: rotate(90deg);
+}
+
+.markdown-body details[open] > summary {
+  border-bottom: 1px solid #343b47;
+}
+
+.markdown-body details > :not(summary) {
+  margin: 0.85rem 0.95rem;
+  color: #c4ccd8;
+}
+
+.markdown-body details > :last-child {
+  margin-bottom: 0.95rem;
+}
+
+.markdown-body details > summary:focus-visible {
+  outline: 2px solid #58a6ff;
+  outline-offset: -2px;
+}
+
 .markdown-body code {
   background-color: #161b22;
   padding: 2px 4px;
