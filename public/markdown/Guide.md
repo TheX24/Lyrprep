@@ -1,7 +1,7 @@
 # Step-by-step guide for creating synced lyrics for Spicy Lyrics
 
 > [!TIP]
-> Prefer watching over reading? Check out this video tutorial, created by **[@iPixelGalaxy](https://profile.spicylyrics.org/ipixelgalaxy)** and **[@yesspapa](https://profile.spicylyrics.org/yesspapa)**!
+> Prefer watching over reading? Check out this video tutorial, created by **[@iPixelGalaxy](https://spicylyrics.org/ipixelgalaxy)** and **[@yesspapa](https://spicylyrics.org/yesspapa)**!
 > <mux-player playback-id="cRdWSU28crVXW7e9mtRfXcixE01mSWrqQdR1EpP02wg7s" style="margin-top:0.75rem;" metadata-video-title="TTML Making Guide | Spicy Lyrics" accent-color="#3771cd"></mux-player>
 
 ---
@@ -179,7 +179,8 @@ To add the songwriters, follow the instructions in the GIF below, or use the men
 
 <h6>This guide is improving over time, and some parts are subject to change. Thanks for reading, and have a great time making TTMLs for the community!</h6>
 <h6>The GIFs shown above may have been made for an older version of the tool, but the core process is the same. We are always working on providing you with the latest information.</h6>
+<h6>All abbreviations and phrases used in the guide can be found in the [Spicy Lyrics Glossary & Abbreviations](https://blog.spicylyrics.org/posts/spicy-lyrics-glossary-and-abbreviations)<h6>
 
 Written guide by: **[@Balint2201](https://github.com/Balint2201)**<br>
-Video guide by: **[@iPixelGalaxy](https://profile.spicylyrics.org/ipixelgalaxy)**, **[@yesspapa](https://profile.spicylyrics.org/yesspapa)**<br>
+Video guide by: **[@iPixelGalaxy](https://spicylyrics.org/ipixelgalaxy)**, **[@yesspapa](https://spicylyrics.org/yesspapa)**<br>
 Sources: **[@roranfeed](https://github.com/roranfeed)**, **[@TX24](https://github.com/TheX24)**, **[@spikerko](https://github.com/Spikerko)**
