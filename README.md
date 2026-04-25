@@ -1,3 +1,5 @@
+![Lyrprep Banner](public/lyrprep.png)
+
 # Lyrprep - Lyrics Preprocessing Tool
 
 A powerful web application for formatting and preprocessing song lyrics with real-time conversion. Perfect for preparing lyrics for karaoke, music production, or lyric videos.
