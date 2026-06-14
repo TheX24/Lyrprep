@@ -8,7 +8,7 @@ Contributors: **[@roranfeed](https://github.com/roranfeed)**, **[@TX24](https://
 
 > [!WARNING]
 > **Do not use AI or any other "Spicy Lyrics non-verified tool" to make or modify TTML files.**
-> All **official** tools will be available at [interface.spicylyrics.org](https://interface.spicylyrics.org/dashboard/tools) once you are a TTML Maker.
+> All **official** tools will be available at [spicylyrics.org](https://spicylyrics.org/app/tools) once you are a TTML Maker.
 
 We will use the [AMLL TTML Tool by Steve-xmh](https://amll-ttml-tool.stevexmh.net/) to make TTMLs.
 > [!NOTE] 
@@ -35,7 +35,7 @@ We will use [Lyrprep](https://lyrprep.spicylyrics.org/) to prepare the lyrics.
 4. Select the best one and copy the text that comes up in the "OUTPUT" box with the little copy button.
 
 > [!NOTE]
-> - To get lyrics via a Spotify link, you need to log in at [interface.spicylyrics.org](https://interface.spicylyrics.org/dashboard/lyrprep) (you will be able to log in after you are an official TTML Maker).
+> - ~~To get lyrics via a Spotify link, you need to log in at [spicylyrics.org](https://spicylyrics.org/app/tools/lyrprep) (you will be able to log in after you are an official TTML Maker).~~ As of 5/17/2026, you are no longer able to get TTMLs from Spotify links from this site.
 > - Even when you can use links to get lyrics, LRCLIB will most likely have more and better lyrics, than the one you get with a link (from Apple Music).
 
 > [!TIP]
