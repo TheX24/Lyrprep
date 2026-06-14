@@ -35,7 +35,7 @@ We will use [Lyrprep](https://lyrprep.spicylyrics.org/) to prepare the lyrics.
 4. Select the best one and copy the text that comes up in the "OUTPUT" box with the little copy button.
 
 > [!NOTE]
-> - ~~To get lyrics via a Spotify link, you need to log in at [spicylyrics.org](https://spicylyrics.org/app/tools/lyrprep) (you will be able to log in after you are an official TTML Maker).~~ As of 5/17/2026, you are no longer able to get TTMLs from Spotify links from this site.
+> - ~~To get lyrics via a Spotify link, you need to log in at [spicylyrics.org](https://spicylyrics.org/app/tools/lyrprep) (you will be able to log in after you are an official TTML Maker).~~ As of 5/9/2026, you are no longer able to get TTMLs from Spotify links from this site.
 > - Even when you can use links to get lyrics, LRCLIB will most likely have more and better lyrics, than the one you get with a link (from Apple Music).
 
 > [!TIP]
